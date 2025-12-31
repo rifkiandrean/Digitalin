@@ -72,7 +72,7 @@ export const DEFAULT_WEDDING_DATA: WeddingData = {
   wishlist: [
     { name: "Coffee Maker", description: "Untuk menemani pagi kami" }
   ],
-  audioUrl: "/musik/musik.mp3"
+  audioUrl: "/musik.mp3"
 };
 
 // Helper: Convert Google Drive links to usable URLs
