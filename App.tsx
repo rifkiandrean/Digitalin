@@ -48,7 +48,7 @@ const LandingPage: React.FC = () => {
     { icon: Heart, title: "Undangan Pernikahan", desc: "Undangan digital eksklusif dengan fitur RSVP, musik, dan navigasi.", link: "/undangan/hani-pupud" },
     { icon: ShoppingCart, title: "Sistem Ritel & POS", desc: "Kelola stok dan penjualan Anda dengan sistem inventaris modern." },
     { icon: UtensilsCrossed, title: "Menu Digital", desc: "QR Code menu untuk restoran dan kafe yang interaktif dan higienis." },
-    { icon: Truck, title: "Aplikasi Pesan Antar", desc: "Solusi logistik dan delivery untuk menjangkau pelanggan lebih luas." }
+    { icon: Truck, title: "Aplikasi Pesan Antar", desc: "Solusi logistik dan delivery untuk menjangkau pelanggan lebih luas.", link: "https://www.lapeerin.vercel.app" }
   ];
 
   return (
@@ -117,7 +117,12 @@ const LandingPage: React.FC = () => {
                   <h3 className="text-xl font-bold mb-4">{s.title}</h3>
                   <p className="text-slate-400 text-sm leading-relaxed mb-8 flex-grow">{s.desc}</p>
                   {s.link ? (
-                    <a href={s.link} className="flex items-center gap-2 text-blue-500 font-bold text-sm hover:underline">
+                    <a 
+                      href={s.link} 
+                      target={s.link.startsWith('http') ? "_blank" : "_self"}
+                      rel={s.link.startsWith('http') ? "noopener noreferrer" : ""}
+                      className="flex items-center gap-2 text-blue-500 font-bold text-sm hover:underline"
+                    >
                       Lihat Contoh <ArrowRight size={16} />
                     </a>
                   ) : (
