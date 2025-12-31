@@ -1,0 +1,21 @@
+
+{
+  "short_name": "Wedding",
+  "name": "Undangan Pernikahan Habib & Adiba",
+  "icons": [
+    {
+      "src": "https://i.ibb.co/Lz0xYm8/floral-corner-refined.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://i.ibb.co/Lz0xYm8/floral-corner-refined.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#1e3a8a",
+  "background_color": "#fdfaf7"
+}

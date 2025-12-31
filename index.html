@@ -4,11 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1e3a8a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
     <title>Undangan Pernikahan Habib & Adiba</title>
+    
+    <link rel="manifest" href="/manifest.json">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
     <style>
         .font-script { font-family: 'Great Vibes', cursive; }
         .font-serif { font-family: 'Playfair Display', serif; }
@@ -22,15 +29,12 @@
             animation: fade-in-up 1s ease-out forwards;
         }
 
-        /* Gerakan Ayunan untuk Bunga Pojok (Poros diatur di komponen) */
-        /* Berayun dari -5 ke 5 derajat agar puncaknya bergerak dinamis */
         @keyframes floral-sway {
             0% { transform: rotate(-5deg); }
             50% { transform: rotate(5deg); }
             100% { transform: rotate(-5deg); }
         }
         
-        /* Gerakan Halus/Kecil untuk Bunga Samping */
         @keyframes floral-sway-gentle {
             0% { transform: rotate(-2deg); }
             50% { transform: rotate(2deg); }
@@ -56,7 +60,6 @@
             aspect-ratio: 2/3;
         }
         
-        /* Custom scrollbar */
         ::-webkit-scrollbar {
             width: 4px;
         }
@@ -84,16 +87,19 @@
 <script type="importmap">
 {
   "imports": {
-    "react-dom/": "https://esm.sh/react-dom@^18.2.0/",
-    "react-dom": "https://esm.sh/react-dom@^18.2.0",
-    "lucide-react": "https://esm.sh/lucide-react@0.263.1",
-    "react/": "https://esm.sh/react@^18.2.0/",
-    "react": "https://esm.sh/react@^18.2.0"
+    "vite": "https://esm.sh/vite@^7.3.0",
+    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "lucide-react": "https://esm.sh/lucide-react@^0.562.0"
   }
 }
 </script>
 </head>
 <body class="bg-slate-200 text-slate-800 selection:bg-blue-100 flex justify-center min-h-screen">
     <div id="root" class="w-full flex justify-center"></div>
+    <!-- Entry point script -->
+    <script type="module" src="/index.tsx"></script>
 </body>
 </html>
