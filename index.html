@@ -1,0 +1,99 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Undangan Pernikahan Habib & Adiba</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        .font-script { font-family: 'Great Vibes', cursive; }
+        .font-serif { font-family: 'Playfair Display', serif; }
+        .font-sans { font-family: 'Montserrat', sans-serif; }
+        
+        @keyframes fade-in-up {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in-up {
+            animation: fade-in-up 1s ease-out forwards;
+        }
+
+        /* Gerakan Ayunan untuk Bunga Pojok (Poros diatur di komponen) */
+        /* Berayun dari -5 ke 5 derajat agar puncaknya bergerak dinamis */
+        @keyframes floral-sway {
+            0% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+            100% { transform: rotate(-5deg); }
+        }
+        
+        /* Gerakan Halus/Kecil untuk Bunga Samping */
+        @keyframes floral-sway-gentle {
+            0% { transform: rotate(-2deg); }
+            50% { transform: rotate(2deg); }
+            100% { transform: rotate(-2deg); }
+        }
+        
+        .animate-floral-sway {
+            animation: floral-sway 5s ease-in-out infinite;
+        }
+
+        .animate-floral-sway-gentle {
+            animation: floral-sway-gentle 10s ease-in-out infinite;
+        }
+
+        .bg-watercolor {
+            background-color: #fdfaf7;
+            background-image: radial-gradient(circle at 10% 20%, rgba(216, 241, 230, 0.2) 0%, rgba(233, 226, 226, 0.2) 90%);
+        }
+
+        .arched-image {
+            border-radius: 999px 999px 0 0;
+            overflow: hidden;
+            aspect-ratio: 2/3;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e3a8a;
+            border-radius: 10px;
+        }
+
+        .loader {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #1e3a8a;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://esm.sh/react-dom@^18.2.0/",
+    "react-dom": "https://esm.sh/react-dom@^18.2.0",
+    "lucide-react": "https://esm.sh/lucide-react@0.263.1",
+    "react/": "https://esm.sh/react@^18.2.0/",
+    "react": "https://esm.sh/react@^18.2.0"
+  }
+}
+</script>
+</head>
+<body class="bg-slate-200 text-slate-800 selection:bg-blue-100 flex justify-center min-h-screen">
+    <div id="root" class="w-full flex justify-center"></div>
+</body>
+</html>
