@@ -3,17 +3,17 @@ import {
   Mail, MapPin, Loader2, Heart, ShoppingCart, 
   UtensilsCrossed, Truck, ArrowRight, Star, ShieldCheck, Zap, 
   Phone, Landmark, Building2, Trash2, X, Plus, Minus, Send, Check,
-  Instagram, Clock
+  Instagram, Clock, LayoutDashboard, Briefcase, Globe, BarChart3,
+  Lock, User, LogOut, Search, Filter, Eye, Edit3, Settings,
+  Link as LinkIcon, RefreshCw, MoreVertical, CreditCard, ChevronRight
 } from 'lucide-react';
 import Countdown from './components/Countdown';
 import FloatingMusic from './components/FloatingMusic';
 import Dashboard from './components/Dashboard';
 import ScrollReveal from './components/ScrollReveal';
 import GuestBook from './components/GuestBook';
-import { fetchWeddingData, getDriveMediaUrl, DEFAULT_WEDDING_DATA } from './constants';
+import { fetchWeddingData, getDriveMediaUrl, DEFAULT_WEDDING_DATA, verifyAdminPinFromCloud } from './constants';
 import { WeddingData } from './types';
-
-const ADMIN_PIN = "hanipupud2026";
 
 // --- HELPERS ---
 const formatEventDate = (dateStr: string) => {
@@ -53,26 +53,467 @@ const INVITATION_THEMES = [
     price: 132000, 
     desc: "Sentuhan gold yang mewah memberikan kesan premium. Sangat cocok untuk pesta pernikahan di ballroom.",
     img: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=600" 
-  },
-  { 
-    id: "03", 
-    name: "SPESIAL 03", 
-    category: "Spesial Foto",
-    originalPrice: 210000, 
-    price: 132000, 
-    desc: "Tema rustik yang hangat dengan dominasi warna bumi. Pilihan favorit untuk konsep outdoor.",
-    img: "https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&q=80&w=600" 
-  },
-  { 
-    id: "04", 
-    name: "SPESIAL 04", 
-    category: "Spesial Foto",
-    originalPrice: 210000, 
-    price: 132000, 
-    desc: "Minimalis dengan tipografi estetik. Menonjolkan foto prewedding Anda dengan sangat indah.",
-    img: "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&q=80&w=600" 
   }
 ];
+
+// --- ADMIN PAGE COMPONENT ---
+const AdminPage: React.FC = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [pin, setPin] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState<'overview' | 'products' | 'orders' | 'settings'>('overview');
+  const [productCategory, setProductCategory] = useState('Semua');
+
+  useEffect(() => {
+    document.title = "Admin Panel - Punakawan Digital";
+    const auth = sessionStorage.getItem('vell_admin_auth');
+    if (auth === 'true') setIsLoggedIn(true);
+  }, []);
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    
+    try {
+      // Memanggil fungsi verify dari constants.ts yang terhubung ke spreadsheet
+      const isValid = await verifyAdminPinFromCloud(pin);
+      if (isValid) {
+        setIsLoggedIn(true);
+        sessionStorage.setItem('vell_admin_auth', 'true');
+      } else {
+        alert("Akses Ditolak: PIN Salah atau tidak terdaftar di database spreadsheet.");
+      }
+    } catch (err) {
+      alert("Terjadi kesalahan koneksi ke database spreadsheet. Pastikan URL API sudah benar.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleLogout = () => {
+    sessionStorage.removeItem('vell_admin_auth');
+    setIsLoggedIn(false);
+    navigateTo('/');
+  };
+
+  const serviceItems = [
+    { title: 'Premium Wedding Invitation', price: '132.000', sales: 124, icon: Heart, color: 'rose', category: 'Undangan', desc: 'Sistem manajemen undangan digital dengan RSVP cloud.' },
+    { title: 'Portal E-Gov & Layanan Publik', price: '15.000.000', sales: 4, icon: Landmark, color: 'blue', category: 'Pemerintah', desc: 'Dashboard transparansi dan layanan administrasi terintegrasi.' },
+    { title: 'Exclusive Company Profile', price: '2.500.000', sales: 18, icon: Building2, color: 'indigo', category: 'Perusahaan', desc: 'Branding bisnis profesional dengan optimasi SEO.' },
+    { title: 'Food Delivery Platform', price: '7.500.000', sales: 7, icon: Truck, color: 'amber', category: 'Pesan Antar', desc: 'Aplikasi kurir dan pemesanan makanan kustom.' },
+    { title: 'Digital QR Menu', price: '850.000', sales: 32, icon: UtensilsCrossed, color: 'emerald', category: 'Pesan Antar', desc: 'Menu interaktif nirsentuh untuk resto dan kafe.' },
+    { title: 'Sistem Inventory & POS', price: '5.000.000', sales: 12, icon: ShoppingCart, color: 'violet', category: 'Perusahaan', desc: 'Pengelolaan stok dan kasir online real-time.' },
+  ];
+
+  const filteredServices = productCategory === 'Semua' 
+    ? serviceItems 
+    : serviceItems.filter(s => s.category === productCategory);
+
+  if (!isLoggedIn) {
+    return (
+      <div className="min-h-screen bg-[#0f172a] flex items-center justify-center p-6 font-sans">
+        <div className="w-full max-w-md bg-white rounded-[2.5rem] shadow-2xl p-10 text-center animate-fade-in-up">
+          <div className="w-20 h-20 bg-blue-600 rounded-2xl flex items-center justify-center text-white mx-auto mb-8 shadow-xl shadow-blue-500/20">
+            <Lock size={40} />
+          </div>
+          <h1 className="text-3xl font-black text-slate-900 mb-3 tracking-tight">Punakawan <span className="text-blue-600">Admin</span></h1>
+          <p className="text-slate-500 text-sm mb-10 font-medium">Hubungkan ke database spreadsheet dengan memasukkan PIN Otoritas Anda.</p>
+          
+          <form onSubmit={handleLogin} className="space-y-5">
+            <div className="relative">
+              <input 
+                type="password" 
+                placeholder="••••••" 
+                value={pin}
+                onChange={(e) => setPin(e.target.value)}
+                className="w-full p-5 bg-slate-50 border-2 border-slate-100 rounded-2xl text-center text-3xl tracking-[0.6em] focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all font-bold text-slate-800"
+                autoFocus
+              />
+            </div>
+            <button 
+              type="submit"
+              disabled={isLoading}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-5 rounded-2xl font-black text-lg shadow-xl shadow-blue-200 transition-all flex items-center justify-center gap-3 active:scale-[0.98]"
+            >
+              {isLoading ? <Loader2 className="animate-spin" /> : <ShieldCheck />}
+              Autentikasi Sekarang
+            </button>
+          </form>
+          <div className="mt-10 pt-8 border-t border-slate-100">
+            <button onClick={() => navigateTo('/')} className="text-slate-400 text-xs hover:text-blue-600 font-bold uppercase tracking-widest transition-colors">Batal & Kembali</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-[#f8fafc] flex font-sans">
+      {/* Sidebar Desktop */}
+      <aside className="hidden lg:flex w-80 bg-[#0f172a] text-white flex-col sticky top-0 h-screen shadow-2xl z-50">
+        <div className="p-10">
+          <div className="flex items-center gap-4 mb-16">
+            <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center font-black text-2xl shadow-lg shadow-blue-600/30">P</div>
+            <div className="flex flex-col">
+              <span className="font-black tracking-tight text-xl leading-none">PUNAKAWAN</span>
+              <span className="text-blue-500 text-[10px] font-black tracking-[0.2em] uppercase">Digital Studio</span>
+            </div>
+          </div>
+          
+          <nav className="space-y-4">
+            {[
+              { id: 'overview', label: 'Dashboard Utama', icon: LayoutDashboard },
+              { id: 'products', label: 'Layanan & Produk', icon: Briefcase },
+              { id: 'orders', label: 'Log Transaksi', icon: ShoppingCart },
+              { id: 'settings', label: 'Koneksi Cloud', icon: RefreshCw },
+            ].map((item) => (
+              <button
+                key={item.id}
+                onClick={() => setActiveTab(item.id as any)}
+                className={`w-full flex items-center gap-4 px-6 py-5 rounded-2xl text-sm font-bold transition-all ${
+                  activeTab === item.id 
+                    ? 'bg-blue-600 text-white shadow-xl shadow-blue-900/40 translate-x-2' 
+                    : 'text-slate-400 hover:bg-white/5 hover:text-white'
+                }`}
+              >
+                <item.icon size={20} />
+                {item.label}
+              </button>
+            ))}
+          </nav>
+        </div>
+        
+        <div className="mt-auto p-10 border-t border-white/5 bg-[#020617]/50">
+          <div className="flex items-center gap-4 mb-8">
+            <div className="w-12 h-12 rounded-2xl bg-slate-800 flex items-center justify-center border border-white/10">
+              <User size={24} className="text-blue-400" />
+            </div>
+            <div>
+              <p className="text-sm font-black">Main Admin</p>
+              <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Super User</p>
+            </div>
+          </div>
+          <button onClick={handleLogout} className="w-full flex items-center justify-center gap-3 py-4 rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white text-xs font-black transition-all group">
+            <LogOut size={16} className="group-hover:-translate-x-1 transition-transform" /> Sign Out
+          </button>
+        </div>
+      </aside>
+
+      {/* Main Content Area */}
+      <main className="flex-1 p-8 md:p-14 lg:p-20 overflow-y-auto">
+        <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-16 gap-6">
+          <div className="animate-fade-in-up">
+            <div className="flex items-center gap-2 text-blue-600 text-[10px] font-black uppercase tracking-[0.3em] mb-3">
+               <Zap size={14} fill="currentColor" /> Admin Control Panel v2.5
+            </div>
+            <h2 className="text-5xl font-black text-slate-900 capitalize tracking-tight">{activeTab}</h2>
+          </div>
+          <div className="flex items-center gap-4 bg-white p-3 rounded-2xl shadow-sm border border-slate-100 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+             <div className="hidden sm:flex px-4 py-2 items-center gap-3 text-slate-400 group">
+                <Search size={18} className="group-focus-within:text-blue-600 transition-colors" />
+                <input type="text" placeholder="Cari data klien..." className="bg-transparent border-none outline-none text-sm text-slate-800 font-bold w-48 placeholder:text-slate-300" />
+             </div>
+             <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center font-black border border-blue-100">A</div>
+          </div>
+        </header>
+
+        {activeTab === 'overview' && (
+          <div className="space-y-16 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-8">
+               {[
+                 { label: 'Revenue Hari Ini', value: 'Rp 1.45M', icon: BarChart3, color: 'blue', trend: '+14%', desc: '6 Transaksi baru' },
+                 { label: 'Total Pesanan', value: '156', icon: ShoppingCart, color: 'emerald', trend: '+12', desc: 'Bulan ini' },
+                 { label: 'Proyek Aktif', value: '24', icon: Globe, color: 'indigo', trend: 'Stabil', desc: 'Sesuai timeline' },
+                 { label: 'Buku Tamu Baru', value: '89', icon: Mail, color: 'amber', trend: '+45', desc: 'Last 24h' },
+               ].map((stat, i) => (
+                 <div key={i} className="bg-white p-10 rounded-[3rem] shadow-sm border border-slate-100 relative overflow-hidden group hover:shadow-2xl hover:shadow-blue-900/5 transition-all cursor-default">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-slate-50 rounded-full -mr-16 -mt-16 group-hover:bg-blue-50 transition-colors duration-500"></div>
+                    <div className={`w-16 h-16 bg-${stat.color}-50 text-${stat.color}-600 rounded-[1.5rem] flex items-center justify-center mb-8 relative z-10 shadow-sm`}>
+                      <stat.icon size={32} />
+                    </div>
+                    <p className="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] mb-2 relative z-10">{stat.label}</p>
+                    <div className="flex items-end justify-between relative z-10 mb-4">
+                      <h4 className="text-3xl font-black text-slate-900 tracking-tight">{stat.value}</h4>
+                      <span className="text-[10px] font-black text-emerald-500 bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-100">{stat.trend}</span>
+                    </div>
+                    <p className="text-slate-400 text-xs font-medium relative z-10">{stat.desc}</p>
+                 </div>
+               ))}
+            </div>
+
+            <div className="grid grid-cols-1 xl:grid-cols-3 gap-12">
+               <div className="xl:col-span-2 bg-white rounded-[3rem] border border-slate-100 p-12 shadow-sm">
+                 <div className="flex justify-between items-center mb-12">
+                    <div>
+                      <h3 className="text-2xl font-black text-slate-900">Transaksi Terkini</h3>
+                      <p className="text-sm text-slate-400 font-medium">Monitoring pengerjaan proyek kustom Punakawan.</p>
+                    </div>
+                    <button className="bg-blue-600 text-white px-6 py-3 rounded-2xl text-xs font-black hover:bg-blue-700 shadow-xl shadow-blue-200 transition-all flex items-center gap-2">
+                       <Plus size={16} /> Order Baru
+                    </button>
+                 </div>
+                 <div className="overflow-x-auto">
+                    <table className="w-full text-left">
+                      <thead>
+                        <tr className="text-slate-300 text-[10px] uppercase font-black border-b border-slate-50 tracking-[0.2em]">
+                          <th className="pb-8 font-black">Klien & Service</th>
+                          <th className="pb-8 font-black">Timeline</th>
+                          <th className="pb-8 font-black">Billing</th>
+                          <th className="pb-8 font-black">Aksi</th>
+                        </tr>
+                      </thead>
+                      <tbody className="text-sm">
+                        {[
+                          { id: '#PK-105', name: 'Rizky & Amanda', service: 'Wedding Invitation', status: 'Selesai', color: 'emerald', date: '12 Okt 2025' },
+                          { id: '#PK-104', name: 'Kec. Mantrijeron', service: 'E-Gov Portal', status: 'Produksi', color: 'blue', date: 'Estimasi 2mgg' },
+                          { id: '#PK-103', name: 'Kedai Kopi 48', service: 'QR Digital Menu', status: 'Pending', color: 'amber', date: 'Menunggu Payment' },
+                        ].map((row, i) => (
+                          <tr key={i} className="border-b border-slate-50 last:border-none group hover:bg-slate-50/50 transition-colors">
+                            <td className="py-7">
+                               <p className="font-black text-slate-800 text-base">{row.name}</p>
+                               <div className="flex items-center gap-2 text-[10px] text-slate-400 font-bold uppercase mt-1">
+                                 <span className="text-blue-500">{row.id}</span>
+                                 <span className="w-1 h-1 bg-slate-200 rounded-full"></span>
+                                 <span>{row.service}</span>
+                               </div>
+                            </td>
+                            <td className="py-7">
+                              <div className="flex flex-col">
+                                <span className="text-slate-600 font-bold text-xs">{row.date}</span>
+                                <div className="w-24 h-1.5 bg-slate-100 rounded-full mt-2 overflow-hidden">
+                                  <div className={`h-full bg-${row.color}-500 w-3/4`}></div>
+                                </div>
+                              </div>
+                            </td>
+                            <td className="py-7">
+                              <span className={`px-4 py-2 rounded-xl text-[9px] font-black uppercase bg-${row.color}-50 text-${row.color}-600 border border-${row.color}-100 shadow-sm`}>{row.status}</span>
+                            </td>
+                            <td className="py-7">
+                               <div className="flex gap-3">
+                                 <button className="w-10 h-10 bg-slate-50 text-slate-400 rounded-xl hover:text-blue-600 hover:bg-blue-50 transition-all flex items-center justify-center border border-slate-100"><Eye size={18} /></button>
+                                 <button className="w-10 h-10 bg-slate-50 text-slate-400 rounded-xl hover:text-emerald-600 hover:bg-emerald-50 transition-all flex items-center justify-center border border-slate-100"><Edit3 size={18} /></button>
+                               </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                 </div>
+               </div>
+
+               <div className="bg-white rounded-[3rem] border border-slate-100 p-12 shadow-sm flex flex-col relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-48 h-48 bg-blue-50/30 blur-[60px] rounded-full -mr-24 -mt-24"></div>
+                  <h3 className="text-2xl font-black text-slate-900 mb-2 relative z-10">Distribusi Produk</h3>
+                  <p className="text-sm text-slate-400 mb-12 font-medium relative z-10">Berdasarkan revenue per kategori.</p>
+                  
+                  <div className="space-y-10 flex-grow relative z-10">
+                    {[
+                      { label: 'Undangan Digital', percentage: 65, color: 'rose', icon: Heart },
+                      { label: 'Web Perusahaan', percentage: 20, color: 'blue', icon: Building2 },
+                      { label: 'Sistem Pemerintah', percentage: 10, color: 'indigo', icon: Landmark },
+                      { label: 'Pesan Antar', percentage: 5, color: 'amber', icon: Truck },
+                    ].map((p, i) => (
+                      <div key={i} className="space-y-4">
+                        <div className="flex justify-between items-center text-xs font-black uppercase tracking-widest">
+                          <div className="flex items-center gap-3">
+                            <div className={`w-8 h-8 bg-${p.color}-50 text-${p.color}-600 rounded-lg flex items-center justify-center border border-${p.color}-100`}>
+                              <p.icon size={16} />
+                            </div>
+                            <span className="text-slate-700">{p.label}</span>
+                          </div>
+                          <span className="text-blue-600 bg-blue-50 px-2 py-1 rounded-lg">{p.percentage}%</span>
+                        </div>
+                        <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden p-1">
+                          <div className={`h-full bg-${p.color}-500 rounded-full transition-all duration-1000`} style={{ width: `${p.percentage}%` }}></div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  <div className="mt-16 p-8 bg-slate-900 text-white rounded-[2.5rem] shadow-2xl relative z-10">
+                     <p className="text-[10px] font-black text-blue-400 uppercase tracking-[0.3em] mb-2">Target Monthly Revenue</p>
+                     <div className="flex items-center justify-between">
+                        <p className="text-2xl font-black tracking-tight">Rp 250.000.000</p>
+                        <Zap size={20} className="text-amber-400 fill-amber-400" />
+                     </div>
+                     <div className="w-full h-1.5 bg-white/10 rounded-full mt-6 overflow-hidden">
+                       <div className="h-full bg-blue-500 w-[72%]"></div>
+                     </div>
+                     <p className="text-[9px] text-white/40 mt-3 font-bold">Progress: 72% dari target pengerjaan proyek.</p>
+                  </div>
+               </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'products' && (
+          <div className="bg-white rounded-[4rem] border border-slate-100 p-12 md:p-20 animate-fade-in-up shadow-sm">
+            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8 mb-16">
+              <div className="flex flex-wrap gap-4 w-full lg:w-auto overflow-x-auto pb-4 custom-scrollbar">
+                {['Semua', 'Undangan', 'Pemerintah', 'Perusahaan', 'Pesan Antar'].map((cat, i) => (
+                  <button 
+                    key={i} 
+                    onClick={() => setProductCategory(cat)}
+                    className={`px-8 py-4 rounded-[1.5rem] text-xs font-black whitespace-nowrap transition-all border-2 ${
+                      productCategory === cat 
+                        ? 'bg-blue-600 text-white border-blue-600 shadow-2xl shadow-blue-200 -translate-y-1' 
+                        : 'bg-white text-slate-400 border-slate-100 hover:border-blue-200'
+                    }`}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+              <button className="w-full lg:w-auto px-10 py-5 bg-blue-600 text-white rounded-[1.5rem] font-black text-sm flex items-center justify-center gap-3 hover:bg-blue-700 shadow-2xl shadow-blue-200 transition-all active:scale-95 group">
+                <Plus size={20} className="group-hover:rotate-90 transition-transform" /> Tambah Layanan Baru
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10">
+              {filteredServices.map((prod, i) => (
+                <div key={i} className="p-10 border-2 border-slate-50 rounded-[3rem] hover:border-blue-500 transition-all group bg-white hover:shadow-2xl hover:shadow-blue-900/5 cursor-pointer flex flex-col animate-fade-in-up" style={{ animationDelay: `${i * 0.1}s` }}>
+                  <div className={`w-20 h-20 bg-${prod.color}-50 text-${prod.color}-600 rounded-[2rem] flex items-center justify-center mb-10 group-hover:scale-110 transition-transform duration-500 shadow-sm border border-${prod.color}-100`}>
+                    <prod.icon size={36} />
+                  </div>
+                  <div className="flex-grow">
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className={`text-[8px] font-black uppercase tracking-widest bg-${prod.color}-50 text-${prod.color}-600 px-3 py-1 rounded-full`}>{prod.category}</span>
+                    </div>
+                    <h4 className="font-black text-slate-900 text-2xl mb-4 leading-tight">{prod.title}</h4>
+                    <p className="text-slate-400 text-sm leading-relaxed mb-8 font-medium">{prod.desc}</p>
+                  </div>
+                  <div className="pt-10 border-t border-slate-50">
+                    <div className="flex justify-between items-end mb-8">
+                      <div>
+                        <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-1">Price Point</p>
+                        <p className="text-blue-600 font-black text-2xl">Rp {prod.price}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-1">Total Sales</p>
+                        <p className="text-slate-900 font-black text-lg">{prod.sales}</p>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                       <button className="py-4 bg-slate-50 text-slate-600 rounded-2xl font-black text-xs hover:bg-blue-50 hover:text-blue-600 transition-all flex items-center justify-center gap-2 border border-slate-100"><Edit3 size={16} /> Edit Data</button>
+                       <button className="py-4 bg-slate-50 text-slate-400 rounded-2xl font-black text-xs hover:bg-red-50 hover:text-red-500 transition-all flex items-center justify-center gap-2 border border-slate-100"><Trash2 size={16} /> Hapus</button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'settings' && (
+          <div className="max-w-4xl animate-fade-in-up space-y-12">
+             <div className="bg-white rounded-[4rem] border border-slate-100 p-16 shadow-sm">
+               <div className="flex items-center gap-4 mb-12">
+                  <div className="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center">
+                    <RefreshCw size={28} />
+                  </div>
+                  <div>
+                    <h3 className="text-3xl font-black text-slate-900">Konfigurasi Cloud</h3>
+                    <p className="text-sm text-slate-400 font-medium">Sinkronisasi database spreadsheet Punakawan Digital.</p>
+                  </div>
+               </div>
+
+               <div className="space-y-10">
+                  <div className="space-y-4">
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] flex items-center gap-3 ml-2">
+                      <LinkIcon size={14} /> Google Apps Script Web App Endpoint
+                    </label>
+                    <div className="flex flex-col sm:flex-row gap-4">
+                      <input 
+                        type="text" 
+                        placeholder="https://script.google.com/macros/s/..." 
+                        className="flex-1 p-6 bg-slate-50 border-2 border-slate-100 rounded-3xl text-sm font-mono focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all"
+                      />
+                      <button className="px-10 py-6 bg-blue-600 text-white rounded-3xl font-black text-sm shadow-2xl shadow-blue-200 hover:bg-blue-700 transition-all active:scale-95">Update Endpoint</button>
+                    </div>
+                  </div>
+                  
+                  <div className="p-10 bg-slate-50 rounded-[3rem] border-2 border-slate-100 grid grid-cols-1 md:grid-cols-2 gap-10">
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-3 text-emerald-600 font-black text-xs uppercase tracking-widest">
+                        <Check size={18} /> Database Online
+                      </div>
+                      <p className="text-sm text-slate-600 leading-relaxed font-medium">Sheet Utama: <strong className="text-slate-900">Punakawan_Central_DB</strong></p>
+                      <p className="text-xs text-slate-400">Menyimpan data client, order, dan setting undangan digital.</p>
+                    </div>
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-3 text-blue-600 font-black text-xs uppercase tracking-widest">
+                        <Zap size={18} fill="currentColor" /> Real-time Sync
+                      </div>
+                      <p className="text-sm text-slate-600 font-medium">Update Terakhir: <strong className="text-slate-900">4 menit yang lalu</strong></p>
+                      <p className="text-xs text-slate-400">Seluruh data terenkripsi end-to-end via HTTPS.</p>
+                    </div>
+                  </div>
+
+                  <div className="pt-10 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-6">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center">
+                        <ShieldCheck size={24} />
+                      </div>
+                      <div>
+                        <p className="text-sm font-black text-slate-900">Admin PIN Access</p>
+                        <p className="text-xs text-slate-400 font-medium">Ganti PIN otoritas masuk sistem.</p>
+                      </div>
+                    </div>
+                    <button className="px-8 py-4 bg-white border-2 border-slate-100 rounded-2xl font-black text-xs text-slate-600 hover:border-blue-600 hover:text-blue-600 transition-all">Ganti PIN Sekarang</button>
+                  </div>
+               </div>
+             </div>
+             
+             <div className="bg-slate-900 rounded-[4rem] p-16 shadow-2xl flex flex-col md:flex-row items-center gap-10">
+                <div className="w-20 h-20 bg-white/10 rounded-[2rem] flex items-center justify-center text-blue-400">
+                  <RefreshCw size={36} />
+                </div>
+                <div className="flex-1 text-center md:text-left">
+                  <h3 className="text-2xl font-black text-white mb-3">Backup Data Central</h3>
+                  <p className="text-white/40 text-sm font-medium mb-0">Unduh seluruh salinan database Punakawan Studio dalam format JSON atau CSV untuk arsip manual.</p>
+                </div>
+                <button className="flex items-center gap-4 px-10 py-6 bg-white text-slate-900 rounded-[1.5rem] font-black text-sm hover:bg-blue-400 hover:text-white transition-all shadow-xl shadow-white/5 active:scale-95">
+                  Download All Archives
+                </button>
+             </div>
+          </div>
+        )}
+      </main>
+      
+      {/* Mobile Footer Navigation - Centered Pill */}
+      <nav className="lg:hidden fixed bottom-8 left-1/2 -translate-x-1/2 w-[85%] bg-white/90 backdrop-blur-2xl border border-white/20 rounded-[2.5rem] p-3 flex justify-between items-center z-50 shadow-[0_25px_50px_-12px_rgba(59,130,246,0.3)]">
+        {[
+          { id: 'overview', icon: LayoutDashboard },
+          { id: 'products', icon: Briefcase },
+          { id: 'orders', icon: ShoppingCart },
+          { id: 'settings', icon: Settings },
+        ].map((item) => (
+          <button 
+            key={item.id}
+            onClick={() => setActiveTab(item.id as any)}
+            className={`p-5 rounded-[1.5rem] transition-all relative ${activeTab === item.id ? 'bg-blue-600 text-white shadow-2xl shadow-blue-600/40' : 'text-slate-400 hover:text-slate-600'}`}
+          >
+            <item.icon size={22} />
+            {activeTab === item.id && <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 border-2 border-white rounded-full"></span>}
+          </button>
+        ))}
+      </nav>
+      
+      <style>{`
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+      `}</style>
+    </div>
+  );
+};
 
 // --- INVITATION CATALOG PAGE ---
 const InvitationCatalog: React.FC = () => {
@@ -230,15 +671,8 @@ const InvitationCatalog: React.FC = () => {
                     </button>
                   </div>
                 </div>
-                <div className="p-6 flex flex-col flex-grow">
-                  <div className="flex justify-between items-start mb-2">
-                    <h3 className="text-[#8B4C50] font-bold text-lg">{theme.name}</h3>
-                    <div className="flex items-center text-yellow-500">
-                      <Star size={14} fill="currentColor" />
-                      <span className="text-xs ml-1 font-bold text-slate-400">5.0</span>
-                    </div>
-                  </div>
-                  <p className="text-slate-500 text-xs leading-relaxed mb-4 flex-grow">{theme.desc}</p>
+                <div className="p-6 flex flex-col flex-grow text-center">
+                  <h3 className="text-[#8B4C50] font-bold text-lg mb-4">{theme.name}</h3>
                   <div className="mb-6">
                     <p className="text-red-400 line-through text-xs">Rp {theme.originalPrice.toLocaleString('id-ID')}</p>
                     <p className="text-[#8B4C50] font-bold text-2xl">Rp {theme.price.toLocaleString('id-ID')}</p>
@@ -246,15 +680,15 @@ const InvitationCatalog: React.FC = () => {
                   <div className="grid grid-cols-2 gap-3">
                     <button 
                       onClick={() => navigateTo("/undangan/hani-pupud")}
-                      className="py-3 px-2 border border-[#C07E81] text-[#C07E81] rounded-2xl font-bold text-[10px] uppercase hover:bg-[#FFE5E0] transition-all"
+                      className="py-3 border border-[#C07E81] text-[#C07E81] rounded-2xl font-bold text-[10px] uppercase hover:bg-[#FFE5E0] transition-all"
                     >
-                      Lihat Contoh
+                      Contoh
                     </button>
                     <button 
                       onClick={() => addToCart(theme)}
-                      className="py-3 px-2 bg-[#C07E81] text-white rounded-2xl font-bold text-[10px] uppercase shadow-md hover:bg-[#8B4C50] transition-all flex items-center justify-center gap-2"
+                      className="py-3 bg-[#C07E81] text-white rounded-2xl font-bold text-[10px] uppercase shadow-md hover:bg-[#8B4C50] transition-all"
                     >
-                      <ShoppingCart size={14} /> Pesan
+                      Pesan
                     </button>
                   </div>
                 </div>
@@ -325,12 +759,13 @@ const InvitationCatalog: React.FC = () => {
                 </a>
               </div>
               <p className="text-[10px] opacity-60 font-bold uppercase tracking-widest">Copyright ©2024 Punakawan Digital</p>
+              <button onClick={() => navigateTo('/admin')} className="mt-8 text-white/20 text-[8px] hover:text-white transition-colors">Admin Login</button>
             </div>
           </ScrollReveal>
         </div>
       </section>
 
-      {/* Cart Modal / Slide-over */}
+      {/* Cart Drawer */}
       {isCartOpen && (
         <div className="fixed inset-0 z-[100] bg-black/40 backdrop-blur-sm flex justify-end">
           <div className="w-full max-w-md bg-white h-full shadow-2xl flex flex-col animate-fade-in-left">
@@ -357,7 +792,7 @@ const InvitationCatalog: React.FC = () => {
                     <div className="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0">
                       <img src={item.item.img} className="w-full h-full object-cover" alt={item.item.name} />
                     </div>
-                    <div className="flex-1 flex flex-col">
+                    <div className="flex-1 flex flex-col text-left">
                       <div className="flex justify-between items-start mb-1">
                         <h4 className="font-bold text-slate-800 text-sm">{item.item.name}</h4>
                         <button onClick={() => removeFromCart(item.item.id)} className="text-slate-300 hover:text-red-500 transition-colors">
@@ -371,7 +806,6 @@ const InvitationCatalog: React.FC = () => {
                           <span className="px-3 text-xs font-bold">{item.qty}</span>
                           <button onClick={() => updateQty(item.item.id, 1)} className="p-1 hover:bg-slate-50 border-l"><Plus size={14} /></button>
                         </div>
-                        <span className="text-[10px] text-slate-400 italic">Subtotal: Rp {(item.item.price * item.qty).toLocaleString('id-ID')}</span>
                       </div>
                     </div>
                   </div>
@@ -382,44 +816,20 @@ const InvitationCatalog: React.FC = () => {
             {cart.length > 0 && (
               <div className="p-6 border-t bg-slate-50">
                 <div className="flex justify-between items-center mb-6">
-                  <span className="text-slate-500 font-medium">Total Estimasi</span>
+                  <span className="text-slate-500 font-medium text-sm uppercase font-bold tracking-widest">Subtotal</span>
                   <span className="text-2xl font-bold text-[#8B4C50]">Rp {totalPrice.toLocaleString('id-ID')}</span>
                 </div>
                 <button 
                   onClick={checkoutWhatsApp}
-                  className="w-full bg-[#25D366] text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-3 shadow-lg hover:bg-[#128C7E] transition-all active:scale-95"
+                  className="w-full bg-[#25D366] text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-3 shadow-lg hover:bg-[#128C7E] transition-all"
                 >
-                  <Send size={18} /> Pesan Sekarang (WhatsApp)
+                  <Send size={18} /> Checkout via WhatsApp
                 </button>
-                <p className="text-[10px] text-slate-400 text-center mt-4">Pemesanan akan dilanjutkan melalui percakapan WhatsApp</p>
               </div>
             )}
           </div>
         </div>
       )}
-
-      {/* Floating Action Buttons */}
-      <div className="fixed bottom-6 right-6 flex flex-col gap-4 z-50">
-        <button 
-          onClick={() => setIsCartOpen(true)}
-          className="w-14 h-14 bg-[#C07E81] text-white rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-all border-4 border-white relative"
-        >
-          <ShoppingCart size={24} />
-          {cart.length > 0 && (
-            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] w-6 h-6 rounded-full flex items-center justify-center border-2 border-white font-bold">
-              {cart.length}
-            </span>
-          )}
-        </button>
-        <a 
-          href="https://wa.me/6281234567890" 
-          target="_blank" 
-          rel="noopener noreferrer" 
-          className="w-14 h-14 bg-green-500 text-white rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-all border-4 border-white"
-        >
-          <Phone size={24} fill="currentColor" />
-        </a>
-      </div>
     </div>
   );
 };
@@ -457,9 +867,9 @@ const LandingPage: React.FC = () => {
         </div>
       </nav>
 
-      <section className="relative pt-32 pb-20 px-6 overflow-hidden">
+      <section className="relative pt-32 pb-20 px-6 overflow-hidden text-center">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-blue-600/20 blur-[120px] rounded-full -z-10 opacity-30"></div>
-        <div className="max-w-7xl mx-auto text-center">
+        <div className="max-w-7xl mx-auto">
           <ScrollReveal direction="up">
             <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2 rounded-full text-xs font-bold text-blue-400 mb-8 uppercase tracking-widest">
               <Zap size={14} /> Solusi Digital Masa Depan
@@ -479,7 +889,7 @@ const LandingPage: React.FC = () => {
                 const el = document.getElementById('services');
                 el?.scrollIntoView({ behavior: 'smooth' });
               }}>
-                Lihat Karya Kami
+                Lihat Layanan
               </button>
             </div>
           </ScrollReveal>
@@ -489,8 +899,8 @@ const LandingPage: React.FC = () => {
       <section id="services" className="py-24 px-6 bg-slate-950/50">
         <div className="max-w-7xl mx-auto">
           <ScrollReveal direction="up" className="text-center mb-20">
-            <h2 className="text-sm font-bold text-blue-500 uppercase tracking-[0.3em] mb-4">Layanan Kami</h2>
-            <p className="text-3xl md:text-4xl font-bold mb-6">Solusi IT Terintegrasi untuk Segala Kebutuhan</p>
+            <h2 className="text-sm font-bold text-blue-500 uppercase tracking-[0.3em] mb-4 text-center">Layanan Kami</h2>
+            <p className="text-3xl md:text-4xl font-bold mb-6 text-center">Solusi IT Terintegrasi untuk Segala Kebutuhan</p>
             <div className="w-20 h-1 bg-blue-600 mx-auto rounded-full"></div>
           </ScrollReveal>
 
@@ -504,20 +914,15 @@ const LandingPage: React.FC = () => {
                   <h3 className="text-xl font-bold mb-4">{s.title}</h3>
                   <p className="text-slate-400 text-sm leading-relaxed mb-8 flex-grow">{s.desc}</p>
                   {s.link ? (
-                    <a 
-                      href={s.link} 
-                      target={s.link.startsWith('http') ? "_blank" : "_self"}
-                      rel={s.link.startsWith('http') ? "noopener noreferrer" : ""}
-                      onClick={(e) => {
-                        if (!s.link.startsWith('http')) {
-                          e.preventDefault();
-                          navigateTo(s.link);
-                        }
+                    <button 
+                      onClick={() => {
+                        if (s.link.startsWith('http')) window.open(s.link, '_blank');
+                        else navigateTo(s.link);
                       }}
-                      className="flex items-center gap-2 text-blue-500 font-bold text-sm hover:underline cursor-pointer"
+                      className="flex items-center gap-2 text-blue-500 font-bold text-sm hover:underline cursor-pointer text-left"
                     >
                       Lihat Contoh <ArrowRight size={16} />
-                    </a>
+                    </button>
                   ) : (
                     <div className="text-slate-600 text-xs italic font-medium">Coming Soon</div>
                   )}
@@ -530,6 +935,7 @@ const LandingPage: React.FC = () => {
 
       <footer className="py-12 border-t border-white/5 text-center text-slate-500 text-sm">
         <p>&copy; 2025 Vell Digital. All rights reserved.</p>
+        <button onClick={() => navigateTo('/admin')} className="mt-4 opacity-10 hover:opacity-100 transition-opacity text-[8px] uppercase tracking-widest">Admin Login</button>
       </footer>
     </div>
   );
@@ -540,8 +946,6 @@ const WeddingInvitation: React.FC = () => {
   const [weddingData, setWeddingData] = useState<WeddingData | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [isDashboardOpen, setIsDashboardOpen] = useState(false);
-  const [showPinPrompt, setShowPinPrompt] = useState(false);
-  const [pinInput, setPinInput] = useState("");
   const [guestName, setGuestName] = useState('Tamu Undangan');
 
   useEffect(() => {
@@ -557,10 +961,9 @@ const WeddingInvitation: React.FC = () => {
     const params = new URLSearchParams(window.location.search);
     const to = params.get('to');
     if (to) setGuestName(to);
-    if (params.get('admin') === 'true') setShowPinPrompt(true);
   }, []);
 
-  if (!weddingData) return <div className="h-screen flex items-center justify-center bg-white"><Loader2 className="animate-spin text-blue-900" /></div>;
+  if (!weddingData) return <div className="h-screen flex items-center justify-center bg-white font-sans"><Loader2 className="animate-spin text-blue-900" /></div>;
 
   const FloralCorner = ({ position }: { position: string }) => {
     const styles: any = {
@@ -576,47 +979,20 @@ const WeddingInvitation: React.FC = () => {
     );
   };
 
-  const handlePinSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (pinInput === ADMIN_PIN) {
-      setShowPinPrompt(false);
-      setIsDashboardOpen(true);
-      setPinInput("");
-    } else {
-      alert("PIN Salah");
-      setPinInput("");
-    }
-  };
-
   if (isDashboardOpen) return <Dashboard data={weddingData} onUpdate={setWeddingData} onClose={() => setIsDashboardOpen(false)} />;
-
-  if (showPinPrompt) {
-    return (
-      <div className="fixed inset-0 z-[200] flex items-center justify-center bg-slate-900/80 backdrop-blur-sm p-4">
-        <div className="bg-white rounded-3xl p-6 w-full max-w-[360px] shadow-2xl">
-          <h2 className="text-2xl font-bold text-slate-800 mb-2">Akses Dasbor</h2>
-          <form onSubmit={handlePinSubmit} className="space-y-4">
-            <input type="password" placeholder="Masukkan PIN" autoFocus value={pinInput} onChange={e => setPinInput(e.target.value)} className="w-full p-4 bg-slate-50 border rounded-2xl text-center text-xl tracking-widest outline-none focus:ring-2 focus:ring-blue-500" />
-            <button type="submit" className="w-full bg-blue-900 text-white py-4 rounded-2xl font-bold uppercase tracking-widest text-sm shadow-lg">Masuk Dasbor</button>
-            <button onClick={() => setShowPinPrompt(false)} className="w-full text-slate-400 text-xs mt-2">Batal</button>
-          </form>
-        </div>
-      </div>
-    );
-  }
 
   if (!isOpen) {
     return (
-      <div className="max-w-[480px] w-full mx-auto h-screen bg-watercolor relative overflow-hidden flex flex-col justify-end pb-16 px-8">
+      <div className="max-w-[480px] w-full mx-auto h-screen bg-watercolor relative overflow-hidden flex flex-col justify-end pb-16 px-8 font-sans">
         <div className="absolute inset-0 z-0" style={{ backgroundImage: `url('${getDriveMediaUrl(weddingData.assets.splashBg)}')`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
         <div className="absolute inset-0 bg-gradient-to-t from-white via-white/40 to-transparent"></div>
         <FloralCorner position="top-left" />
         <FloralCorner position="top-right" />
-        <div className="z-10 animate-fade-in-up">
+        <div className="z-10 animate-fade-in-up text-center">
             <p className="text-slate-600 font-serif font-bold text-sm mb-2">The Wedding of</p>
             <h1 className="text-5xl font-serif text-blue-900 mb-8">{weddingData.coupleShortName}</h1>
             <h2 className="text-slate-800 text-2xl font-serif mb-6 capitalize">{guestName}</h2>
-            <button onClick={() => setIsOpen(true)} className="flex items-center gap-3 bg-blue-900 text-white px-6 py-3 rounded-full shadow-xl font-bold text-sm"><Mail size={16} /> Buka Undangan</button>
+            <button onClick={() => setIsOpen(true)} className="flex items-center gap-3 bg-blue-900 text-white px-8 py-4 rounded-full shadow-xl font-bold text-sm mx-auto"><Mail size={16} /> Buka Undangan</button>
         </div>
       </div>
     );
@@ -664,7 +1040,7 @@ const WeddingInvitation: React.FC = () => {
                           <MapPin className="text-red-400 w-8 h-8 mx-auto mb-4" />
                           <h4 className="font-bold text-slate-800 text-base mb-2">{event.location}</h4>
                           <p className="text-xs text-slate-500 mb-8">{event.address}</p>
-                          <a href={event.mapsUrl} target="_blank" rel="noopener noreferrer" className="block w-full bg-blue-900 text-white py-3 rounded-xl font-bold uppercase text-[10px]">Navigasi Peta</a>
+                          <a href={event.mapsUrl} target="_blank" rel="noopener noreferrer" className="block w-full bg-blue-900 text-white py-3 rounded-xl font-bold uppercase text-[10px] tracking-widest">Navigasi Peta</a>
                       </div>
                   </ScrollReveal>
               ))}
@@ -691,6 +1067,9 @@ const App: React.FC = () => {
     return () => window.removeEventListener('popstate', handleLocationChange);
   }, []);
 
+  if (currentPath === '/admin') {
+    return <AdminPage />;
+  }
   if (currentPath === '/undangan') {
     return <InvitationCatalog />;
   }

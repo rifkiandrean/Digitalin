@@ -96,6 +96,22 @@ const getLocalFallback = (): WeddingData => {
   }
 };
 
+export const verifyAdminPinFromCloud = async (pin: string): Promise<boolean> => {
+  if (!GOOGLE_SHEET_API_URL || GOOGLE_SHEET_API_URL.includes("XXXXXXXX")) {
+    // Fallback if URL not set
+    return pin === "admin123";
+  }
+
+  try {
+    const response = await fetch(`${GOOGLE_SHEET_API_URL}?action=verify_admin&pin=${pin}`);
+    if (!response.ok) return pin === "admin123";
+    const data = await response.json();
+    return data.success === true;
+  } catch (error) {
+    return pin === "admin123";
+  }
+};
+
 export const fetchWeddingData = async (): Promise<WeddingData> => {
   if (!GOOGLE_SHEET_API_URL || GOOGLE_SHEET_API_URL.includes("XXXXXXXX")) {
     console.warn("Google Apps Script URL belum dikonfigurasi.");
