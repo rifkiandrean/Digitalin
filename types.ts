@@ -41,25 +41,6 @@ export interface GuestMessage {
   timestamp: string;
 }
 
-export interface InvitationTheme {
-  id: string;
-  name: string;
-  category: string;
-  originalPrice: number;
-  price: number;
-  desc: string;
-  img: string;
-  previewUrl: string;
-}
-
-export interface CatalogConfig {
-  heroTitle: string;
-  heroSubtitle: string;
-  heroImages: string[];
-  categories: string[];
-  themes: InvitationTheme[];
-}
-
 export interface WeddingData {
   groomName: string;
   brideName: string;
@@ -71,10 +52,10 @@ export interface WeddingData {
   weddingDate: string;
   turutMengundang: string[];
   assets: {
-    floralCorner: string;
-    floralCornerMid: string; 
-    floralCornerBack: string; 
-    floralSide: string; 
+    floralCorner: string; // Bunga Utama (Depan)
+    floralCornerMid: string; // Bunga Tengah
+    floralCornerBack: string; // Bunga Belakang
+    floralSide: string; // Bunga Samping (Baru)
     heroImage: string;
     bridePhoto: string;
     groomPhoto: string;
@@ -89,5 +70,4 @@ export interface WeddingData {
   bankAccounts: BankInfo[];
   wishlist: WishlistItem[];
   audioUrl: string;
-  catalogConfig?: CatalogConfig;
 }
