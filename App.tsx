@@ -154,27 +154,47 @@ const App: React.FC = () => {
     } catch (e) { return dateStr; }
   };
 
-  const getBankLogo = (bankName: string) => {
-    const name = bankName.toLowerCase();
-    if (name.includes('bca')) return "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Bank_Central_Asia.svg/1200px-Bank_Central_Asia.svg.png";
-    if (name.includes('mandiri')) return "https://upload.wikimedia.org/wikipedia/id/thumb/a/ad/Bank_Mandiri_logo_2016.svg/2560px-Bank_Mandiri_logo_2016.svg.png";
-    return null;
-  };
-
   const getSectionStyle = (url?: string) => {
     if (!url) return {};
     return { backgroundImage: `url('${getDriveMediaUrl(url)}')`, backgroundSize: 'cover', backgroundPosition: 'center' };
   };
 
   const FloralCorner = ({ position }: { position: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' }) => {
-    const styles: Record<string, string> = { 'top-left': '-top-10 -left-10', 'top-right': '-top-10 -right-10 scale-x-[-1]', 'bottom-left': '-bottom-10 -left-10 scale-y-[-1]', 'bottom-right': '-bottom-10 -right-10 scale-x-[-1] scale-y-[-1]' };
+    const styles: Record<string, string> = { 
+      'top-left': '-top-12 -left-12', 
+      'top-right': '-top-12 -right-12 scale-x-[-1]', 
+      'bottom-left': '-bottom-12 -left-12 scale-y-[-1]', 
+      'bottom-right': '-bottom-12 -right-12 scale-x-[-1] scale-y-[-1]' 
+    };
+
     return (
-      <div className={`absolute pointer-events-none select-none z-30 w-48 h-48 md:w-64 md:h-64 ${styles[position]}`}>
-        <div className="absolute inset-0 transform scale-x-[-1.25] scale-y-125 translate-x-4 translate-y-4 opacity-30">
-            <img src={getDriveMediaUrl(weddingData.assets.floralCornerBack || weddingData.assets.floralCorner)} alt="floral-back" className="w-full h-full object-contain animate-floral-sway blur-[1px]" />
+      <div className={`absolute pointer-events-none select-none z-30 w-56 h-56 md:w-72 md:h-72 ${styles[position]}`}>
+        {/* BACK LAYER */}
+        <div className="absolute inset-0 transform scale-[1.3] opacity-20 blur-[1px]">
+            <img 
+              src={getDriveMediaUrl(weddingData.assets.floralCornerBack || weddingData.assets.floralCorner)} 
+              alt="floral-back" 
+              className="w-full h-full object-contain animate-floral-sway-gentle rotate-[15deg] translate-x-4 translate-y-4" 
+            />
         </div>
-        <div className="absolute inset-0 opacity-100 drop-shadow-sm">
-            <img src={getDriveMediaUrl(weddingData.assets.floralCorner)} alt="floral-front" className="w-full h-full object-contain animate-floral-sway" />
+        
+        {/* MID LAYER */}
+        <div className="absolute inset-0 transform scale-[1.15] opacity-40">
+            <img 
+              src={getDriveMediaUrl(weddingData.assets.floralCornerMid || weddingData.assets.floralCorner)} 
+              alt="floral-mid" 
+              className="w-full h-full object-contain animate-floral-sway-gentle -rotate-[8deg] translate-x-2 translate-y-2" 
+              style={{ animationDelay: '-1.5s' }}
+            />
+        </div>
+
+        {/* FRONT LAYER */}
+        <div className="absolute inset-0 opacity-100 drop-shadow-xl">
+            <img 
+              src={getDriveMediaUrl(weddingData.assets.floralCorner)} 
+              alt="floral-front" 
+              className="w-full h-full object-contain animate-floral-sway" 
+            />
         </div>
       </div>
     );
