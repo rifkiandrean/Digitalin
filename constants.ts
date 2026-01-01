@@ -7,19 +7,19 @@ const GOOGLE_SHEET_API_URL = "https://script.google.com/macros/s/AKfycbwEmoyg1Mv
 // Link Embed default untuk Masjid Agung Kota Kediri
 const DEFAULT_MAPS_EMBED = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3952.936553835694!2d112.0116847!3d-7.8176885!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e785706598379c1%3A0xe5a3637e676100a7!2sMasjid%20Agung%20Kota%20Kediri!5e0!3m2!1sid!2sid!4v1710000000000!5m2!1sid!2sid";
 
-// Default Data
+// Default Data untuk Hani & Pupud
 export const DEFAULT_WEDDING_DATA: WeddingData = {
-  groomName: "Rizky Ramadhan",
-  brideName: "Amanda Syifa Putri",
+  groomName: "Pupud Ardianto",
+  brideName: "Hani Fatimatuzzahra",
   groomParents: "Bapak & Ibu Keluarga Pria",
   brideParents: "Bapak & Ibu Keluarga Wanita",
   groomInstagram: "https://instagram.com/",
   brideInstagram: "https://instagram.com/",
-  coupleShortName: "Rizky & Amanda",
-  weddingDate: "2025-10-12T09:00:00",
+  coupleShortName: "Hani & Pupud",
+  weddingDate: "2026-05-16T09:00:00",
   turutMengundang: [
-    "Keluarga Besar Bpk. Ahmad (Kediri)",
-    "Keluarga Besar Bpk. Yusuf (Surabaya)",
+    "Keluarga Besar Bpk. Ahmad",
+    "Keluarga Besar Bpk. Yusuf",
     "Segenap Kerabat & Sahabat"
   ],
   assets: {
@@ -27,10 +27,10 @@ export const DEFAULT_WEDDING_DATA: WeddingData = {
     floralCornerMid: "https://i.ibb.co/Lz0xYm8/floral-corner-refined.png", 
     floralCornerBack: "https://i.ibb.co/Lz0xYm8/floral-corner-refined.png", 
     floralSide: "https://i.ibb.co/Lz0xYm8/floral-corner-refined.png", 
-    heroImage: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=800",
-    bridePhoto: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=500",
-    groomPhoto: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=500",
-    splashBg: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=1080",
+    heroImage: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=1080",
+    bridePhoto: "https://images.unsplash.com/photo-1523438885200-e635ba2c371e?auto=format&fit=crop&q=80&w=500",
+    groomPhoto: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=500",
+    splashBg: "https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&q=80&w=1080",
     coupleBg: "",
     eventsBg: "",
     galleryBg: "",
@@ -45,19 +45,19 @@ export const DEFAULT_WEDDING_DATA: WeddingData = {
   events: [
     {
       title: 'Akad Nikah',
-      date: '2025-10-12',
+      date: '2026-05-16',
       time: '08.00 - 10.00 WIB',
-      location: 'Masjid Agung Kota',
-      address: 'Jl. Pahlawan No. 1, Kediri, Jawa Timur',
+      location: 'Masjid Raya',
+      address: 'Jl. Utama No. 123, Kota Bahagia',
       mapsUrl: 'https://maps.app.goo.gl/sNJBfN491XT8BG2G6',
       mapsEmbedUrl: DEFAULT_MAPS_EMBED
     },
     {
       title: 'Resepsi Pernikahan',
-      date: '2025-10-12',
+      date: '2026-05-16',
       time: '11.00 - 14.00 WIB',
-      location: 'Grand Ballroom Hotel',
-      address: 'Jl. Sudirman Kav. 12, Kediri, Jawa Timur',
+      location: 'Aula Serbaguna',
+      address: 'Jl. Pemuda No. 45, Kota Bahagia',
       mapsUrl: 'https://maps.app.goo.gl/sNJBfN491XT8BG2G6',
       mapsEmbedUrl: DEFAULT_MAPS_EMBED
     }
@@ -66,13 +66,13 @@ export const DEFAULT_WEDDING_DATA: WeddingData = {
     {
       bankName: "BCA",
       accountNumber: "1234567890",
-      accountHolder: "Rizky Ramadhan",
+      accountHolder: "Hani Fatimatuzzahra",
     }
   ],
   wishlist: [
     { name: "Coffee Maker", description: "Untuk menemani pagi kami" }
   ],
-  audioUrl: "/musik.mp3"
+  audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
 };
 
 // Helper: Convert Google Drive links to usable URLs
@@ -98,7 +98,6 @@ const getLocalFallback = (): WeddingData => {
 
 export const fetchWeddingData = async (): Promise<WeddingData> => {
   if (!GOOGLE_SHEET_API_URL || GOOGLE_SHEET_API_URL.includes("XXXXXXXX")) {
-    console.warn("Google Apps Script URL belum dikonfigurasi.");
     return getLocalFallback();
   }
 

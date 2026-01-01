@@ -1,6 +1,7 @@
+
 {
-  "short_name": "Wedding",
-  "name": "Undangan Pernikahan Rizky & Amanda",
+  "short_name": "HaniPupud",
+  "name": "Undangan Pernikahan Hani & Pupud",
   "icons": [
     {
       "src": "https://i.ibb.co/Lz0xYm8/floral-corner-refined.png",
@@ -13,7 +14,7 @@
       "type": "image/png"
     }
   ],
-  "start_url": ".",
+  "start_url": "/undangan/hani-pupud",
   "display": "standalone",
   "theme_color": "#1e3a8a",
   "background_color": "#fdfaf7"

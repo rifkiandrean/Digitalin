@@ -6,10 +6,24 @@ import FloatingMusic from './components/FloatingMusic';
 import Dashboard from './components/Dashboard';
 import ScrollReveal from './components/ScrollReveal';
 import GuestBook from './components/GuestBook';
+import LandingPage from './components/LandingPage';
+import ServiceDetail from './components/ServiceDetail';
 import { fetchWeddingData, getDriveMediaUrl, DEFAULT_WEDDING_DATA } from './constants';
 import { WeddingData } from './types';
 
 const ADMIN_PIN = "hanipupud2026";
+
+// Daftar rute layanan yang didukung
+const SERVICE_PATHS = [
+  "/website-perusahaan",
+  "/website-pemerintahan",
+  "/retail-pos",
+  "/qr-menu",
+  "/undangan",
+  "/ulang-tahun",
+  "/e-commerce",
+  "/food-delivery"
+];
 
 // Helper to format date string from YYYY-MM-DD to Indonesian Long Date
 const formatEventDate = (dateStr: string) => {
@@ -45,6 +59,7 @@ const getBankLogo = (bankName: string) => {
 };
 
 const App: React.FC = () => {
+  const [currentPath, setCurrentPath] = useState(window.location.pathname);
   const [weddingData, setWeddingData] = useState<WeddingData | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [isDashboardOpen, setIsDashboardOpen] = useState(false);
@@ -57,31 +72,59 @@ const App: React.FC = () => {
   const giftSectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    const initData = async () => {
-      try {
-        const data = await fetchWeddingData();
-        setWeddingData({
-            ...DEFAULT_WEDDING_DATA,
-            ...data,
-            assets: {
-                ...DEFAULT_WEDDING_DATA.assets,
-                ...data.assets
-            }
-        });
-      } catch (err) {
-        setWeddingData(DEFAULT_WEDDING_DATA);
-      }
+    // Listen for path changes
+    const handleLocationChange = () => {
+      setCurrentPath(window.location.pathname);
     };
-    initData();
-
-    const params = new URLSearchParams(window.location.search);
-    const to = params.get('to');
-    if (to) setGuestName(to);
+    window.addEventListener('popstate', handleLocationChange);
     
-    if (params.get('admin') === 'true') {
-      setShowPinPrompt(true);
+    const isWeddingPath = window.location.pathname === '/undangan/hani-pupud';
+    
+    if (isWeddingPath) {
+      document.title = "Undangan Hani & Pupud";
+      const initData = async () => {
+        try {
+          const data = await fetchWeddingData();
+          setWeddingData({
+              ...DEFAULT_WEDDING_DATA,
+              ...data,
+              assets: {
+                  ...DEFAULT_WEDDING_DATA.assets,
+                  ...data.assets
+              }
+          });
+        } catch (err) {
+          setWeddingData(DEFAULT_WEDDING_DATA);
+        }
+      };
+      initData();
+
+      const params = new URLSearchParams(window.location.search);
+      const to = params.get('to');
+      if (to) setGuestName(to);
+      
+      if (params.get('admin') === 'true') {
+        setShowPinPrompt(true);
+      }
+    } else if (SERVICE_PATHS.includes(window.location.pathname)) {
+        document.title = "Layanan Kami - Vell Digital";
+    } else {
+      document.title = "Vell Digital Service - Modern Digital Solution";
     }
-  }, []);
+
+    return () => window.removeEventListener('popstate', handleLocationChange);
+  }, [currentPath]);
+
+  // Route Handling
+  if (currentPath === '/undangan/hani-pupud') {
+    // Render Wedding Invitation below
+  } else if (SERVICE_PATHS.includes(currentPath)) {
+    return <ServiceDetail path={currentPath} />;
+  } else {
+    return <LandingPage />;
+  }
+
+  // --- Wedding Invitation Logic Below ---
 
   useEffect(() => {
     if (!weddingData) return;
@@ -602,7 +645,7 @@ const App: React.FC = () => {
             </button>
             
             <div className="space-y-2">
-              <div className="text-[8px] tracking-[0.4em] text-slate-300 uppercase font-black">Digital Invitation • 2025</div>
+              <div className="text-[8px] tracking-[0.4em] text-slate-300 uppercase font-black">Digital Invitation • 2026</div>
               <a 
                 href="https://www.vell.web.id" 
                 target="_blank" 
