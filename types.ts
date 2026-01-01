@@ -52,10 +52,10 @@ export interface WeddingData {
   weddingDate: string;
   turutMengundang: string[];
   assets: {
-    floralCorner: string; // Bunga Utama (Depan)
-    floralCornerMid: string; // Bunga Tengah
-    floralCornerBack: string; // Bunga Belakang
-    floralSide: string; // Bunga Samping (Baru)
+    floralCorner: string; 
+    floralCornerMid: string; 
+    floralCornerBack: string; 
+    floralSide: string; 
     heroImage: string;
     bridePhoto: string;
     groomPhoto: string;
@@ -70,4 +70,13 @@ export interface WeddingData {
   bankAccounts: BankInfo[];
   wishlist: WishlistItem[];
   audioUrl: string;
+}
+
+export interface InvitationTemplate {
+  id: string;
+  name: string;
+  price: number;
+  previewImageUrl: string;
+  category: 'Modern' | 'Floral' | 'Minimalist' | 'Elegant';
+  isPopular?: boolean;
 }
