@@ -3,7 +3,7 @@ import {
   Mail, Calendar, MapPin, Instagram, Gift, ChevronDown, Copy, Check, 
   UserCircle, Lock, X, Loader2, Users, CreditCard, 
   Globe, Building2, Landmark, Heart, ShoppingCart, UtensilsCrossed, 
-  Truck, ArrowRight, Star, ShieldCheck, Zap
+  Truck, ArrowRight, Star, ShieldCheck, Zap, MessageCircle, Phone
 } from 'lucide-react';
 import Countdown from './components/Countdown';
 import FloatingMusic from './components/FloatingMusic';
@@ -28,12 +28,129 @@ const formatEventDate = (dateStr: string) => {
   } catch (e) { return dateStr; }
 };
 
-const getBankLogo = (bankName: string) => {
-  const name = bankName.toLowerCase();
-  if (name.includes('bca')) return "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Bank_Central_Asia.svg/1200px-Bank_Central_Asia.svg.png";
-  if (name.includes('mandiri')) return "https://upload.wikimedia.org/wikipedia/id/thumb/a/ad/Bank_Mandiri_logo_2016.svg/2560px-Bank_Mandiri_logo_2016.svg.png";
-  if (name.includes('dana')) return "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Logo_dana_blue.svg/1200px-Logo_dana_blue.svg.png";
-  return null;
+// --- INVITATION CATALOG PAGE ---
+const InvitationCatalog: React.FC = () => {
+  const [activeCategory, setActiveCategory] = useState("Spesial Foto");
+
+  useEffect(() => {
+    document.title = "Katalog Undangan Digital - Vell Digital";
+  }, []);
+
+  const categories = [
+    "Spesial Foto", "Spesial Tanpa Foto",
+    "Minimalist Luxury Foto", "Minimalist Luxury Tanpa Foto",
+    "Premium Vintage Foto", "Premium Vintage Tanpa Foto",
+    "Adat Foto", "Adat Tanpa Foto"
+  ];
+
+  const themes = [
+    { id: "01", name: "SPESIAL 01", originalPrice: "210.000", discountedPrice: "132.000", img: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=600" },
+    { id: "02", name: "SPESIAL 02", originalPrice: "210.000", discountedPrice: "132.000", img: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=600" },
+    { id: "03", name: "SPESIAL 03", originalPrice: "210.000", discountedPrice: "132.000", img: "https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&q=80&w=600" },
+    { id: "04", name: "SPESIAL 04", originalPrice: "210.000", discountedPrice: "132.000", img: "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&q=80&w=600" }
+  ];
+
+  const navigateToInvite = (path: string) => {
+    window.history.pushState({}, '', path);
+    window.dispatchEvent(new Event('popstate'));
+  };
+
+  return (
+    <div className="min-h-screen bg-[#FDF2F0] font-sans pb-20">
+      {/* Hero Section */}
+      <section className="relative min-h-[85vh] bg-gradient-to-b from-[#C07E81] to-[#E8A5A9] text-white px-6 pt-6 overflow-hidden flex flex-col items-center">
+        {/* Top Header */}
+        <div className="w-full max-w-7xl flex justify-between items-center mb-16">
+          <div className="flex flex-col items-start cursor-pointer" onClick={() => navigateToInvite('/')}>
+            <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-[#C07E81] font-bold text-2xl shadow-lg">V</div>
+            <span className="text-[8px] font-bold mt-1 tracking-widest uppercase">Vell Digital</span>
+          </div>
+          <button className="bg-[#FFE5E0] text-[#C07E81] px-6 py-2 rounded-full font-bold flex items-center gap-2 shadow-lg hover:bg-white transition-all">
+            <ShoppingCart size={18} /> Pesan
+          </button>
+        </div>
+
+        {/* Hero Content */}
+        <div className="text-center z-10">
+          <ScrollReveal direction="up">
+            <h1 className="text-4xl md:text-6xl font-bold mb-4 tracking-tight">Undangan <span className="text-[#FFE5E0]">Digital</span></h1>
+            <p className="text-lg md:text-xl opacity-90 mb-10">Berbagi momen spesial dengan <span className="font-bold">Murah !</span></p>
+            <button className="bg-[#FFE5E0] text-[#8B4C50] px-8 py-4 rounded-full font-bold flex items-center gap-2 mx-auto shadow-xl hover:scale-105 transition-transform mb-16">
+              <ArrowRight size={20} /> Lihat Katalog
+            </button>
+          </ScrollReveal>
+        </div>
+
+        {/* Device Mockups */}
+        <div className="flex gap-4 md:gap-8 justify-center items-end mt-auto -mb-16">
+          <div className="w-40 h-80 md:w-56 md:h-[450px] bg-white rounded-[2rem] p-3 shadow-2xl rotate-[-5deg] transform border-[6px] border-[#333]">
+             <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=400" className="w-full h-full object-cover rounded-[1.5rem]" />
+          </div>
+          <div className="w-40 h-80 md:w-56 md:h-[450px] bg-white rounded-[2rem] p-3 shadow-2xl rotate-[5deg] transform border-[6px] border-[#333]">
+             <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=400" className="w-full h-full object-cover rounded-[1.5rem]" />
+          </div>
+        </div>
+      </section>
+
+      {/* Theme Selection */}
+      <section className="mt-32 px-6 max-w-5xl mx-auto">
+        <ScrollReveal direction="up">
+          <h2 className="text-3xl font-bold text-[#8B4C50] text-center mb-4">Pilihan Tema</h2>
+          <p className="text-center text-slate-500 text-sm mb-10 italic">Silahkan klik tombol dibawah ini untuk melihat contoh</p>
+        </ScrollReveal>
+
+        <div className="grid grid-cols-2 md:grid-cols-2 gap-3 mb-12">
+          {categories.map((cat, i) => (
+            <button
+              key={i}
+              onClick={() => setActiveCategory(cat)}
+              className={`py-3 px-4 rounded-full border border-[#C07E81] text-[10px] md:text-xs font-bold transition-all ${
+                activeCategory === cat ? 'bg-[#C07E81] text-white shadow-md' : 'bg-white text-[#C07E81]'
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+
+        <div className="bg-[#C07E81] text-white py-3 px-6 rounded-xl font-bold text-center mb-8 shadow-md">
+          {activeCategory}
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4 md:gap-8">
+          {themes.map((theme, i) => (
+            <ScrollReveal key={i} delay={i * 100} direction="up">
+              <div className="bg-white rounded-3xl overflow-hidden shadow-lg border border-[#F2D7D9] flex flex-col h-full group">
+                <div className="relative aspect-[3/4] overflow-hidden">
+                  <div className="absolute top-0 right-0 z-20 bg-red-600 text-white text-[10px] font-bold px-8 py-1 rotate-45 translate-x-6 translate-y-2 shadow-lg">
+                    DISC. 40%
+                  </div>
+                  <img src={theme.img} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                </div>
+                <div className="p-4 flex flex-col flex-grow">
+                  <h3 className="text-slate-700 font-bold text-sm mb-3">{theme.name}</h3>
+                  <div className="mb-4">
+                    <p className="text-red-400 line-through text-[10px]">Rp. {theme.originalPrice}</p>
+                    <p className="text-[#8B4C50] font-bold text-lg">Rp. {theme.discountedPrice}</p>
+                  </div>
+                  <button 
+                    onClick={() => navigateToInvite("/undangan/hani-pupud")}
+                    className="w-full py-2.5 bg-[#C07E81] text-white rounded-xl font-bold text-xs uppercase shadow-md hover:bg-[#8B4C50] transition-colors mt-auto"
+                  >
+                    Lihat Contoh
+                  </button>
+                </div>
+              </div>
+            </ScrollReveal>
+          ))}
+        </div>
+      </section>
+
+      <a href="https://wa.me/6281234567890" target="_blank" className="fixed bottom-6 right-6 w-14 h-14 bg-green-500 text-white rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-all z-50 border-4 border-white">
+        <Phone size={24} fill="currentColor" />
+      </a>
+    </div>
+  );
 };
 
 // --- LANDING PAGE COMPONENT ---
@@ -44,8 +161,8 @@ const LandingPage: React.FC = () => {
 
   const services = [
     { icon: Building2, title: "Website Perusahaan", desc: "Company profile profesional untuk meningkatkan kredibilitas bisnis Anda." },
-    { icon: Landmark, title: "Sistem Pemerintahan", desc: "Portal informasi dan layanan publik yang transparan serta efisien." },
-    { icon: Heart, title: "Undangan Pernikahan", desc: "Undangan digital eksklusif dengan fitur RSVP, musik, dan navigasi.", link: "/undangan/hani-pupud" },
+    { icon: Landmark, title: "Sistem Pemerintahan", desc: "Portal informasi dan layanan publik yang transparan serta efisien.", link: "https://elearning-school-mocha.vercel.app" },
+    { icon: Heart, title: "Undangan Pernikahan", desc: "Undangan digital eksklusif dengan fitur RSVP, musik, dan navigasi.", link: "/undangan" },
     { icon: ShoppingCart, title: "Sistem Ritel & POS", desc: "Kelola stok dan penjualan Anda dengan sistem inventaris modern." },
     { icon: UtensilsCrossed, title: "Menu Digital", desc: "QR Code menu untuk restoran dan kafe yang interaktif dan higienis." },
     { icon: Truck, title: "Aplikasi Pesan Antar", desc: "Solusi logistik dan delivery untuk menjangkau pelanggan lebih luas.", link: "https://www.lapeerin.vercel.app" }
@@ -53,17 +170,15 @@ const LandingPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-slate-900 text-white font-sans overflow-x-hidden">
-      {/* Navbar */}
       <nav className="fixed top-0 w-full z-50 bg-slate-900/80 backdrop-blur-md border-b border-white/5 px-6 py-4">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="text-2xl font-bold tracking-tighter flex items-center gap-2">
+          <div className="text-2xl font-bold tracking-tighter flex items-center gap-2 cursor-pointer" onClick={() => window.location.pathname = "/"}>
             <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">V</div>
             <span>VELL<span className="text-blue-500">DIGITAL</span></span>
           </div>
           <div className="hidden md:flex gap-8 text-sm font-medium text-slate-400">
             <a href="#" className="hover:text-white transition-colors">Beranda</a>
             <a href="#services" className="hover:text-white transition-colors">Layanan</a>
-            <a href="#portfolio" className="hover:text-white transition-colors">Portofolio</a>
           </div>
           <button className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-full text-sm font-bold transition-all">
             Mulai Proyek
@@ -71,7 +186,6 @@ const LandingPage: React.FC = () => {
         </div>
       </nav>
 
-      {/* Hero Section */}
       <section className="relative pt-32 pb-20 px-6 overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-blue-600/20 blur-[120px] rounded-full -z-10 opacity-30"></div>
         <div className="max-w-7xl mx-auto text-center">
@@ -90,7 +204,10 @@ const LandingPage: React.FC = () => {
               <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-2xl font-bold text-lg transition-all flex items-center justify-center gap-2 group">
                 Konsultasi Sekarang <ArrowRight className="group-hover:translate-x-1 transition-transform" />
               </button>
-              <button className="bg-white/5 hover:bg-white/10 border border-white/10 text-white px-8 py-4 rounded-2xl font-bold text-lg transition-all">
+              <button className="bg-white/5 hover:bg-white/10 border border-white/10 text-white px-8 py-4 rounded-2xl font-bold text-lg transition-all" onClick={() => {
+                const el = document.getElementById('services');
+                el?.scrollIntoView({ behavior: 'smooth' });
+              }}>
                 Lihat Karya Kami
               </button>
             </div>
@@ -98,7 +215,6 @@ const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Services Section */}
       <section id="services" className="py-24 px-6 bg-slate-950/50">
         <div className="max-w-7xl mx-auto">
           <ScrollReveal direction="up" className="text-center mb-20">
@@ -121,7 +237,14 @@ const LandingPage: React.FC = () => {
                       href={s.link} 
                       target={s.link.startsWith('http') ? "_blank" : "_self"}
                       rel={s.link.startsWith('http') ? "noopener noreferrer" : ""}
-                      className="flex items-center gap-2 text-blue-500 font-bold text-sm hover:underline"
+                      onClick={(e) => {
+                        if (!s.link.startsWith('http')) {
+                          e.preventDefault();
+                          window.history.pushState({}, '', s.link);
+                          window.dispatchEvent(new Event('popstate'));
+                        }
+                      }}
+                      className="flex items-center gap-2 text-blue-500 font-bold text-sm hover:underline cursor-pointer"
                     >
                       Lihat Contoh <ArrowRight size={16} />
                     </a>
@@ -135,31 +258,8 @@ const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Trust Markers */}
-      <section className="py-20 px-6">
-        <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
-          {[
-            { icon: ShieldCheck, label: "Keamanan Terjamin" },
-            { icon: Zap, label: "Performa Cepat" },
-            { icon: Star, label: "Desain Eksklusif" },
-            { icon: Globe, label: "Skalabilitas Global" }
-          ].map((item, i) => (
-            <div key={i} className="flex flex-col items-center text-center">
-              <item.icon className="w-10 h-10 text-blue-500 mb-4 opacity-50" />
-              <span className="font-bold text-slate-300">{item.label}</span>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Footer */}
       <footer className="py-12 border-t border-white/5 text-center text-slate-500 text-sm">
         <p>&copy; 2025 Vell Digital. All rights reserved.</p>
-        <div className="mt-4 flex justify-center gap-6">
-          <a href="#" className="hover:text-white">Terms</a>
-          <a href="#" className="hover:text-white">Privacy</a>
-          <a href="#" className="hover:text-white">Contact</a>
-        </div>
       </footer>
     </div>
   );
@@ -170,11 +270,7 @@ const WeddingInvitation: React.FC = () => {
   const [weddingData, setWeddingData] = useState<WeddingData | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [isDashboardOpen, setIsDashboardOpen] = useState(false);
-  const [showPinPrompt, setShowPinPrompt] = useState(false);
-  const [pinInput, setPinInput] = useState("");
-  const [pinError, setPinError] = useState(false);
   const [guestName, setGuestName] = useState('Tamu Undangan');
-  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
 
   useEffect(() => {
     const initData = async () => {
@@ -186,175 +282,65 @@ const WeddingInvitation: React.FC = () => {
       } catch (err) { setWeddingData(DEFAULT_WEDDING_DATA); }
     };
     initData();
-
     const params = new URLSearchParams(window.location.search);
     const to = params.get('to');
     if (to) setGuestName(to);
-    if (params.get('admin') === 'true') setShowPinPrompt(true);
   }, []);
 
-  useEffect(() => {
-    if (!weddingData) return;
-    document.body.style.overflow = (!isOpen && !isDashboardOpen && !showPinPrompt) ? 'hidden' : 'auto';
-  }, [isOpen, isDashboardOpen, showPinPrompt, weddingData]);
+  if (!weddingData) return <div className="h-screen flex items-center justify-center bg-white"><Loader2 className="animate-spin text-blue-900" /></div>;
 
-  if (!weddingData) {
-    return (
-      <div className="h-screen w-full flex flex-col items-center justify-center bg-slate-50 max-w-[480px] mx-auto shadow-2xl">
-        <Loader2 className="w-10 h-10 text-blue-900 animate-spin mb-4" />
-        <p className="text-blue-900 font-serif tracking-widest text-sm uppercase px-6 text-center">Menyiapkan Undangan...</p>
-      </div>
-    );
-  }
-
-  const handleOpenInvitation = () => {
-    setIsOpen(true);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const handlePinSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (pinInput === ADMIN_PIN) {
-      setPinError(false);
-      setShowPinPrompt(false);
-      setIsDashboardOpen(true);
-      setPinInput("");
-    } else {
-      setPinError(true);
-      setPinInput("");
-    }
-  };
-
-  const copyToClipboard = (text: string, index: number) => {
-    navigator.clipboard.writeText(text);
-    setCopiedIndex(index);
-    setTimeout(() => setCopiedIndex(null), 2000);
-  };
-
-  const FloralCorner = ({ position }: { position: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' }) => {
-    const styles: Record<string, string> = {
+  const FloralCorner = ({ position }: { position: string }) => {
+    const styles: any = {
       'top-left': '-top-10 -left-10',
       'top-right': '-top-10 -right-10 scale-x-[-1]',
       'bottom-left': '-bottom-10 -left-10 scale-y-[-1]',
       'bottom-right': '-bottom-10 -right-10 scale-x-[-1] scale-y-[-1]',
     };
     return (
-      <div className={`absolute pointer-events-none select-none z-30 w-48 h-48 md:w-64 md:h-64 ${styles[position]}`}>
-        <div className="absolute inset-0 opacity-100 drop-shadow-sm">
-            <img 
-              src={getDriveMediaUrl(weddingData.assets.floralCorner)} 
-              alt="floral" 
-              className="w-full h-full object-contain animate-floral-sway"
-              style={{ transformOrigin: 'top left', animationDuration: '5s' }}
-            />
-        </div>
+      <div className={`absolute z-30 w-48 h-48 ${styles[position]}`}>
+        <img src={getDriveMediaUrl(weddingData.assets.floralCorner)} className="w-full h-full object-contain animate-floral-sway" />
       </div>
     );
   };
 
-  const MobileWrapper = ({ children, className = "" }: { children?: React.ReactNode, className?: string }) => (
-    <div className={`max-w-[480px] w-full mx-auto bg-watercolor min-h-screen shadow-2xl relative overflow-x-hidden ${className}`}>
-      {children}
-    </div>
-  );
-
   if (isDashboardOpen) return <Dashboard data={weddingData} onUpdate={setWeddingData} onClose={() => setIsDashboardOpen(false)} />;
-
-  if (showPinPrompt) {
-    return (
-      <div className="fixed inset-0 z-[200] flex items-center justify-center bg-slate-900/80 backdrop-blur-sm p-4">
-        <div className="bg-white rounded-3xl p-6 w-full max-w-[360px] shadow-2xl animate-fade-in-up">
-          <h2 className="text-2xl font-bold text-slate-800 mb-2">Akses Dasbor</h2>
-          <form onSubmit={handlePinSubmit} className="space-y-4">
-            <input type="password" placeholder="Masukkan PIN" autoFocus value={pinInput} onChange={e => setPinInput(e.target.value)} className="w-full p-4 bg-slate-50 border rounded-2xl text-center text-xl tracking-widest outline-none focus:ring-2 focus:ring-blue-500" />
-            <button type="submit" className="w-full bg-blue-900 text-white py-4 rounded-2xl font-bold uppercase tracking-widest text-sm shadow-lg">Masuk Dasbor</button>
-            <button onClick={() => setShowPinPrompt(false)} className="w-full text-slate-400 text-xs mt-2">Batal</button>
-          </form>
-        </div>
-      </div>
-    );
-  }
 
   if (!isOpen) {
     return (
-      <MobileWrapper className="flex flex-col relative h-screen overflow-hidden">
-        <div className="absolute inset-0 z-0" style={{ backgroundImage: `url('${getDriveMediaUrl(weddingData.assets.splashBg)}')`, backgroundSize: 'cover', backgroundPosition: 'center top' }} />
-        <div className="absolute inset-0 bg-gradient-to-t from-white via-white/50 to-transparent z-0"></div>
+      <div className="max-w-[480px] w-full mx-auto h-screen bg-watercolor relative overflow-hidden flex flex-col justify-end pb-16 px-8">
+        <div className="absolute inset-0 z-0" style={{ backgroundImage: `url('${getDriveMediaUrl(weddingData.assets.splashBg)}')`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
+        <div className="absolute inset-0 bg-gradient-to-t from-white via-white/40 to-transparent"></div>
         <FloralCorner position="top-left" />
         <FloralCorner position="top-right" />
-        <div className="z-10 relative flex flex-col h-full justify-end pb-16 px-8 w-full animate-fade-in-up">
+        <div className="z-10 animate-fade-in-up">
             <p className="text-slate-600 font-serif font-bold text-sm mb-2">The Wedding of</p>
-            <h1 className="text-5xl font-serif text-blue-900 mb-8 leading-none">{weddingData.coupleShortName}</h1>
+            <h1 className="text-5xl font-serif text-blue-900 mb-8">{weddingData.coupleShortName}</h1>
             <h2 className="text-slate-800 text-2xl font-serif mb-6 capitalize">{guestName}</h2>
-            <button onClick={handleOpenInvitation} className="flex items-center gap-3 bg-blue-900 text-white px-6 py-3 rounded-full shadow-xl font-bold text-sm"><Mail size={16} /> Buka Undangan</button>
+            <button onClick={() => setIsOpen(true)} className="flex items-center gap-3 bg-blue-900 text-white px-6 py-3 rounded-full shadow-xl font-bold text-sm"><Mail size={16} /> Buka Undangan</button>
         </div>
-      </MobileWrapper>
+      </div>
     );
   }
 
   return (
-    <MobileWrapper>
-      <div className="font-sans selection:bg-blue-900 selection:text-white pb-24">
-        <FloatingMusic audioUrl={weddingData.audioUrl} />
-        
-        {/* Hero Section */}
-        <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-6 pt-12">
-          <FloralCorner position="top-left" />
-          <FloralCorner position="top-right" />
-          <div className="animate-fade-in-up w-full">
-            <p className="text-blue-900 font-serif tracking-[0.4em] mb-8 text-xs uppercase font-bold">Save Our Date</p>
-            <div className="arched-image w-64 border-[6px] border-white shadow-xl mx-auto mb-10 overflow-hidden"><img src={getDriveMediaUrl(weddingData.assets.heroImage)} className="w-full h-full object-cover" /></div>
-            <h2 className="font-script text-6xl text-blue-900 mb-6">{weddingData.coupleShortName}</h2>
-            <Countdown targetDate={weddingData.weddingDate} />
-          </div>
-        </section>
-
-        {/* Info & Events */}
-        <section className="py-20 px-6 text-center bg-white/30 backdrop-blur-sm">
-            <ScrollReveal><div className="font-script text-4xl text-blue-900 mb-8">Assalamu'alaikum Wr. Wb.</div></ScrollReveal>
-            <div className="flex flex-col gap-16 items-center">
-                <ScrollReveal direction="left" className="w-full">
-                    <div className="arched-image w-56 mx-auto mb-6 border-[5px] border-white shadow-xl"><img src={getDriveMediaUrl(weddingData.assets.bridePhoto)} className="w-full h-full object-cover" /></div>
-                    <h3 className="font-script text-4xl text-blue-900 mb-2">{weddingData.brideName}</h3>
-                    <p className="text-slate-500 italic text-xs">Putri dari {weddingData.brideParents}</p>
-                </ScrollReveal>
-                <ScrollReveal direction="right" className="w-full">
-                    <div className="arched-image w-56 mx-auto mb-6 border-[5px] border-white shadow-xl"><img src={getDriveMediaUrl(weddingData.assets.groomPhoto)} className="w-full h-full object-cover" /></div>
-                    <h3 className="font-script text-4xl text-blue-900 mb-2">{weddingData.groomName}</h3>
-                    <p className="text-slate-500 italic text-xs">Putra dari {weddingData.groomParents}</p>
-                </ScrollReveal>
-            </div>
-        </section>
-
-        {/* Events Cards */}
-        <section className="py-20 px-4">
-            <h2 className="font-script text-5xl text-blue-900 text-center mb-12">Waktu & Tempat</h2>
-            <div className="space-y-8">
-                {weddingData.events.map((event, idx) => (
-                    <ScrollReveal key={idx} direction="up">
-                        <div className="bg-white p-8 rounded-[2rem] shadow-xl text-center">
-                            <h3 className="font-serif text-2xl text-blue-900 mb-4 uppercase">{event.title}</h3>
-                            <p className="text-slate-800 font-bold mb-2">{formatEventDate(event.date)}</p>
-                            <p className="text-blue-900 font-medium mb-6 text-sm">Pukul {event.time}</p>
-                            <MapPin className="text-red-400 w-8 h-8 mx-auto mb-4" />
-                            <h4 className="font-bold text-slate-800 text-base mb-2">{event.location}</h4>
-                            <p className="text-xs text-slate-500 mb-8">{event.address}</p>
-                            <a href={event.mapsUrl} target="_blank" className="block w-full bg-blue-900 text-white py-3 rounded-xl font-bold uppercase text-[10px]">Navigasi Peta</a>
-                        </div>
-                    </ScrollReveal>
-                ))}
-            </div>
-        </section>
-
-        <GuestBook guestName={guestName} />
-
-        {/* Footer */}
-        <footer className="py-20 text-center">
-            <p className="font-script text-5xl text-blue-900 mb-10">{weddingData.coupleShortName}</p>
-            <div className="text-[10px] tracking-widest text-slate-300 font-bold">POWERED BY VELL DIGITAL</div>
-        </footer>
-      </div>
-    </MobileWrapper>
+    <div className="max-w-[480px] w-full mx-auto bg-watercolor min-h-screen shadow-2xl pb-24 font-sans">
+      <FloatingMusic audioUrl={weddingData.audioUrl} />
+      <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-6">
+        <FloralCorner position="top-left" />
+        <FloralCorner position="top-right" />
+        <div className="animate-fade-in-up">
+          <p className="text-blue-900 font-serif tracking-widest mb-8 text-xs uppercase font-bold">Save Our Date</p>
+          <div className="arched-image w-64 border-[6px] border-white shadow-xl mx-auto mb-10 overflow-hidden"><img src={getDriveMediaUrl(weddingData.assets.heroImage)} className="w-full h-full object-cover" /></div>
+          <h2 className="font-script text-6xl text-blue-900 mb-6">{weddingData.coupleShortName}</h2>
+          <Countdown targetDate={weddingData.weddingDate} />
+        </div>
+      </section>
+      <GuestBook guestName={guestName} />
+      <footer className="py-20 text-center">
+          <p className="font-script text-5xl text-blue-900 mb-10">{weddingData.coupleShortName}</p>
+          <div className="text-[10px] tracking-widest text-slate-300 font-bold">POWERED BY VELL DIGITAL</div>
+      </footer>
+    </div>
   );
 };
 
@@ -368,12 +354,13 @@ const App: React.FC = () => {
     return () => window.removeEventListener('popstate', handleLocationChange);
   }, []);
 
-  // Simplified Router
+  if (currentPath === '/undangan') {
+    return <InvitationCatalog />;
+  }
   if (currentPath === '/undangan/hani-pupud') {
     return <WeddingInvitation />;
   }
 
-  // Default is Landing Page
   return <LandingPage />;
 };
 
