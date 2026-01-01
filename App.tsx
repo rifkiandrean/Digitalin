@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { 
   Mail, MapPin, Loader2, Heart, ShoppingCart, 
   UtensilsCrossed, Truck, ArrowRight, Star, ShieldCheck, Zap, 
-  Phone, Landmark, Building2, Trash2, X, Plus, Minus, Send, Check
+  Phone, Landmark, Building2, Trash2, X, Plus, Minus, Send, Check,
+  Instagram, Clock
 } from 'lucide-react';
 import Countdown from './components/Countdown';
 import FloatingMusic from './components/FloatingMusic';
@@ -80,7 +81,7 @@ const InvitationCatalog: React.FC = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
 
   useEffect(() => {
-    document.title = "Katalog Undangan Digital - Vell Digital";
+    document.title = "Katalog Undangan Digital - Punakawan Digital";
     const savedCart = localStorage.getItem('vell_cart');
     if (savedCart) setCart(JSON.parse(savedCart));
   }, []);
@@ -123,20 +124,20 @@ const InvitationCatalog: React.FC = () => {
   const totalPrice = cart.reduce((acc, curr) => acc + (curr.item.price * curr.qty), 0);
 
   const checkoutWhatsApp = () => {
-    const message = `Halo Vell Digital, saya ingin memesan undangan digital:\n\n` +
+    const message = `Halo Punakawan Digital, saya ingin memesan undangan digital:\n\n` +
       cart.map(c => `- ${c.item.name} (${c.qty}x) @ Rp ${c.item.price.toLocaleString('id-ID')}`).join('\n') +
       `\n\nTotal: Rp ${totalPrice.toLocaleString('id-ID')}\n\nMohon informasi langkah selanjutnya. Terima kasih.`;
     window.open(`https://wa.me/6281234567890?text=${encodeURIComponent(message)}`, '_blank');
   };
 
   return (
-    <div className="min-h-screen bg-[#FDF2F0] font-sans pb-20 relative overflow-x-hidden">
+    <div className="min-h-screen bg-[#FDF2F0] font-sans relative overflow-x-hidden">
       {/* Hero Section */}
       <section className="relative min-h-[85vh] bg-gradient-to-b from-[#C07E81] to-[#E8A5A9] text-white px-6 pt-6 overflow-hidden flex flex-col items-center">
         <div className="w-full max-w-7xl flex justify-between items-center mb-16 relative z-20">
           <div className="flex flex-col items-start cursor-pointer" onClick={() => navigateTo('/')}>
-            <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-[#C07E81] font-bold text-2xl shadow-lg">V</div>
-            <span className="text-[8px] font-bold mt-1 tracking-widest uppercase">Vell Digital</span>
+            <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-[#C07E81] font-bold text-2xl shadow-lg">P</div>
+            <span className="text-[8px] font-bold mt-1 tracking-widest uppercase">Punakawan Digital</span>
           </div>
           <button 
             onClick={() => setIsCartOpen(true)}
@@ -260,6 +261,72 @@ const InvitationCatalog: React.FC = () => {
               </div>
             </ScrollReveal>
           ))}
+        </div>
+      </section>
+
+      {/* --- CONTACT FOOTER SECTION --- */}
+      <section className="mt-24 pb-12 bg-gradient-to-t from-[#C07E81] to-[#E8A5A9] text-white px-6">
+        <div className="max-w-4xl mx-auto pt-16">
+          <ScrollReveal direction="up" className="text-center mb-12">
+            <h2 className="text-3xl font-bold mb-8">Hubungi Kami</h2>
+            
+            {/* Map Card */}
+            <div className="bg-white p-4 rounded-[2.5rem] shadow-2xl overflow-hidden mb-12 group transition-transform hover:scale-[1.02]">
+              <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3952.825121406691!2d110.35415307584557!3d-7.808331977524584!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a5796f7c35583%3A0x673c683883a62883!2sUndangan%20Punakawan%20Digital!5e0!3m2!1sid!2sid!4v1711234567890!5m2!1sid!2sid" 
+                className="w-full h-[300px] md:h-[400px] rounded-[2rem] border-none" 
+                allowFullScreen={true} 
+                loading="lazy" 
+                referrerPolicy="no-referrer-when-downgrade"
+              ></iframe>
+            </div>
+
+            {/* Contact Details */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10 text-left px-4">
+              <div className="space-y-4">
+                <div className="flex items-start gap-4">
+                   <div className="bg-white/20 p-2 rounded-lg"><MapPin size={24} /></div>
+                   <div>
+                     <h3 className="font-bold text-lg mb-1">Alamat :</h3>
+                     <p className="text-sm opacity-90 leading-relaxed">
+                       Jl. Sugeng Jeroni No.48A, Gedongkiwo, Kec. Mantrijeron, Kota Yogyakarta, Daerah Istimewa Yogyakarta 55142
+                     </p>
+                   </div>
+                </div>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="flex items-start gap-4">
+                   <div className="bg-white/20 p-2 rounded-lg"><Clock size={24} /></div>
+                   <div>
+                     <h3 className="font-bold text-lg mb-1">Jam Buka :</h3>
+                     <div className="text-sm opacity-90 space-y-1">
+                       <p>Senin – Jum’at : 08.00 – 21.00 WIB</p>
+                       <p>Sabtu : 09.00 – 20.00 WIB</p>
+                       <p>Minggu / Hari Libur : Slow Respon</p>
+                     </div>
+                   </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Social Media & Copyright */}
+            <div className="mt-16 flex flex-col items-center border-t border-white/20 pt-10">
+              <div className="flex flex-wrap justify-center gap-8 mb-8">
+                <a href="https://instagram.com/punakawandigital" target="_blank" className="flex items-center gap-2 hover:scale-110 transition-transform">
+                   <Instagram size={20} />
+                   <span className="text-sm font-bold">Punakawan Digital</span>
+                </a>
+                <a href="https://tiktok.com/@punakawandigital" target="_blank" className="flex items-center gap-2 hover:scale-110 transition-transform">
+                   <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                     <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.04-.1z"/>
+                   </svg>
+                   <span className="text-sm font-bold">Punakawan Digital</span>
+                </a>
+              </div>
+              <p className="text-[10px] opacity-60 font-bold uppercase tracking-widest">Copyright ©2024 Punakawan Digital</p>
+            </div>
+          </ScrollReveal>
         </div>
       </section>
 
