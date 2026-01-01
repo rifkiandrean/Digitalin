@@ -36,7 +36,7 @@ export const services = [
   {
     id: "retail-pos",
     title: "Retail/Mesin Kasir",
-    desc: "Sistem POS modern untuk pengelolaan stok dan penjualan yang lebih efisien.",
+    desc: "Sistem POS modern untuk pengelolaan stok and penjualan yang lebih efisien.",
     icon: Store,
     color: "bg-emerald-600",
     path: "/retail-pos"
@@ -85,9 +85,9 @@ export const services = [
 
 const LandingPage: React.FC = () => {
   return (
-    <div className="min-h-screen bg-white font-sans text-slate-900">
-      {/* Navbar */}
-      <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-100">
+    <div className="min-h-screen bg-white font-sans text-slate-900 w-full">
+      {/* Navbar - Fixed centering for Desktop */}
+      <nav className="fixed top-0 left-0 right-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-100">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">

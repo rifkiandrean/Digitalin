@@ -169,8 +169,8 @@ const App: React.FC = () => {
 
     return (
       <div className={`absolute pointer-events-none select-none z-30 w-56 h-56 md:w-72 md:h-72 ${styles[position]}`}>
-        {/* BACK LAYER */}
-        <div className="absolute inset-0 transform scale-[1.3] opacity-20 blur-[1px]">
+        {/* BACK LAYER - Flipped horizontally as requested */}
+        <div className="absolute inset-0 transform scale-[1.3] scale-x-[-1] opacity-20 blur-[1px]">
             <img 
               src={getDriveMediaUrl(weddingData.assets.floralCornerBack || weddingData.assets.floralCorner)} 
               alt="floral-back" 
