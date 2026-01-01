@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
-  Mail, Calendar, MapPin, Instagram, Gift, ChevronDown, Copy, Check, 
-  UserCircle, Lock, X, Loader2, Users, CreditCard, 
-  Globe, Building2, Landmark, Heart, ShoppingCart, UtensilsCrossed, 
-  Truck, ArrowRight, Star, ShieldCheck, Zap, MessageCircle, Phone
+  Mail, MapPin, Loader2, Heart, ShoppingCart, 
+  UtensilsCrossed, Truck, ArrowRight, Star, ShieldCheck, Zap, 
+  Phone, Landmark, Building2, Trash2, X, Plus, Minus, Send, Check
 } from 'lucide-react';
 import Countdown from './components/Countdown';
 import FloatingMusic from './components/FloatingMusic';
@@ -28,13 +27,67 @@ const formatEventDate = (dateStr: string) => {
   } catch (e) { return dateStr; }
 };
 
+const navigateTo = (path: string) => {
+  window.history.pushState({}, '', path);
+  window.dispatchEvent(new Event('popstate'));
+  window.scrollTo(0, 0);
+};
+
+// --- DATA PRODUK ---
+const INVITATION_THEMES = [
+  { 
+    id: "01", 
+    name: "SPESIAL 01", 
+    category: "Spesial Foto",
+    originalPrice: 210000, 
+    price: 132000, 
+    desc: "Desain elegan dengan ornamen floral biru yang modern. Cocok untuk tema pernikahan garden atau indoor.",
+    img: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=600" 
+  },
+  { 
+    id: "02", 
+    name: "SPESIAL 02", 
+    category: "Spesial Foto",
+    originalPrice: 210000, 
+    price: 132000, 
+    desc: "Sentuhan gold yang mewah memberikan kesan premium. Sangat cocok untuk pesta pernikahan di ballroom.",
+    img: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=600" 
+  },
+  { 
+    id: "03", 
+    name: "SPESIAL 03", 
+    category: "Spesial Foto",
+    originalPrice: 210000, 
+    price: 132000, 
+    desc: "Tema rustik yang hangat dengan dominasi warna bumi. Pilihan favorit untuk konsep outdoor.",
+    img: "https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&q=80&w=600" 
+  },
+  { 
+    id: "04", 
+    name: "SPESIAL 04", 
+    category: "Spesial Foto",
+    originalPrice: 210000, 
+    price: 132000, 
+    desc: "Minimalis dengan tipografi estetik. Menonjolkan foto prewedding Anda dengan sangat indah.",
+    img: "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&q=80&w=600" 
+  }
+];
+
 // --- INVITATION CATALOG PAGE ---
 const InvitationCatalog: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState("Spesial Foto");
+  const [cart, setCart] = useState<{item: any, qty: number}[]>([]);
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
   useEffect(() => {
     document.title = "Katalog Undangan Digital - Vell Digital";
+    const savedCart = localStorage.getItem('vell_cart');
+    if (savedCart) setCart(JSON.parse(savedCart));
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem('vell_cart', JSON.stringify(cart));
+  }, [cart]);
 
   const categories = [
     "Spesial Foto", "Spesial Tanpa Foto",
@@ -43,63 +96,96 @@ const InvitationCatalog: React.FC = () => {
     "Adat Foto", "Adat Tanpa Foto"
   ];
 
-  const themes = [
-    { id: "01", name: "SPESIAL 01", originalPrice: "210.000", discountedPrice: "132.000", img: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=600" },
-    { id: "02", name: "SPESIAL 02", originalPrice: "210.000", discountedPrice: "132.000", img: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=600" },
-    { id: "03", name: "SPESIAL 03", originalPrice: "210.000", discountedPrice: "132.000", img: "https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&q=80&w=600" },
-    { id: "04", name: "SPESIAL 04", originalPrice: "210.000", discountedPrice: "132.000", img: "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&q=80&w=600" }
-  ];
+  const addToCart = (theme: any) => {
+    const existing = cart.find(c => c.item.id === theme.id);
+    if (existing) {
+      setCart(cart.map(c => c.item.id === theme.id ? { ...c, qty: c.qty + 1 } : c));
+    } else {
+      setCart([...cart, { item: theme, qty: 1 }]);
+    }
+    setIsCartOpen(true);
+  };
 
-  const navigateToInvite = (path: string) => {
-    window.history.pushState({}, '', path);
-    window.dispatchEvent(new Event('popstate'));
+  const removeFromCart = (id: string) => {
+    setCart(cart.filter(c => c.item.id !== id));
+  };
+
+  const updateQty = (id: string, delta: number) => {
+    setCart(cart.map(c => {
+      if (c.item.id === id) {
+        const newQty = Math.max(1, c.qty + delta);
+        return { ...c, qty: newQty };
+      }
+      return c;
+    }));
+  };
+
+  const totalPrice = cart.reduce((acc, curr) => acc + (curr.item.price * curr.qty), 0);
+
+  const checkoutWhatsApp = () => {
+    const message = `Halo Vell Digital, saya ingin memesan undangan digital:\n\n` +
+      cart.map(c => `- ${c.item.name} (${c.qty}x) @ Rp ${c.item.price.toLocaleString('id-ID')}`).join('\n') +
+      `\n\nTotal: Rp ${totalPrice.toLocaleString('id-ID')}\n\nMohon informasi langkah selanjutnya. Terima kasih.`;
+    window.open(`https://wa.me/6281234567890?text=${encodeURIComponent(message)}`, '_blank');
   };
 
   return (
-    <div className="min-h-screen bg-[#FDF2F0] font-sans pb-20">
+    <div className="min-h-screen bg-[#FDF2F0] font-sans pb-20 relative overflow-x-hidden">
       {/* Hero Section */}
       <section className="relative min-h-[85vh] bg-gradient-to-b from-[#C07E81] to-[#E8A5A9] text-white px-6 pt-6 overflow-hidden flex flex-col items-center">
-        {/* Top Header */}
-        <div className="w-full max-w-7xl flex justify-between items-center mb-16">
-          <div className="flex flex-col items-start cursor-pointer" onClick={() => navigateToInvite('/')}>
+        <div className="w-full max-w-7xl flex justify-between items-center mb-16 relative z-20">
+          <div className="flex flex-col items-start cursor-pointer" onClick={() => navigateTo('/')}>
             <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-[#C07E81] font-bold text-2xl shadow-lg">V</div>
             <span className="text-[8px] font-bold mt-1 tracking-widest uppercase">Vell Digital</span>
           </div>
-          <button className="bg-[#FFE5E0] text-[#C07E81] px-6 py-2 rounded-full font-bold flex items-center gap-2 shadow-lg hover:bg-white transition-all">
-            <ShoppingCart size={18} /> Pesan
+          <button 
+            onClick={() => setIsCartOpen(true)}
+            className="bg-[#FFE5E0] text-[#C07E81] px-6 py-2 rounded-full font-bold flex items-center gap-2 shadow-lg hover:bg-white transition-all relative"
+          >
+            <ShoppingCart size={18} /> 
+            <span>Pesan</span>
+            {cart.length > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center border-2 border-white">
+                {cart.length}
+              </span>
+            )}
           </button>
         </div>
 
-        {/* Hero Content */}
         <div className="text-center z-10">
           <ScrollReveal direction="up">
             <h1 className="text-4xl md:text-6xl font-bold mb-4 tracking-tight">Undangan <span className="text-[#FFE5E0]">Digital</span></h1>
             <p className="text-lg md:text-xl opacity-90 mb-10">Berbagi momen spesial dengan <span className="font-bold">Murah !</span></p>
-            <button className="bg-[#FFE5E0] text-[#8B4C50] px-8 py-4 rounded-full font-bold flex items-center gap-2 mx-auto shadow-xl hover:scale-105 transition-transform mb-16">
+            <button 
+              onClick={() => {
+                const el = document.getElementById('catalog-themes');
+                el?.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="bg-[#FFE5E0] text-[#8B4C50] px-8 py-4 rounded-full font-bold flex items-center gap-2 mx-auto shadow-xl hover:scale-105 transition-transform mb-16"
+            >
               <ArrowRight size={20} /> Lihat Katalog
             </button>
           </ScrollReveal>
         </div>
 
-        {/* Device Mockups */}
         <div className="flex gap-4 md:gap-8 justify-center items-end mt-auto -mb-16">
           <div className="w-40 h-80 md:w-56 md:h-[450px] bg-white rounded-[2rem] p-3 shadow-2xl rotate-[-5deg] transform border-[6px] border-[#333]">
-             <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=400" className="w-full h-full object-cover rounded-[1.5rem]" />
+             <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=400" className="w-full h-full object-cover rounded-[1.5rem]" alt="Device" />
           </div>
           <div className="w-40 h-80 md:w-56 md:h-[450px] bg-white rounded-[2rem] p-3 shadow-2xl rotate-[5deg] transform border-[6px] border-[#333]">
-             <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=400" className="w-full h-full object-cover rounded-[1.5rem]" />
+             <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=400" className="w-full h-full object-cover rounded-[1.5rem]" alt="Device" />
           </div>
         </div>
       </section>
 
       {/* Theme Selection */}
-      <section className="mt-32 px-6 max-w-5xl mx-auto">
+      <section id="catalog-themes" className="mt-32 px-6 max-w-5xl mx-auto">
         <ScrollReveal direction="up">
           <h2 className="text-3xl font-bold text-[#8B4C50] text-center mb-4">Pilihan Tema</h2>
           <p className="text-center text-slate-500 text-sm mb-10 italic">Silahkan klik tombol dibawah ini untuk melihat contoh</p>
         </ScrollReveal>
 
-        <div className="grid grid-cols-2 md:grid-cols-2 gap-3 mb-12">
+        <div className="grid grid-cols-2 gap-3 mb-12">
           {categories.map((cat, i) => (
             <button
               key={i}
@@ -117,28 +203,59 @@ const InvitationCatalog: React.FC = () => {
           {activeCategory}
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4 md:gap-8">
-          {themes.map((theme, i) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+          {INVITATION_THEMES.map((theme, i) => (
             <ScrollReveal key={i} delay={i * 100} direction="up">
-              <div className="bg-white rounded-3xl overflow-hidden shadow-lg border border-[#F2D7D9] flex flex-col h-full group">
+              <div className="bg-white rounded-[2.5rem] overflow-hidden shadow-lg border border-[#F2D7D9] flex flex-col h-full group">
                 <div className="relative aspect-[3/4] overflow-hidden">
                   <div className="absolute top-0 right-0 z-20 bg-red-600 text-white text-[10px] font-bold px-8 py-1 rotate-45 translate-x-6 translate-y-2 shadow-lg">
                     DISC. 40%
                   </div>
-                  <img src={theme.img} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                </div>
-                <div className="p-4 flex flex-col flex-grow">
-                  <h3 className="text-slate-700 font-bold text-sm mb-3">{theme.name}</h3>
-                  <div className="mb-4">
-                    <p className="text-red-400 line-through text-[10px]">Rp. {theme.originalPrice}</p>
-                    <p className="text-[#8B4C50] font-bold text-lg">Rp. {theme.discountedPrice}</p>
+                  <img src={theme.img} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt={theme.name} />
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4">
+                    <button 
+                      onClick={() => navigateTo("/undangan/hani-pupud")}
+                      className="bg-white text-[#8B4C50] p-3 rounded-full hover:bg-[#FFE5E0] transition-colors"
+                      title="Preview"
+                    >
+                      <Zap size={20} />
+                    </button>
+                    <button 
+                      onClick={() => addToCart(theme)}
+                      className="bg-[#C07E81] text-white p-3 rounded-full hover:bg-[#8B4C50] transition-colors"
+                      title="Tambah ke Keranjang"
+                    >
+                      <ShoppingCart size={20} />
+                    </button>
                   </div>
-                  <button 
-                    onClick={() => navigateToInvite("/undangan/hani-pupud")}
-                    className="w-full py-2.5 bg-[#C07E81] text-white rounded-xl font-bold text-xs uppercase shadow-md hover:bg-[#8B4C50] transition-colors mt-auto"
-                  >
-                    Lihat Contoh
-                  </button>
+                </div>
+                <div className="p-6 flex flex-col flex-grow">
+                  <div className="flex justify-between items-start mb-2">
+                    <h3 className="text-[#8B4C50] font-bold text-lg">{theme.name}</h3>
+                    <div className="flex items-center text-yellow-500">
+                      <Star size={14} fill="currentColor" />
+                      <span className="text-xs ml-1 font-bold text-slate-400">5.0</span>
+                    </div>
+                  </div>
+                  <p className="text-slate-500 text-xs leading-relaxed mb-4 flex-grow">{theme.desc}</p>
+                  <div className="mb-6">
+                    <p className="text-red-400 line-through text-xs">Rp {theme.originalPrice.toLocaleString('id-ID')}</p>
+                    <p className="text-[#8B4C50] font-bold text-2xl">Rp {theme.price.toLocaleString('id-ID')}</p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <button 
+                      onClick={() => navigateTo("/undangan/hani-pupud")}
+                      className="py-3 px-2 border border-[#C07E81] text-[#C07E81] rounded-2xl font-bold text-[10px] uppercase hover:bg-[#FFE5E0] transition-all"
+                    >
+                      Lihat Contoh
+                    </button>
+                    <button 
+                      onClick={() => addToCart(theme)}
+                      className="py-3 px-2 bg-[#C07E81] text-white rounded-2xl font-bold text-[10px] uppercase shadow-md hover:bg-[#8B4C50] transition-all flex items-center justify-center gap-2"
+                    >
+                      <ShoppingCart size={14} /> Pesan
+                    </button>
+                  </div>
                 </div>
               </div>
             </ScrollReveal>
@@ -146,9 +263,96 @@ const InvitationCatalog: React.FC = () => {
         </div>
       </section>
 
-      <a href="https://wa.me/6281234567890" target="_blank" className="fixed bottom-6 right-6 w-14 h-14 bg-green-500 text-white rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-all z-50 border-4 border-white">
-        <Phone size={24} fill="currentColor" />
-      </a>
+      {/* Cart Modal / Slide-over */}
+      {isCartOpen && (
+        <div className="fixed inset-0 z-[100] bg-black/40 backdrop-blur-sm flex justify-end">
+          <div className="w-full max-w-md bg-white h-full shadow-2xl flex flex-col animate-fade-in-left">
+            <div className="p-6 border-b flex justify-between items-center bg-[#C07E81] text-white">
+              <div className="flex items-center gap-3">
+                <ShoppingCart className="w-6 h-6" />
+                <h2 className="text-xl font-bold">Pesanan Anda</h2>
+              </div>
+              <button onClick={() => setIsCartOpen(false)} className="p-2 hover:bg-white/20 rounded-full transition-colors">
+                <X size={24} />
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-6 space-y-6">
+              {cart.length === 0 ? (
+                <div className="h-full flex flex-col items-center justify-center text-slate-400">
+                  <ShoppingCart size={64} strokeWidth={1} className="mb-4 opacity-20" />
+                  <p className="text-sm font-medium">Keranjang masih kosong</p>
+                  <button onClick={() => setIsCartOpen(false)} className="mt-4 text-[#C07E81] font-bold text-sm underline">Mulai Belanja</button>
+                </div>
+              ) : (
+                cart.map((item, idx) => (
+                  <div key={idx} className="flex gap-4 p-4 bg-slate-50 rounded-[1.5rem] border border-slate-100 group">
+                    <div className="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0">
+                      <img src={item.item.img} className="w-full h-full object-cover" alt={item.item.name} />
+                    </div>
+                    <div className="flex-1 flex flex-col">
+                      <div className="flex justify-between items-start mb-1">
+                        <h4 className="font-bold text-slate-800 text-sm">{item.item.name}</h4>
+                        <button onClick={() => removeFromCart(item.item.id)} className="text-slate-300 hover:text-red-500 transition-colors">
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+                      <p className="text-[#C07E81] font-bold text-sm mb-3">Rp {item.item.price.toLocaleString('id-ID')}</p>
+                      <div className="flex items-center gap-4 mt-auto">
+                        <div className="flex items-center border rounded-lg bg-white overflow-hidden">
+                          <button onClick={() => updateQty(item.item.id, -1)} className="p-1 hover:bg-slate-50 border-r"><Minus size={14} /></button>
+                          <span className="px-3 text-xs font-bold">{item.qty}</span>
+                          <button onClick={() => updateQty(item.item.id, 1)} className="p-1 hover:bg-slate-50 border-l"><Plus size={14} /></button>
+                        </div>
+                        <span className="text-[10px] text-slate-400 italic">Subtotal: Rp {(item.item.price * item.qty).toLocaleString('id-ID')}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+
+            {cart.length > 0 && (
+              <div className="p-6 border-t bg-slate-50">
+                <div className="flex justify-between items-center mb-6">
+                  <span className="text-slate-500 font-medium">Total Estimasi</span>
+                  <span className="text-2xl font-bold text-[#8B4C50]">Rp {totalPrice.toLocaleString('id-ID')}</span>
+                </div>
+                <button 
+                  onClick={checkoutWhatsApp}
+                  className="w-full bg-[#25D366] text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-3 shadow-lg hover:bg-[#128C7E] transition-all active:scale-95"
+                >
+                  <Send size={18} /> Pesan Sekarang (WhatsApp)
+                </button>
+                <p className="text-[10px] text-slate-400 text-center mt-4">Pemesanan akan dilanjutkan melalui percakapan WhatsApp</p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Floating Action Buttons */}
+      <div className="fixed bottom-6 right-6 flex flex-col gap-4 z-50">
+        <button 
+          onClick={() => setIsCartOpen(true)}
+          className="w-14 h-14 bg-[#C07E81] text-white rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-all border-4 border-white relative"
+        >
+          <ShoppingCart size={24} />
+          {cart.length > 0 && (
+            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] w-6 h-6 rounded-full flex items-center justify-center border-2 border-white font-bold">
+              {cart.length}
+            </span>
+          )}
+        </button>
+        <a 
+          href="https://wa.me/6281234567890" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="w-14 h-14 bg-green-500 text-white rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-all border-4 border-white"
+        >
+          <Phone size={24} fill="currentColor" />
+        </a>
+      </div>
     </div>
   );
 };
@@ -172,7 +376,7 @@ const LandingPage: React.FC = () => {
     <div className="min-h-screen bg-slate-900 text-white font-sans overflow-x-hidden">
       <nav className="fixed top-0 w-full z-50 bg-slate-900/80 backdrop-blur-md border-b border-white/5 px-6 py-4">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="text-2xl font-bold tracking-tighter flex items-center gap-2 cursor-pointer" onClick={() => window.location.pathname = "/"}>
+          <div className="text-2xl font-bold tracking-tighter flex items-center gap-2 cursor-pointer" onClick={() => navigateTo('/')}>
             <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">V</div>
             <span>VELL<span className="text-blue-500">DIGITAL</span></span>
           </div>
@@ -240,8 +444,7 @@ const LandingPage: React.FC = () => {
                       onClick={(e) => {
                         if (!s.link.startsWith('http')) {
                           e.preventDefault();
-                          window.history.pushState({}, '', s.link);
-                          window.dispatchEvent(new Event('popstate'));
+                          navigateTo(s.link);
                         }
                       }}
                       className="flex items-center gap-2 text-blue-500 font-bold text-sm hover:underline cursor-pointer"
@@ -270,6 +473,8 @@ const WeddingInvitation: React.FC = () => {
   const [weddingData, setWeddingData] = useState<WeddingData | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [isDashboardOpen, setIsDashboardOpen] = useState(false);
+  const [showPinPrompt, setShowPinPrompt] = useState(false);
+  const [pinInput, setPinInput] = useState("");
   const [guestName, setGuestName] = useState('Tamu Undangan');
 
   useEffect(() => {
@@ -285,6 +490,7 @@ const WeddingInvitation: React.FC = () => {
     const params = new URLSearchParams(window.location.search);
     const to = params.get('to');
     if (to) setGuestName(to);
+    if (params.get('admin') === 'true') setShowPinPrompt(true);
   }, []);
 
   if (!weddingData) return <div className="h-screen flex items-center justify-center bg-white"><Loader2 className="animate-spin text-blue-900" /></div>;
@@ -298,12 +504,39 @@ const WeddingInvitation: React.FC = () => {
     };
     return (
       <div className={`absolute z-30 w-48 h-48 ${styles[position]}`}>
-        <img src={getDriveMediaUrl(weddingData.assets.floralCorner)} className="w-full h-full object-contain animate-floral-sway" />
+        <img src={getDriveMediaUrl(weddingData.assets.floralCorner)} className="w-full h-full object-contain animate-floral-sway" alt="Floral decoration" />
       </div>
     );
   };
 
+  const handlePinSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (pinInput === ADMIN_PIN) {
+      setShowPinPrompt(false);
+      setIsDashboardOpen(true);
+      setPinInput("");
+    } else {
+      alert("PIN Salah");
+      setPinInput("");
+    }
+  };
+
   if (isDashboardOpen) return <Dashboard data={weddingData} onUpdate={setWeddingData} onClose={() => setIsDashboardOpen(false)} />;
+
+  if (showPinPrompt) {
+    return (
+      <div className="fixed inset-0 z-[200] flex items-center justify-center bg-slate-900/80 backdrop-blur-sm p-4">
+        <div className="bg-white rounded-3xl p-6 w-full max-w-[360px] shadow-2xl">
+          <h2 className="text-2xl font-bold text-slate-800 mb-2">Akses Dasbor</h2>
+          <form onSubmit={handlePinSubmit} className="space-y-4">
+            <input type="password" placeholder="Masukkan PIN" autoFocus value={pinInput} onChange={e => setPinInput(e.target.value)} className="w-full p-4 bg-slate-50 border rounded-2xl text-center text-xl tracking-widest outline-none focus:ring-2 focus:ring-blue-500" />
+            <button type="submit" className="w-full bg-blue-900 text-white py-4 rounded-2xl font-bold uppercase tracking-widest text-sm shadow-lg">Masuk Dasbor</button>
+            <button onClick={() => setShowPinPrompt(false)} className="w-full text-slate-400 text-xs mt-2">Batal</button>
+          </form>
+        </div>
+      </div>
+    );
+  }
 
   if (!isOpen) {
     return (
@@ -323,22 +556,59 @@ const WeddingInvitation: React.FC = () => {
   }
 
   return (
-    <div className="max-w-[480px] w-full mx-auto bg-watercolor min-h-screen shadow-2xl pb-24 font-sans">
+    <div className="max-w-[480px] w-full mx-auto bg-watercolor min-h-screen shadow-2xl pb-24 font-sans overflow-x-hidden">
       <FloatingMusic audioUrl={weddingData.audioUrl} />
       <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-6">
         <FloralCorner position="top-left" />
         <FloralCorner position="top-right" />
-        <div className="animate-fade-in-up">
+        <div className="animate-fade-in-up w-full">
           <p className="text-blue-900 font-serif tracking-widest mb-8 text-xs uppercase font-bold">Save Our Date</p>
-          <div className="arched-image w-64 border-[6px] border-white shadow-xl mx-auto mb-10 overflow-hidden"><img src={getDriveMediaUrl(weddingData.assets.heroImage)} className="w-full h-full object-cover" /></div>
+          <div className="arched-image w-64 border-[6px] border-white shadow-xl mx-auto mb-10 overflow-hidden"><img src={getDriveMediaUrl(weddingData.assets.heroImage)} className="w-full h-full object-cover" alt="Couple" /></div>
           <h2 className="font-script text-6xl text-blue-900 mb-6">{weddingData.coupleShortName}</h2>
           <Countdown targetDate={weddingData.weddingDate} />
         </div>
       </section>
+
+      <section className="py-20 px-6 text-center">
+          <ScrollReveal><div className="font-script text-4xl text-blue-900 mb-8">Assalamu'alaikum Wr. Wb.</div></ScrollReveal>
+          <div className="flex flex-col gap-16 items-center">
+              <ScrollReveal direction="left" className="w-full">
+                  <div className="arched-image w-56 mx-auto mb-6 border-[5px] border-white shadow-xl"><img src={getDriveMediaUrl(weddingData.assets.bridePhoto)} className="w-full h-full object-cover" alt="Bride" /></div>
+                  <h3 className="font-script text-4xl text-blue-900 mb-2">{weddingData.brideName}</h3>
+                  <p className="text-slate-500 italic text-xs">Putri dari {weddingData.brideParents}</p>
+              </ScrollReveal>
+              <ScrollReveal direction="right" className="w-full">
+                  <div className="arched-image w-56 mx-auto mb-6 border-[5px] border-white shadow-xl"><img src={getDriveMediaUrl(weddingData.assets.groomPhoto)} className="w-full h-full object-cover" alt="Groom" /></div>
+                  <h3 className="font-script text-4xl text-blue-900 mb-2">{weddingData.groomName}</h3>
+                  <p className="text-slate-500 italic text-xs">Putra dari {weddingData.groomParents}</p>
+              </ScrollReveal>
+          </div>
+      </section>
+
+      <section className="py-20 px-4">
+          <h2 className="font-script text-5xl text-blue-900 text-center mb-12">Waktu & Tempat</h2>
+          <div className="space-y-8">
+              {weddingData.events.map((event, idx) => (
+                  <ScrollReveal key={idx} direction="up">
+                      <div className="bg-white p-8 rounded-[2rem] shadow-xl text-center">
+                          <h3 className="font-serif text-2xl text-blue-900 mb-4 uppercase">{event.title}</h3>
+                          <p className="text-slate-800 font-bold mb-2">{formatEventDate(event.date)}</p>
+                          <p className="text-blue-900 font-medium mb-6 text-sm">Pukul {event.time}</p>
+                          <MapPin className="text-red-400 w-8 h-8 mx-auto mb-4" />
+                          <h4 className="font-bold text-slate-800 text-base mb-2">{event.location}</h4>
+                          <p className="text-xs text-slate-500 mb-8">{event.address}</p>
+                          <a href={event.mapsUrl} target="_blank" rel="noopener noreferrer" className="block w-full bg-blue-900 text-white py-3 rounded-xl font-bold uppercase text-[10px]">Navigasi Peta</a>
+                      </div>
+                  </ScrollReveal>
+              ))}
+          </div>
+      </section>
+
       <GuestBook guestName={guestName} />
+      
       <footer className="py-20 text-center">
           <p className="font-script text-5xl text-blue-900 mb-10">{weddingData.coupleShortName}</p>
-          <div className="text-[10px] tracking-widest text-slate-300 font-bold">POWERED BY VELL DIGITAL</div>
+          <div className="text-[10px] tracking-widest text-slate-300 font-bold uppercase">POWERED BY VELL DIGITAL</div>
       </footer>
     </div>
   );
