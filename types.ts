@@ -81,3 +81,13 @@ export interface InvitationTemplate {
   category: 'Modern' | 'Floral' | 'Minimalist' | 'Elegant';
   isPopular?: boolean;
 }
+
+export interface PortfolioItem {
+  id: string;
+  title: string;
+  category: 'Website' | 'Undangan' | 'Sistem';
+  client: string;
+  description: string;
+  imageUrl: string;
+  tags: string[];
+}

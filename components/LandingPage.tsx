@@ -12,7 +12,9 @@ import {
   ChevronRight,
   Zap,
   ShieldCheck,
-  Smartphone
+  Smartphone,
+  ExternalLink,
+  Layers
 } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
 
@@ -83,6 +85,24 @@ export const services = [
   }
 ];
 
+const featuredProjects = [
+  {
+    title: "Desa Wisata Portal",
+    category: "Website",
+    image: "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?auto=format&fit=crop&q=80&w=600"
+  },
+  {
+    title: "Vell POS Coffee",
+    category: "Systems",
+    image: "https://images.unsplash.com/photo-1556742049-04ff4361cc56?auto=format&fit=crop&q=80&w=600"
+  },
+  {
+    title: "Premium Wedding",
+    category: "Undangan",
+    image: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=600"
+  }
+];
+
 const LandingPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-white font-sans text-slate-900 w-full">
@@ -95,6 +115,13 @@ const LandingPage: React.FC = () => {
             </div>
             <span className="font-bold text-xl tracking-tight text-slate-800">Vell Digital</span>
           </div>
+          
+          <div className="hidden md:flex items-center gap-8 text-sm font-bold uppercase tracking-widest text-slate-500">
+             <a href="#services" className="hover:text-indigo-600 transition-colors">Layanan</a>
+             <a href="/portfolio" className="hover:text-indigo-600 transition-colors">Portfolio</a>
+             <a href="https://wa.me/628123456789" className="text-indigo-600">Kontak</a>
+          </div>
+
           <a 
             href="https://wa.me/628123456789" 
             className="bg-indigo-600 text-white px-5 py-2 rounded-full text-sm font-bold hover:bg-indigo-700 transition-all shadow-md"
@@ -122,9 +149,9 @@ const LandingPage: React.FC = () => {
               <a href="#services" className="bg-slate-900 text-white px-8 py-4 rounded-2xl font-bold hover:bg-slate-800 transition-all flex items-center justify-center gap-2">
                 Lihat Layanan <ChevronRight size={18} />
               </a>
-              <button className="bg-white text-slate-900 border border-slate-200 px-8 py-4 rounded-2xl font-bold hover:bg-slate-50 transition-all">
-                Portfolio Kami
-              </button>
+              <a href="/portfolio" className="bg-white text-slate-900 border border-slate-200 px-8 py-4 rounded-2xl font-bold hover:bg-slate-50 transition-all flex items-center justify-center gap-2">
+                Portfolio Kami <ExternalLink size={18} />
+              </a>
             </div>
           </ScrollReveal>
         </div>
@@ -161,6 +188,44 @@ const LandingPage: React.FC = () => {
                 </a>
               </ScrollReveal>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Portfolio Section */}
+      <section className="py-24 px-6 bg-white overflow-hidden">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+             <div className="text-left">
+                <ScrollReveal direction="left">
+                   <div className="flex items-center gap-2 text-indigo-600 mb-4 font-black uppercase tracking-widest text-xs">
+                      <Layers size={14} />
+                      Showcase
+                   </div>
+                   <h2 className="text-3xl sm:text-5xl font-black text-slate-900 leading-tight">Proyek Unggulan <br />Terbaru Kami</h2>
+                </ScrollReveal>
+             </div>
+             <ScrollReveal direction="right">
+                <a href="/portfolio" className="bg-slate-100 text-slate-800 px-8 py-4 rounded-2xl font-bold hover:bg-indigo-600 hover:text-white transition-all flex items-center gap-2">
+                   Lihat Semua Karya <ChevronRight size={18} />
+                </a>
+             </ScrollReveal>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+             {featuredProjects.map((p, idx) => (
+               <ScrollReveal key={idx} delay={idx * 150} direction="up">
+                  <div className="group bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500">
+                     <div className="aspect-[4/3] overflow-hidden">
+                        <img src={p.image} alt={p.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                     </div>
+                     <div className="p-8">
+                        <span className="text-[10px] font-black uppercase text-indigo-600 tracking-widest">{p.category}</span>
+                        <h3 className="text-xl font-bold text-slate-800 mt-2">{p.title}</h3>
+                     </div>
+                  </div>
+               </ScrollReveal>
+             ))}
           </div>
         </div>
       </section>
@@ -249,10 +314,10 @@ const LandingPage: React.FC = () => {
             <span className="font-bold text-xl text-slate-800">Vell Digital</span>
           </div>
           <div className="flex gap-8 text-slate-500 text-sm font-medium">
-            <a href="#" className="hover:text-indigo-600 transition-colors">Layanan</a>
-            <a href="#" className="hover:text-indigo-600 transition-colors">Portfolio</a>
+            <a href="/" className="hover:text-indigo-600 transition-colors">Layanan</a>
+            <a href="/portfolio" className="hover:text-indigo-600 transition-colors">Portfolio</a>
             <a href="#" className="hover:text-indigo-600 transition-colors">Tentang</a>
-            <a href="#" className="hover:text-indigo-600 transition-colors">Kontak</a>
+            <a href="https://wa.me/628123456789" className="hover:text-indigo-600 transition-colors">Kontak</a>
           </div>
           <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">
             © 2026 Vell Digital Service. All rights reserved.
