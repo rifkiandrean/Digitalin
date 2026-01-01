@@ -59,7 +59,8 @@ const INVITATION_THEMES = [
 // --- ADMIN PAGE COMPONENT ---
 const AdminPage: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [pin, setPin] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<'overview' | 'products' | 'orders' | 'settings'>('overview');
   const [productCategory, setProductCategory] = useState('Semua');
@@ -74,20 +75,16 @@ const AdminPage: React.FC = () => {
     e.preventDefault();
     setIsLoading(true);
     
-    try {
-      // Memanggil fungsi verify dari constants.ts yang terhubung ke spreadsheet
-      const isValid = await verifyAdminPinFromCloud(pin);
-      if (isValid) {
+    // Simulasi delay untuk UX loading yang lebih smooth
+    setTimeout(() => {
+      if (email === "rifkiandrean@gmail.com" && password === "sawaludin22") {
         setIsLoggedIn(true);
         sessionStorage.setItem('vell_admin_auth', 'true');
       } else {
-        alert("Akses Ditolak: PIN Salah atau tidak terdaftar di database spreadsheet.");
+        alert("Akses Ditolak: Email atau Password salah.");
       }
-    } catch (err) {
-      alert("Terjadi kesalahan koneksi ke database spreadsheet. Pastikan URL API sudah benar.");
-    } finally {
       setIsLoading(false);
-    }
+    }, 800);
   };
 
   const handleLogout = () => {
@@ -112,34 +109,61 @@ const AdminPage: React.FC = () => {
   if (!isLoggedIn) {
     return (
       <div className="min-h-screen bg-[#0f172a] flex items-center justify-center p-6 font-sans">
-        <div className="w-full max-w-md bg-white rounded-[2.5rem] shadow-2xl p-10 text-center animate-fade-in-up">
-          <div className="w-20 h-20 bg-blue-600 rounded-2xl flex items-center justify-center text-white mx-auto mb-8 shadow-xl shadow-blue-500/20">
-            <Lock size={40} />
-          </div>
-          <h1 className="text-3xl font-black text-slate-900 mb-3 tracking-tight">Punakawan <span className="text-blue-600">Admin</span></h1>
-          <p className="text-slate-500 text-sm mb-10 font-medium">Hubungkan ke database spreadsheet dengan memasukkan PIN Otoritas Anda.</p>
-          
-          <form onSubmit={handleLogin} className="space-y-5">
-            <div className="relative">
-              <input 
-                type="password" 
-                placeholder="••••••" 
-                value={pin}
-                onChange={(e) => setPin(e.target.value)}
-                className="w-full p-5 bg-slate-50 border-2 border-slate-100 rounded-2xl text-center text-3xl tracking-[0.6em] focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all font-bold text-slate-800"
-                autoFocus
-              />
+        <div className="w-full max-w-md bg-white rounded-[2.5rem] shadow-2xl p-10 animate-fade-in-up">
+          <div className="text-center mb-10">
+            <div className="w-20 h-20 bg-blue-600 rounded-2xl flex items-center justify-center text-white mx-auto mb-6 shadow-xl shadow-blue-500/20">
+              <ShieldCheck size={40} />
             </div>
+            <h1 className="text-3xl font-black text-slate-900 mb-2 tracking-tight">Punakawan <span className="text-blue-600">Admin</span></h1>
+            <p className="text-slate-500 text-sm font-medium">Silakan masuk untuk mengelola layanan digital.</p>
+          </div>
+          
+          <form onSubmit={handleLogin} className="space-y-6">
+            <div className="space-y-2">
+              <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Email Otoritas</label>
+              <div className="relative group">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-blue-600 transition-colors">
+                  <Mail size={18} />
+                </div>
+                <input 
+                  type="email" 
+                  placeholder="admin@example.com" 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full pl-12 pr-4 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all font-bold text-slate-800"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Password</label>
+              <div className="relative group">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-blue-600 transition-colors">
+                  <Lock size={18} />
+                </div>
+                <input 
+                  type="password" 
+                  placeholder="••••••••" 
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full pl-12 pr-4 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all font-bold text-slate-800"
+                  required
+                />
+              </div>
+            </div>
+
             <button 
               type="submit"
               disabled={isLoading}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-5 rounded-2xl font-black text-lg shadow-xl shadow-blue-200 transition-all flex items-center justify-center gap-3 active:scale-[0.98]"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-5 rounded-2xl font-black text-lg shadow-xl shadow-blue-200 transition-all flex items-center justify-center gap-3 active:scale-[0.98] disabled:opacity-70"
             >
-              {isLoading ? <Loader2 className="animate-spin" /> : <ShieldCheck />}
-              Autentikasi Sekarang
+              {isLoading ? <Loader2 className="animate-spin" /> : <Zap size={20} fill="currentColor" />}
+              Masuk Dashboard
             </button>
           </form>
-          <div className="mt-10 pt-8 border-t border-slate-100">
+
+          <div className="mt-10 pt-8 border-t border-slate-100 text-center">
             <button onClick={() => navigateTo('/')} className="text-slate-400 text-xs hover:text-blue-600 font-bold uppercase tracking-widest transition-colors">Batal & Kembali</button>
           </div>
         </div>
@@ -189,7 +213,7 @@ const AdminPage: React.FC = () => {
               <User size={24} className="text-blue-400" />
             </div>
             <div>
-              <p className="text-sm font-black">Main Admin</p>
+              <p className="text-sm font-black text-white truncate w-32">{email.split('@')[0]}</p>
               <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Super User</p>
             </div>
           </div>
