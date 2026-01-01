@@ -3,13 +3,14 @@ import React, { useState, useEffect } from 'react';
 import { User, MessageCircle, CheckCircle, XCircle, HelpCircle, Send, Lock, Loader2, RefreshCw } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
 import { GuestMessage } from '../types';
-import { fetchGuestMessages, sendGuestMessageToCloud } from '../constants';
+import { fetchGuestMessages, sendGuestMessageToCloud, getDriveMediaUrl } from '../constants';
 
 interface GuestBookProps {
   guestName: string;
+  bgUrl?: string;
 }
 
-const GuestBook: React.FC<GuestBookProps> = ({ guestName }) => {
+const GuestBook: React.FC<GuestBookProps> = ({ guestName, bgUrl }) => {
   const [messages, setMessages] = useState<GuestMessage[]>([]);
   const [attendance, setAttendance] = useState<'hadir' | 'tidak' | 'ragu'>('hadir');
   const [inputMessage, setInputMessage] = useState('');
@@ -85,8 +86,15 @@ const GuestBook: React.FC<GuestBookProps> = ({ guestName }) => {
     }
   };
 
+  const sectionStyle = bgUrl ? { 
+    backgroundImage: `url('${getDriveMediaUrl(bgUrl)}')`, 
+    backgroundSize: 'cover', 
+    backgroundPosition: 'center' 
+  } : {};
+
   return (
-    <section className="py-20 px-6 bg-white relative">
+    <section className={`py-20 px-6 relative overflow-hidden ${bgUrl ? '' : 'bg-white'}`} style={sectionStyle}>
+      {bgUrl && <div className="absolute inset-0 bg-white/60 backdrop-blur-[2px] z-0" />}
       <div className="relative z-10 max-w-md mx-auto">
         <ScrollReveal>
           <div className="text-center mb-10">
@@ -98,7 +106,7 @@ const GuestBook: React.FC<GuestBookProps> = ({ guestName }) => {
 
         {/* Form Section */}
         <ScrollReveal delay={200}>
-          <div className="bg-slate-50 p-6 rounded-[2rem] shadow-lg border border-blue-50 mb-12">
+          <div className="bg-white/80 backdrop-blur-md p-6 rounded-[2rem] shadow-lg border border-blue-50 mb-12">
             {!isGuestValid ? (
               <div className="text-center py-6 px-2">
                 <Lock className="w-12 h-12 text-slate-300 mx-auto mb-4" />
@@ -203,13 +211,13 @@ const GuestBook: React.FC<GuestBookProps> = ({ guestName }) => {
                     Memuat ucapan...
                 </div>
             ) : messages.length === 0 ? (
-                <div className="text-center py-8 text-slate-400 text-xs italic bg-slate-50 rounded-xl border border-dashed">
+                <div className="text-center py-8 text-slate-400 text-xs italic bg-white/50 backdrop-blur-sm rounded-xl border border-dashed">
                     Belum ada ucapan. Jadilah yang pertama memberikan doa restu!
                 </div>
             ) : (
                 messages.map((msg, idx) => (
                     <ScrollReveal key={msg.id || idx} delay={idx * 50} direction="up">
-                        <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex gap-4 transition-transform hover:scale-[1.01]">
+                        <div className="bg-white/80 backdrop-blur-md p-4 rounded-2xl shadow-sm border border-slate-100 flex gap-4 transition-transform hover:scale-[1.01]">
                             <div className="flex-shrink-0">
                                 <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-white text-lg ${
                                     msg.attendance === 'hadir' ? 'bg-blue-900' : 

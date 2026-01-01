@@ -335,7 +335,7 @@ const App: React.FC = () => {
           </div>
         </section>
 
-        <GuestBook guestName={guestName} />
+        <GuestBook guestName={guestName} bgUrl={weddingData.assets.guestbookBg} />
 
         <footer className="py-12 px-6 text-center bg-white relative">
           <p className="text-slate-400 text-[10px] mb-4 tracking-[0.4em] font-bold uppercase">Kami Yang Berbahagia</p>

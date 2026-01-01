@@ -34,7 +34,8 @@ export const DEFAULT_WEDDING_DATA: WeddingData = {
     coupleBg: "",
     eventsBg: "",
     galleryBg: "",
-    giftBg: ""
+    giftBg: "",
+    guestbookBg: ""
   },
   gallery: [
     { id: '1', url: 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&q=80&w=600', alt: 'Gallery 1' },

@@ -64,6 +64,7 @@ export interface WeddingData {
     eventsBg: string;
     galleryBg: string;
     giftBg: string;
+    guestbookBg: string;
   };
   gallery: GalleryItem[];
   events: EventDetail[];
