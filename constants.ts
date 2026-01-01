@@ -1,5 +1,5 @@
 
-import { WeddingData, GuestMessage } from './types';
+import { WeddingData, GuestMessage, InvitationTemplate } from './types';
 
 // GANTI URL INI DENGAN URL DEPLOYMENT GOOGLE APPS SCRIPT ANDA
 const GOOGLE_SHEET_API_URL = "https://script.google.com/macros/s/AKfycbwEmoyg1MvbuA5s6vtCtr6OcictrH3C7luWZOVs7aHRbduLAi5C6UZ6_elRU44jeuA/exec";
@@ -88,6 +88,51 @@ export const getDriveMediaUrl = (url: string, type: 'image' | 'audio' = 'image')
   return url;
 };
 
+// Catalog Database Functions
+export const fetchTemplateCatalog = async (): Promise<InvitationTemplate[]> => {
+  if (!GOOGLE_SHEET_API_URL || GOOGLE_SHEET_API_URL.includes("XXXXXXXX")) {
+    const saved = localStorage.getItem('vell_invitation_templates');
+    return saved ? JSON.parse(saved) : [];
+  }
+
+  try {
+    const response = await fetch(`${GOOGLE_SHEET_API_URL}?action=get_catalog`);
+    if (!response.ok) throw new Error('Failed to fetch catalog');
+    const data = await response.json();
+    return Array.isArray(data) ? data : [];
+  } catch (error) {
+    console.error("Error fetching catalog:", error);
+    const saved = localStorage.getItem('vell_invitation_templates');
+    return saved ? JSON.parse(saved) : [];
+  }
+};
+
+export const saveTemplateCatalogToCloud = async (templates: InvitationTemplate[]) => {
+  localStorage.setItem('vell_invitation_templates', JSON.stringify(templates));
+
+  if (!GOOGLE_SHEET_API_URL || GOOGLE_SHEET_API_URL.includes("XXXXXXXX")) {
+    return;
+  }
+
+  try {
+    const payload = {
+      action: 'update_catalog',
+      catalog: templates
+    };
+
+    await fetch(GOOGLE_SHEET_API_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+  } catch (error) {
+    console.error("Error saving catalog to cloud:", error);
+    throw error;
+  }
+};
+
+// Wedding Settings Database Functions
 const getLocalFallback = (): WeddingData => {
   try {
       const saved = localStorage.getItem('wedding_invitation_data');

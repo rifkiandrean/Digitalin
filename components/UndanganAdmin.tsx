@@ -1,12 +1,13 @@
 
 import React, { useState, useEffect } from 'react';
-// Added Star to the lucide-react import list
-import { LayoutDashboard, Plus, Trash2, Edit2, Save, X, Image as ImageIcon, ArrowLeft, Tag, DollarSign, Package, Star } from 'lucide-react';
+import { LayoutDashboard, Plus, Trash2, Edit2, Save, X, Image as ImageIcon, ArrowLeft, Tag, DollarSign, Package, Star, CloudIcon, RefreshCw, Loader2 } from 'lucide-react';
 import { InvitationTemplate } from '../types';
+import { saveTemplateCatalogToCloud, fetchTemplateCatalog } from '../constants';
 
 const UndanganAdmin: React.FC = () => {
   const [templates, setTemplates] = useState<InvitationTemplate[]>([]);
   const [isAdding, setIsAdding] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState<Partial<InvitationTemplate>>({
     name: '',
@@ -16,13 +17,30 @@ const UndanganAdmin: React.FC = () => {
   });
 
   useEffect(() => {
-    const saved = localStorage.getItem('vell_invitation_templates');
-    if (saved) setTemplates(JSON.parse(saved));
+    const loadData = async () => {
+      const data = await fetchTemplateCatalog();
+      if (data && data.length > 0) {
+        setTemplates(data);
+      }
+    };
+    loadData();
   }, []);
 
   const saveToStorage = (data: InvitationTemplate[]) => {
     localStorage.setItem('vell_invitation_templates', JSON.stringify(data));
     setTemplates(data);
+  };
+
+  const handleSyncToCloud = async () => {
+    setIsSyncing(true);
+    try {
+      await saveTemplateCatalogToCloud(templates);
+      alert("Katalog berhasil disinkronkan ke Spreadsheet (Database)!");
+    } catch (error) {
+      alert("Gagal sinkronisasi. Periksa koneksi atau API URL Anda.");
+    } finally {
+      setIsSyncing(false);
+    }
   };
 
   const handleSave = () => {
@@ -82,15 +100,27 @@ const UndanganAdmin: React.FC = () => {
           </a>
           <div className="flex items-center gap-2">
             <LayoutDashboard size={20} className="text-indigo-600" />
-            <h1 className="font-bold text-lg">Admin Katalog Undangan</h1>
+            <h1 className="font-bold text-lg">Admin Katalog</h1>
           </div>
         </div>
-        <button 
-          onClick={() => setIsAdding(true)}
-          className="bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 hover:bg-indigo-700 transition-all"
-        >
-          <Plus size={16} /> Tambah Desain
-        </button>
+        <div className="flex items-center gap-2">
+          <button 
+            onClick={handleSyncToCloud}
+            disabled={isSyncing}
+            className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all ${
+              isSyncing ? 'bg-slate-100 text-slate-400' : 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100'
+            }`}
+          >
+            {isSyncing ? <Loader2 size={16} className="animate-spin" /> : <CloudIcon size={16} />}
+            Sync to Cloud
+          </button>
+          <button 
+            onClick={() => setIsAdding(true)}
+            className="bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 hover:bg-indigo-700 transition-all"
+          >
+            <Plus size={16} /> Tambah Desain
+          </button>
+        </div>
       </nav>
 
       <div className="max-w-6xl mx-auto px-6 py-8">
@@ -116,10 +146,10 @@ const UndanganAdmin: React.FC = () => {
           </div>
           <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm">
             <div className="flex items-center gap-4">
-              <div className="p-3 bg-emerald-50 text-emerald-600 rounded-2xl"><DollarSign size={24} /></div>
+              <div className="p-3 bg-emerald-50 text-emerald-600 rounded-2xl"><CloudIcon size={24} /></div>
               <div>
-                <div className="text-2xl font-black">Aktif</div>
-                <div className="text-xs text-slate-400 uppercase font-bold">Status Katalog</div>
+                <div className="text-2xl font-black">Connected</div>
+                <div className="text-xs text-slate-400 uppercase font-bold">Cloud Sync Status</div>
               </div>
             </div>
           </div>
@@ -188,7 +218,7 @@ const UndanganAdmin: React.FC = () => {
                   onClick={handleSave}
                   className="w-full bg-slate-900 text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-indigo-600 transition-all mt-4"
                 >
-                  <Save size={18} /> Simpan Desain
+                  <Save size={18} /> Simpan Lokal
                 </button>
               </div>
             </div>

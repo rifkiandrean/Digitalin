@@ -1,8 +1,9 @@
 
 import React, { useState, useEffect } from 'react';
-import { ShoppingBag, Star, ChevronRight, ArrowLeft, MessageSquare, Tag, Zap, Sparkles, Smartphone, CheckCircle2 } from 'lucide-react';
+import { ShoppingBag, Star, ChevronRight, ArrowLeft, MessageSquare, Tag, Zap, Sparkles, Smartphone, CheckCircle2, Loader2, CloudIcon } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
 import { InvitationTemplate } from '../types';
+import { fetchTemplateCatalog } from '../constants';
 
 const WHATSAPP_NUMBER = "6282115123431";
 
@@ -56,15 +57,33 @@ const DEFAULT_TEMPLATES: InvitationTemplate[] = [
 const TemplateStore: React.FC = () => {
   const [templates, setTemplates] = useState<InvitationTemplate[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const saved = localStorage.getItem('vell_invitation_templates');
-    if (saved) {
-      setTemplates(JSON.parse(saved));
-    } else {
-      setTemplates(DEFAULT_TEMPLATES);
-      localStorage.setItem('vell_invitation_templates', JSON.stringify(DEFAULT_TEMPLATES));
-    }
+    const loadTemplates = async () => {
+      setIsLoading(true);
+      try {
+        const cloudTemplates = await fetchTemplateCatalog();
+        if (cloudTemplates && cloudTemplates.length > 0) {
+          setTemplates(cloudTemplates);
+        } else {
+          // Check local storage if cloud is empty
+          const saved = localStorage.getItem('vell_invitation_templates');
+          if (saved) {
+            setTemplates(JSON.parse(saved));
+          } else {
+            setTemplates(DEFAULT_TEMPLATES);
+          }
+        }
+      } catch (error) {
+        console.error("Failed to load templates:", error);
+        setTemplates(DEFAULT_TEMPLATES);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadTemplates();
   }, []);
 
   const categories = ['All', 'Modern', 'Floral', 'Minimalist', 'Elegant'];
@@ -151,63 +170,72 @@ const TemplateStore: React.FC = () => {
         </div>
       </div>
 
-      {/* Product Grid - Optimized for Mobile 2-column */}
-      <div className="max-w-7xl mx-auto px-2 sm:px-8 mt-8 sm:mt-12 grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-8">
-        {filteredTemplates.map((template, idx) => (
-          <ScrollReveal key={template.id} delay={idx * 50} direction="up">
-            <div className="bg-white rounded-[1.5rem] sm:rounded-[2.5rem] border border-slate-100 overflow-hidden shadow-sm hover:shadow-[0_20px_50px_rgba(79,70,229,0.12)] transition-all duration-700 group flex flex-col h-full">
-              
-              {/* Media Container */}
-              <div className="aspect-[4/5] relative overflow-hidden m-1.5 sm:m-3.5 rounded-[1.2rem] sm:rounded-[2rem]">
-                <img 
-                  src={template.previewImageUrl} 
-                  alt={template.name} 
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[2000ms] ease-out"
-                />
-                
-                {/* Floating Labels */}
-                <div className="absolute top-2 sm:top-4 left-2 sm:left-4 flex flex-col gap-1 sm:gap-2 pointer-events-none">
-                  {template.isPopular && (
-                    <div className="bg-[#fbbf24] text-white px-2 sm:px-4 py-1 sm:py-2 rounded-full text-[7px] sm:text-[9px] font-black uppercase tracking-widest shadow-xl border border-white/20 flex items-center gap-1 backdrop-blur-sm bg-[#fbbf24]/90">
-                      <Star size={8} fill="currentColor" className="sm:w-[10px] sm:h-[10px]" /> Best
+      {/* Product Grid */}
+      <div className="max-w-7xl mx-auto px-2 sm:px-8 mt-8 sm:mt-12">
+        {isLoading ? (
+          <div className="flex flex-col items-center justify-center py-24 text-slate-400">
+            <Loader2 size={40} className="animate-spin mb-4 text-indigo-600" />
+            <p className="text-sm font-bold uppercase tracking-widest">Menghubungkan ke Database...</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-8">
+            {filteredTemplates.map((template, idx) => (
+              <ScrollReveal key={template.id} delay={idx * 50} direction="up">
+                <div className="bg-white rounded-[1.5rem] sm:rounded-[2.5rem] border border-slate-100 overflow-hidden shadow-sm hover:shadow-[0_20px_50px_rgba(79,70,229,0.12)] transition-all duration-700 group flex flex-col h-full">
+                  
+                  {/* Media Container */}
+                  <div className="aspect-[4/5] relative overflow-hidden m-1.5 sm:m-3.5 rounded-[1.2rem] sm:rounded-[2rem]">
+                    <img 
+                      src={template.previewImageUrl} 
+                      alt={template.name} 
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[2000ms] ease-out"
+                    />
+                    
+                    {/* Floating Labels */}
+                    <div className="absolute top-2 sm:top-4 left-2 sm:left-4 flex flex-col gap-1 sm:gap-2 pointer-events-none">
+                      {template.isPopular && (
+                        <div className="bg-[#fbbf24] text-white px-2 sm:px-4 py-1 sm:py-2 rounded-full text-[7px] sm:text-[9px] font-black uppercase tracking-widest shadow-xl border border-white/20 flex items-center gap-1 backdrop-blur-sm bg-[#fbbf24]/90">
+                          <Star size={8} fill="currentColor" className="sm:w-[10px] sm:h-[10px]" /> Best
+                        </div>
+                      )}
+                      <div className="bg-white/95 text-slate-800 px-2 sm:px-4 py-1 sm:py-2 rounded-full text-[7px] sm:text-[9px] font-black uppercase tracking-widest shadow-md border border-slate-100/50">
+                        {template.category}
+                      </div>
                     </div>
-                  )}
-                  <div className="bg-white/95 text-slate-800 px-2 sm:px-4 py-1 sm:py-2 rounded-full text-[7px] sm:text-[9px] font-black uppercase tracking-widest shadow-md border border-slate-100/50">
-                    {template.category}
+
+                    <div className="absolute inset-0 bg-indigo-600/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <div className="bg-white p-3 sm:p-5 rounded-full shadow-2xl scale-50 group-hover:scale-100 transition-transform duration-500">
+                            <ShoppingBag size={18} className="text-indigo-600 sm:w-6 sm:h-6" />
+                        </div>
+                    </div>
+                  </div>
+
+                  {/* Product Info */}
+                  <div className="p-3 sm:p-7 pt-1 sm:pt-2 flex flex-col flex-1">
+                    <div className="mb-3 sm:mb-6">
+                      <h3 className="text-sm sm:text-xl font-bold text-slate-800 mb-1 sm:mb-2 group-hover:text-indigo-600 transition-colors line-clamp-1">
+                          {template.name}
+                      </h3>
+                      <div className="inline-flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3.5 py-1 sm:py-1.5 bg-indigo-50/50 text-indigo-600 rounded-lg sm:rounded-xl border border-indigo-50">
+                        <Tag size={10} className="opacity-70 sm:w-3 sm:h-3" />
+                        <span className="font-black text-[10px] sm:text-sm tracking-tight">{formatPrice(template.price)}</span>
+                      </div>
+                    </div>
+
+                    <button 
+                      onClick={() => handleOrder(template)}
+                      className="mt-auto w-full bg-[#1e293b] text-white py-3 sm:py-4.5 rounded-xl sm:rounded-[1.5rem] font-black text-[9px] sm:text-[11px] uppercase tracking-[0.15em] sm:tracking-[0.2em] flex items-center justify-center gap-2 sm:gap-3 hover:bg-indigo-600 transition-all active:scale-[0.97] shadow-lg shadow-slate-100 group-hover:shadow-indigo-100"
+                    >
+                      <MessageSquare size={14} className="sm:w-[18px] sm:h-[18px]" />
+                      <span className="hidden sm:inline">Pesan Sekarang</span>
+                      <span className="sm:hidden">Pesan</span>
+                    </button>
                   </div>
                 </div>
-
-                <div className="absolute inset-0 bg-indigo-600/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <div className="bg-white p-3 sm:p-5 rounded-full shadow-2xl scale-50 group-hover:scale-100 transition-transform duration-500">
-                        <ShoppingBag size={18} className="text-indigo-600 sm:w-6 sm:h-6" />
-                    </div>
-                </div>
-              </div>
-
-              {/* Product Info */}
-              <div className="p-3 sm:p-7 pt-1 sm:pt-2 flex flex-col flex-1">
-                <div className="mb-3 sm:mb-6">
-                  <h3 className="text-sm sm:text-xl font-bold text-slate-800 mb-1 sm:mb-2 group-hover:text-indigo-600 transition-colors line-clamp-1">
-                      {template.name}
-                  </h3>
-                  <div className="inline-flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3.5 py-1 sm:py-1.5 bg-indigo-50/50 text-indigo-600 rounded-lg sm:rounded-xl border border-indigo-50">
-                    <Tag size={10} className="opacity-70 sm:w-3 sm:h-3" />
-                    <span className="font-black text-[10px] sm:text-sm tracking-tight">{formatPrice(template.price)}</span>
-                  </div>
-                </div>
-
-                <button 
-                  onClick={() => handleOrder(template)}
-                  className="mt-auto w-full bg-[#1e293b] text-white py-3 sm:py-4.5 rounded-xl sm:rounded-[1.5rem] font-black text-[9px] sm:text-[11px] uppercase tracking-[0.15em] sm:tracking-[0.2em] flex items-center justify-center gap-2 sm:gap-3 hover:bg-indigo-600 transition-all active:scale-[0.97] shadow-lg shadow-slate-100 group-hover:shadow-indigo-100"
-                >
-                  <MessageSquare size={14} className="sm:w-[18px] sm:h-[18px]" />
-                  <span className="hidden sm:inline">Pesan Sekarang</span>
-                  <span className="sm:hidden">Pesan</span>
-                </button>
-              </div>
-            </div>
-          </ScrollReveal>
-        ))}
+              </ScrollReveal>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Benefits Section */}
