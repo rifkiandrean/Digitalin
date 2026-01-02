@@ -41,6 +41,14 @@ export interface GuestMessage {
   timestamp: string;
 }
 
+export interface GuestQueueItem {
+  id: string;
+  name: string;
+  phone: string;
+  status: 'queued' | 'sent';
+  timestamp: string;
+}
+
 export interface WeddingData {
   groomName: string;
   brideName: string;
