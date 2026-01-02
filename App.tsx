@@ -6,6 +6,7 @@ import TemplateStore from './components/TemplateStore';
 import UndanganAdmin from './components/UndanganAdmin';
 import Portfolio from './components/Portfolio';
 import WeddingInvitation from './components/WeddingInvitation';
+import GuestGenerator from './components/wedding/GuestGenerator';
 
 // Daftar rute layanan yang didukung
 const GENERAL_SERVICE_PATHS = [
@@ -30,6 +31,8 @@ const App: React.FC = () => {
     // Set dynamic titles based on path
     if (currentPath === '/undangan/hani-pupud') {
       document.title = "Undangan Hani & Pupud";
+    } else if (currentPath === '/undangan/hani-pupud/tamugenerator') {
+      document.title = "WhatsApp Guest Generator - Hani & Pupud";
     } else if (currentPath === '/undangan') {
       document.title = "Katalog Undangan Digital - Vell Digital";
     } else if (currentPath === '/undangan/admin') {
@@ -48,6 +51,10 @@ const App: React.FC = () => {
   // Main Routing Logic
   if (currentPath === '/undangan/hani-pupud') {
     return <WeddingInvitation />;
+  }
+
+  if (currentPath === '/undangan/hani-pupud/tamugenerator') {
+    return <GuestGenerator />;
   }
   
   if (currentPath === '/undangan') {
