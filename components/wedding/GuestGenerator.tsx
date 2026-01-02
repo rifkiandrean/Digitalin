@@ -17,30 +17,45 @@ import {
   CheckCircle2,
   Clock,
   LayoutGrid,
-  ListFilter
+  ListFilter,
+  Users,
+  Plus,
+  Type,
+  MoreVertical
 } from 'lucide-react';
 import { fetchWeddingData, getDriveMediaUrl, DEFAULT_WEDDING_DATA } from '../../constants';
 import { WeddingData, GuestQueueItem } from '../../types';
+
+interface MessageTemplate {
+  id: string;
+  name: string;
+  content: string;
+}
 
 const GuestGenerator: React.FC = () => {
   const [weddingData, setWeddingData] = useState<WeddingData | null>(null);
   const [guestName, setGuestName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [messageTemplate, setMessageTemplate] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   
+  // Templates State
+  const [templates, setTemplates] = useState<MessageTemplate[]>([]);
+  const [selectedTemplateId, setSelectedTemplateId] = useState("");
+  const [showTemplateEditor, setShowTemplateEditor] = useState(false);
+  const [editingTemplate, setEditingTemplate] = useState<Partial<MessageTemplate>>({});
+
   // Queue & History State
   const [guestQueue, setGuestQueue] = useState<GuestQueueItem[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState<'all' | 'queued' | 'sent'>('all');
 
   useEffect(() => {
-    // Load saved queue from localStorage
+    // Load saved queue & templates from localStorage
     const savedQueue = localStorage.getItem('wedding_guest_queue');
-    if (savedQueue) {
-      setGuestQueue(JSON.parse(savedQueue));
-    }
+    if (savedQueue) setGuestQueue(JSON.parse(savedQueue));
 
+    const savedTemplates = localStorage.getItem('wedding_msg_templates');
+    
     const initData = async () => {
       try {
         const data = await fetchWeddingData();
@@ -52,9 +67,26 @@ const GuestGenerator: React.FC = () => {
           ? new Date(firstEvent.date).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
           : firstEvent.date;
 
-        const defaultMsg = `Assalamu’alaikum Warahmatullahi Wabarakatuh / Salam Sejahtera,\n\nTanpa mengurangi rasa hormat, izinkan kami mengundang Bapak/Ibu/Saudara/i [Nama Tamu] untuk hadir di acara pernikahan kami:\n\n*${mergedData.groomName} & ${mergedData.brideName}*\n\nWaktu: ${dateStr}\nPukul: ${firstEvent.time}\nTempat: ${firstEvent.location}\nLink Lokasi: ${firstEvent.mapsUrl}\n\nLink Undangan Digital:\n[Link Undangan]\n\nMerupakan suatu kehormatan bagi kami apabila Bapak/Ibu berkenan hadir untuk memberikan doa restu bagi kami berdua.\n\nTerima kasih atas perhatiannya. Kami yang berbahagia,\n*${mergedData.coupleShortName} & Keluarga Besar*`;
-        
-        setMessageTemplate(defaultMsg);
+        if (savedTemplates) {
+          const parsed = JSON.parse(savedTemplates);
+          setTemplates(parsed);
+          setSelectedTemplateId(parsed[0]?.id || "");
+        } else {
+          const defaultTpl: MessageTemplate = {
+            id: '1',
+            name: 'Formal',
+            content: `Assalamu’alaikum Warahmatullahi Wabarakatuh,\n\nTanpa mengurangi rasa hormat, izinkan kami mengundang Bapak/Ibu/Saudara/i [Nama Tamu] untuk hadir di acara pernikahan kami:\n\n*${mergedData.groomName} & ${mergedData.brideName}*\n\nWaktu: ${dateStr}\nPukul: ${firstEvent.time}\nTempat: ${firstEvent.location}\n\nLink Undangan Digital:\n[Link Undangan]\n\nTerima kasih atas perhatiannya.\n*${mergedData.coupleShortName}*`
+          };
+          const informalTpl: MessageTemplate = {
+            id: '2',
+            name: 'Santai',
+            content: `Halo [Nama Tamu]! 👋\n\nKami mau mengundang kamu untuk hadir di hari bahagia kami nih!\n\n*${mergedData.coupleShortName} Wedding*\n📅 ${dateStr}\n📍 ${firstEvent.location}\n\nCek info lengkapnya di sini ya:\n[Link Undangan]\n\nSampai jumpa di sana! ✨`
+          };
+          const list = [defaultTpl, informalTpl];
+          setTemplates(list);
+          setSelectedTemplateId('1');
+          localStorage.setItem('wedding_msg_templates', JSON.stringify(list));
+        }
       } catch (err) {
         console.error("Failed to fetch wedding data", err);
       } finally {
@@ -64,16 +96,55 @@ const GuestGenerator: React.FC = () => {
     initData();
   }, []);
 
-  // Save to localStorage whenever queue changes
+  // Sync states to storage
   useEffect(() => {
     localStorage.setItem('wedding_guest_queue', JSON.stringify(guestQueue));
   }, [guestQueue]);
 
+  useEffect(() => {
+    if (templates.length > 0) {
+      localStorage.setItem('wedding_msg_templates', JSON.stringify(templates));
+    }
+  }, [templates]);
+
+  const handlePickContact = async () => {
+    // Check if Contact Picker API is supported
+    const supportsContacts = 'contacts' in navigator && 'select' in (navigator as any).contacts;
+    
+    if (!supportsContacts) {
+      alert("Browser Anda belum mendukung fitur ambil kontak langsung. Silakan masukkan nomor secara manual.");
+      return;
+    }
+
+    try {
+      const props = ['name', 'tel'];
+      const opts = { multiple: false };
+      const contacts = await (navigator as any).contacts.select(props, opts);
+      
+      if (contacts.length > 0) {
+        const contact = contacts[0];
+        if (contact.name && contact.name[0]) setGuestName(contact.name[0]);
+        if (contact.tel && contact.tel[0]) {
+          // Clean phone number
+          const cleanPhone = contact.tel[0].replace(/[^0-9]/g, '');
+          setPhoneNumber(cleanPhone);
+        }
+      }
+    } catch (err) {
+      console.error("Contact picker error:", err);
+    }
+  };
+
+  const currentTemplate = useMemo(() => {
+    return templates.find(t => t.id === selectedTemplateId) || templates[0];
+  }, [templates, selectedTemplateId]);
+
   const getProcessedMessage = (name: string) => {
+    if (!currentTemplate) return "";
     const baseUrl = window.location.origin + '/undangan/hani-pupud';
     const guestLink = `${baseUrl}?to=${encodeURIComponent(name || "Tamu Undangan")}`;
     
-    return messageTemplate
+    return currentTemplate.content
       .replace(/\[Nama Tamu\]/g, name || "Bapak/Ibu/Saudara/i")
       .replace(/\[Link Undangan\]/g, guestLink);
   };
@@ -117,13 +188,36 @@ const GuestGenerator: React.FC = () => {
     window.open(waUrl, '_blank');
   };
 
+  // Function to delete a guest item from the queue
   const handleDeleteItem = (id: string) => {
-    setGuestQueue(prev => prev.filter(item => item.id !== id));
+    if (confirm("Hapus tamu dari daftar antrean?")) {
+      setGuestQueue(prev => prev.filter(item => item.id !== id));
+    }
   };
 
-  const handleClearQueue = () => {
-    if (confirm("Hapus semua data dalam daftar?")) {
-      setGuestQueue([]);
+  const handleSaveTemplate = () => {
+    if (!editingTemplate.name || !editingTemplate.content) return;
+    
+    if (editingTemplate.id) {
+      setTemplates(prev => prev.map(t => t.id === editingTemplate.id ? (editingTemplate as MessageTemplate) : t));
+    } else {
+      const newTpl = { ...editingTemplate, id: Date.now().toString() } as MessageTemplate;
+      setTemplates(prev => [...prev, newTpl]);
+      setSelectedTemplateId(newTpl.id);
+    }
+    setShowTemplateEditor(false);
+    setEditingTemplate({});
+  };
+
+  const handleDeleteTemplate = (id: string) => {
+    if (templates.length <= 1) {
+      alert("Minimal harus ada satu template.");
+      return;
+    }
+    if (confirm("Hapus template ini?")) {
+      const newList = templates.filter(t => t.id !== id);
+      setTemplates(newList);
+      if (selectedTemplateId === id) setSelectedTemplateId(newList[0].id);
     }
   };
 
@@ -152,7 +246,7 @@ const GuestGenerator: React.FC = () => {
   }
 
   return (
-    <div className="max-w-[480px] mx-auto min-h-screen bg-slate-50 flex flex-col font-sans text-slate-900 pb-20 shadow-2xl">
+    <div className="max-w-[480px] mx-auto min-h-screen bg-slate-50 flex flex-col font-sans text-slate-900 pb-20 shadow-2xl relative">
       {/* Header */}
       <header className="bg-white border-b px-6 py-4 sticky top-0 z-50 flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -165,21 +259,51 @@ const GuestGenerator: React.FC = () => {
           </div>
         </div>
         <div className="flex items-center gap-2">
-            <button onClick={handleClearQueue} className="p-2 text-slate-300 hover:text-red-500 transition-colors" title="Kosongkan Daftar">
+            <button onClick={() => { setEditingTemplate({}); setShowTemplateEditor(true); }} className="p-2 text-indigo-600 hover:bg-indigo-50 rounded-full" title="Tambah Template">
+                <Plus size={18} />
+            </button>
+            <button onClick={() => { if(confirm("Kosongkan daftar?")) setGuestQueue([]); }} className="p-2 text-slate-300 hover:text-red-500" title="Kosongkan Daftar">
                 <Trash2 size={18} />
             </button>
-            <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white">
-                <MessageSquare size={16} />
-            </div>
         </div>
       </header>
 
       <main className="p-4 space-y-6">
+        {/* Template Selector */}
+        <div className="space-y-3">
+          <div className="flex items-center justify-between px-2">
+            <h2 className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Pilih Template Pesan</h2>
+            <button onClick={() => { setEditingTemplate(currentTemplate); setShowTemplateEditor(true); }} className="text-[9px] font-bold text-indigo-600 flex items-center gap-1">
+               <Settings2 size={10} /> Edit Template
+            </button>
+          </div>
+          <div className="flex gap-2 overflow-x-auto no-scrollbar py-1">
+            {templates.map(tpl => (
+              <button
+                key={tpl.id}
+                onClick={() => setSelectedTemplateId(tpl.id)}
+                className={`px-4 py-2 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap border ${
+                  selectedTemplateId === tpl.id 
+                  ? 'bg-slate-800 text-white border-slate-800 shadow-md' 
+                  : 'bg-white text-slate-400 border-slate-100 hover:bg-slate-50'
+                }`}
+              >
+                {tpl.name}
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* Input Form Section */}
         <section className="bg-white p-5 rounded-[2rem] border border-slate-100 shadow-sm animate-fade-in-up">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Input Tamu Baru</h2>
-            <Settings2 size={14} className="text-slate-300" />
+            <button 
+              onClick={handlePickContact}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 text-indigo-600 rounded-full text-[9px] font-black uppercase tracking-widest hover:bg-indigo-100 transition-all"
+            >
+              <Users size={12} /> Ambil Kontak
+            </button>
           </div>
           
           <form onSubmit={handleAddToQueue} className="space-y-4">
@@ -256,7 +380,7 @@ const GuestGenerator: React.FC = () => {
 
         {/* Guest List Queue */}
         <div className="space-y-3">
-            <h2 className="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-2">Daftar Tamu</h2>
+            <h2 className="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-2">Antrean Pengiriman</h2>
             {filteredQueue.length === 0 ? (
                 <div className="bg-white p-12 rounded-[2rem] border border-dashed border-slate-200 text-center flex flex-col items-center">
                     <ListFilter className="text-slate-200 w-12 h-12 mb-4" />
@@ -306,16 +430,56 @@ const GuestGenerator: React.FC = () => {
         </div>
       </main>
 
-      {/* Floating Template Config Trigger */}
-      <button 
-        onClick={() => {
-            const newTpl = prompt("Edit Template Pesan:", messageTemplate);
-            if (newTpl) setMessageTemplate(newTpl);
-        }}
-        className="fixed bottom-6 right-6 w-14 h-14 bg-white text-indigo-600 rounded-full shadow-2xl flex items-center justify-center border border-indigo-50 hover:bg-indigo-50 transition-all z-40"
-      >
-        <Settings2 size={24} />
-      </button>
+      {/* Template Editor Modal */}
+      {showTemplateEditor && (
+        <div className="fixed inset-0 z-[100] bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white w-full max-w-[400px] rounded-[2.5rem] p-6 shadow-2xl animate-fade-in-up">
+            <div className="flex justify-between items-center mb-6 px-2">
+              <h2 className="text-lg font-bold">{editingTemplate.id ? 'Edit Template' : 'Template Baru'}</h2>
+              {editingTemplate.id && (
+                <button onClick={() => handleDeleteTemplate(editingTemplate.id!)} className="text-red-500 p-2"><Trash2 size={18} /></button>
+              )}
+            </div>
+            <div className="space-y-4">
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold uppercase text-slate-400 ml-2">Nama Template</label>
+                <input 
+                  value={editingTemplate.name || ""}
+                  onChange={e => setEditingTemplate({...editingTemplate, name: e.target.value})}
+                  placeholder="Misal: Formal, Teman, Keluarga"
+                  className="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:ring-2 focus:ring-indigo-600 text-sm font-bold"
+                />
+              </div>
+              <div className="space-y-1">
+                <div className="flex justify-between px-2">
+                  <label className="text-[10px] font-bold uppercase text-slate-400">Isi Pesan</label>
+                  <span className="text-[9px] font-bold text-indigo-500">Gunakan [Nama Tamu] & [Link Undangan]</span>
+                </div>
+                <textarea 
+                  value={editingTemplate.content || ""}
+                  onChange={e => setEditingTemplate({...editingTemplate, content: e.target.value})}
+                  placeholder="Tulis pesan di sini..."
+                  className="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:ring-2 focus:ring-indigo-600 text-sm min-h-[200px] resize-none"
+                />
+              </div>
+              <div className="flex gap-2 pt-2">
+                <button 
+                  onClick={() => setShowTemplateEditor(false)}
+                  className="flex-1 py-4 bg-slate-100 text-slate-500 rounded-2xl font-black uppercase tracking-widest text-[10px]"
+                >
+                  Batal
+                </button>
+                <button 
+                  onClick={handleSaveTemplate}
+                  className="flex-1 py-4 bg-indigo-600 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-lg shadow-indigo-100"
+                >
+                  Simpan
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <footer className="mt-auto py-8 text-center text-[9px] font-black uppercase tracking-[0.4em] text-slate-300">
         Vell Digital • Bulk Management
