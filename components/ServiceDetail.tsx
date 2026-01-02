@@ -82,7 +82,7 @@ const ServiceDetail: React.FC<ServiceDetailProps> = ({ path }) => {
                     Konsultasikan ide Anda secara gratis dengan tim ahli kami dan dapatkan penawaran harga terbaik.
                   </p>
                   <a 
-                    href="https://wa.me/628123456789" 
+                    href="https://wa.me/6282115123431" 
                     className="inline-flex items-center gap-3 bg-white text-indigo-900 px-10 py-5 rounded-3xl font-black hover:bg-indigo-50 transition-all shadow-2xl active:scale-95 uppercase tracking-widest text-sm"
                   >
                     <MessageSquare size={20} />
@@ -101,7 +101,7 @@ const ServiceDetail: React.FC<ServiceDetailProps> = ({ path }) => {
             <div className="flex justify-center gap-6">
                <a href="/" className="text-slate-500 hover:text-indigo-600 text-sm font-medium">Beranda</a>
                <a href="/undangan" className="text-slate-500 hover:text-indigo-600 text-sm font-medium">Layanan</a>
-               <a href="https://wa.me/628123456789" className="text-slate-500 hover:text-indigo-600 text-sm font-medium">Kontak</a>
+               <a href="https://wa.me/6282115123431" className="text-slate-500 hover:text-indigo-600 text-sm font-medium">Kontak</a>
             </div>
          </div>
       </footer>
