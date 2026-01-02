@@ -30,31 +30,36 @@ export const FloralCorner = ({ position, assets }: { position: 'top-left' | 'top
     'bottom-right': '-bottom-12 -right-12 scale-x-[-1] scale-y-[-1]' 
   };
 
+  // Pastikan aset tersedia atau gunakan fallback ke floralCorner utama
+  const imgBack = getDriveMediaUrl(assets.floralCornerBack || assets.floralCorner);
+  const imgMid = getDriveMediaUrl(assets.floralCornerMid || assets.floralCorner);
+  const imgFront = getDriveMediaUrl(assets.floralCorner);
+
   return (
     <div className={`absolute pointer-events-none select-none z-30 w-56 h-56 md:w-72 md:h-72 ${styles[position]}`}>
-      {/* BACK LAYER */}
-      <div className="absolute inset-0 transform scale-[1.3] scale-x-[-1] opacity-20 blur-[1px]">
+      {/* BACK LAYER - Dibuat lebih besar dan lebih terlihat */}
+      <div className="absolute inset-0 transform scale-[1.3] origin-base opacity-30 blur-[0.5px]">
           <img 
-            src={getDriveMediaUrl(assets.floralCornerBack || assets.floralCorner)} 
+            src={imgBack} 
             alt="floral-back" 
             className="w-full h-full object-contain origin-base animate-floral-sway-gentle rotate-[15deg] translate-x-4 translate-y-4" 
           />
       </div>
       
-      {/* MID LAYER */}
-      <div className="absolute inset-0 transform scale-[1.15] opacity-40">
+      {/* MID LAYER - Opasitas ditingkatkan agar tidak transparan berlebih */}
+      <div className="absolute inset-0 transform scale-[1.15] origin-base opacity-60">
           <img 
-            src={getDriveMediaUrl(assets.floralCornerMid || assets.floralCorner)} 
+            src={imgMid} 
             alt="floral-mid" 
             className="w-full h-full object-contain origin-base animate-floral-sway-gentle -rotate-[8deg] translate-x-2 translate-y-2" 
             style={{ animationDelay: '-1.5s' }}
           />
       </div>
 
-      {/* FRONT LAYER */}
-      <div className="absolute inset-0 opacity-100 drop-shadow-xl">
+      {/* FRONT LAYER - Lapisan utama paling depan */}
+      <div className="absolute inset-0 opacity-100 drop-shadow-xl origin-base">
           <img 
-            src={getDriveMediaUrl(assets.floralCorner)} 
+            src={imgFront} 
             alt="floral-front" 
             className="w-full h-full object-contain origin-base animate-floral-sway" 
           />
