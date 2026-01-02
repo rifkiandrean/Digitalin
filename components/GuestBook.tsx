@@ -25,8 +25,12 @@ const GuestBook: React.FC<GuestBookProps> = ({ guestName, bgUrl }) => {
     setIsLoadingMessages(true);
     try {
         const data = await fetchGuestMessages();
-        // Urutkan dari yang terbaru (asumsi id adalah timestamp atau urutan masuk)
-        const sortedData = data.sort((a, b) => Number(b.id) - Number(a.id));
+        // Urutkan dari yang terbaru berdasarkan timestamp/id
+        const sortedData = [...data].sort((a, b) => {
+            const idA = parseInt(a.id) || 0;
+            const idB = parseInt(b.id) || 0;
+            return idB - idA;
+        });
         setMessages(sortedData);
     } catch (e) {
         console.error("Error loading messages");
@@ -50,21 +54,25 @@ const GuestBook: React.FC<GuestBookProps> = ({ guestName, bgUrl }) => {
       name: guestName,
       attendance: attendance,
       message: inputMessage,
-      timestamp: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
+      timestamp: new Date().toLocaleString('id-ID', { 
+        day: 'numeric', 
+        month: 'short', 
+        year: 'numeric',
+        hour: '2-digit', 
+        minute: '2-digit' 
+      })
     };
 
     try {
-      // Optimistic UI Update: Tampilkan dulu sebelum sukses fetch
-      setMessages([newMessage, ...messages]);
-      setHasSubmitted(true);
-      setInputMessage('');
-      
-      // Kirim ke Database
+      // Kirim ke Database (Sheet guestbook)
       await sendGuestMessageToCloud(newMessage);
       
+      // Update UI
+      setMessages(prev => [newMessage, ...prev]);
+      setHasSubmitted(true);
+      setInputMessage('');
     } catch (error) {
       alert("Gagal mengirim pesan. Silakan coba lagi.");
-      // Rollback jika gagal (opsional, tapi untuk UX lebih baik biarkan dulu)
     } finally {
       setIsSubmitting(false);
     }
@@ -100,19 +108,18 @@ const GuestBook: React.FC<GuestBookProps> = ({ guestName, bgUrl }) => {
           <div className="text-center mb-10">
             <MessageCircle className="w-12 h-12 mx-auto mb-4 text-blue-900 opacity-20" />
             <h2 className="font-script text-5xl text-blue-900 mb-4 animate-fade-in-up">Kehadiran & Ucapan</h2>
-            <p className="text-slate-500 text-xs animate-fade-in-up" style={{ animationDelay: '0.2s' }}>Mohon konfirmasi kehadiran dan berikan doa restu Anda.</p>
+            <p className="text-slate-500 text-xs animate-fade-in-up">Mohon konfirmasi kehadiran dan berikan doa restu Anda.</p>
           </div>
         </ScrollReveal>
 
-        {/* Form Section */}
         <ScrollReveal delay={200}>
           <div className="bg-white/80 backdrop-blur-md p-6 rounded-[2rem] shadow-lg border border-blue-50 mb-12">
             {!isGuestValid ? (
               <div className="text-center py-6 px-2">
                 <Lock className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-                <h3 className="font-bold text-slate-700 mb-2">Akses Terbatas</h3>
-                <p className="text-xs text-slate-500 leading-relaxed">
-                  Mohon maaf, fitur pengisian buku tamu hanya tersedia bagi tamu yang menerima tautan undangan personal (dengan nama yang tercantum).
+                <h3 className="font-bold text-slate-700 mb-2 text-sm">Akses Terbatas</h3>
+                <p className="text-[10px] text-slate-500 leading-relaxed">
+                  Fitur buku tamu tersedia melalui tautan undangan personal.
                 </p>
               </div>
             ) : hasSubmitted ? (
@@ -121,54 +128,54 @@ const GuestBook: React.FC<GuestBookProps> = ({ guestName, bgUrl }) => {
                   <CheckCircle className="w-8 h-8 text-green-600" />
                 </div>
                 <h3 className="font-serif text-xl text-blue-900 mb-2">Terima Kasih!</h3>
-                <p className="text-xs text-slate-500">Konfirmasi kehadiran dan ucapan Anda telah kami terima.</p>
+                <p className="text-xs text-slate-500">Ucapan Anda telah tersimpan di buku tamu kami.</p>
                 <button 
                   onClick={() => setHasSubmitted(false)}
-                  className="mt-6 text-[10px] font-bold text-blue-900 underline uppercase tracking-widest"
+                  className="mt-6 text-[10px] font-black text-blue-900 underline uppercase tracking-widest"
                 >
-                  Kirim Ucapan Lagi
+                  Kirim Ucapan Lain
                 </button>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-1">
-                  <label className="text-[10px] font-bold uppercase text-slate-400 ml-2">Nama Tamu</label>
-                  <div className="flex items-center gap-3 bg-white p-3 rounded-xl border border-slate-200">
-                    <User className="w-5 h-5 text-blue-900/50" />
-                    <span className="font-bold text-slate-700 capitalize">{guestName}</span>
+                  <label className="text-[10px] font-black uppercase text-slate-400 ml-2 tracking-widest">Nama Anda</label>
+                  <div className="flex items-center gap-3 bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+                    <User className="w-4 h-4 text-blue-900/50" />
+                    <span className="font-bold text-slate-700 capitalize text-sm">{guestName}</span>
                   </div>
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-[10px] font-bold uppercase text-slate-400 ml-2">Konfirmasi Kehadiran</label>
+                  <label className="text-[10px] font-black uppercase text-slate-400 ml-2 tracking-widest">Kehadiran</label>
                   <div className="grid grid-cols-3 gap-2">
                     {['hadir', 'ragu', 'tidak'].map((status) => (
                       <button
                         key={status}
                         type="button"
                         onClick={() => setAttendance(status as any)}
-                        className={`p-2 rounded-xl border text-[10px] font-bold uppercase transition-all flex flex-col items-center gap-1 ${
+                        className={`p-3 rounded-2xl border text-[9px] font-black uppercase transition-all flex flex-col items-center gap-1.5 ${
                           attendance === status 
-                            ? 'bg-blue-900 text-white border-blue-900 shadow-md transform scale-105' 
-                            : 'bg-white text-slate-500 border-slate-200 hover:bg-slate-50'
+                            ? 'bg-blue-900 text-white border-blue-900 shadow-lg' 
+                            : 'bg-white text-slate-400 border-slate-100 hover:bg-slate-50'
                         }`}
                       >
                         {status === 'hadir' && <CheckCircle size={14} />}
                         {status === 'ragu' && <HelpCircle size={14} />}
                         {status === 'tidak' && <XCircle size={14} />}
-                        <span>{status === 'tidak' ? 'Maaf' : status}</span>
+                        <span>{status === 'tidak' ? 'Absen' : status}</span>
                       </button>
                     ))}
                   </div>
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-[10px] font-bold uppercase text-slate-400 ml-2">Ucapan & Doa</label>
+                  <label className="text-[10px] font-black uppercase text-slate-400 ml-2 tracking-widest">Ucapan & Doa</label>
                   <textarea
                     value={inputMessage}
                     onChange={(e) => setInputMessage(e.target.value)}
-                    placeholder="Tuliskan ucapan dan doa restu Anda di sini..."
-                    className="w-full p-4 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm min-h-[120px] resize-none placeholder:text-slate-300"
+                    placeholder="Tuliskan doa restu Anda..."
+                    className="w-full p-5 bg-white border border-slate-100 rounded-2xl focus:ring-2 focus:ring-blue-900/20 outline-none text-sm min-h-[140px] resize-none shadow-sm"
                     required
                   />
                 </div>
@@ -176,29 +183,26 @@ const GuestBook: React.FC<GuestBookProps> = ({ guestName, bgUrl }) => {
                 <button
                   type="submit"
                   disabled={isSubmitting || !inputMessage.trim()}
-                  className="w-full bg-blue-900 text-white py-4 rounded-xl font-bold uppercase tracking-widest text-xs hover:bg-blue-800 transition-all shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="w-full bg-blue-900 text-white py-5 rounded-2xl font-black uppercase tracking-widest text-[11px] hover:bg-blue-800 transition-all shadow-xl active:scale-95 disabled:opacity-50 flex items-center justify-center gap-3"
                 >
                   {isSubmitting ? (
-                    <span className="flex items-center gap-2"><Loader2 className="animate-spin" size={16} /> Mengirim...</span>
+                    <Loader2 className="animate-spin" size={16} />
                   ) : (
-                    <>
-                      <Send size={16} />
-                      <span>Kirim Ucapan</span>
-                    </>
+                    <Send size={16} />
                   )}
+                  {isSubmitting ? 'Mengirim...' : 'Kirim Sekarang'}
                 </button>
               </form>
             )}
           </div>
         </ScrollReveal>
 
-        {/* List Ucapan */}
-        <div className="space-y-4 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
-            <div className="flex items-center justify-between mb-6">
-                <h3 className="text-center font-serif text-lg text-slate-800">Doa & Ucapan Terbaru</h3>
+        <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar pb-10">
+            <div className="flex items-center justify-between mb-8 px-2">
+                <h3 className="font-serif text-xl text-slate-800">Buku Tamu</h3>
                 <button 
                     onClick={loadMessages} 
-                    className="p-2 text-blue-900 bg-blue-50 rounded-full hover:bg-blue-100 transition-colors"
+                    className="p-2.5 text-blue-900 bg-blue-50 rounded-full hover:bg-blue-100 transition-all active:rotate-180 duration-500"
                     disabled={isLoadingMessages}
                 >
                     <RefreshCw size={14} className={isLoadingMessages ? 'animate-spin' : ''} />
@@ -206,36 +210,38 @@ const GuestBook: React.FC<GuestBookProps> = ({ guestName, bgUrl }) => {
             </div>
             
             {isLoadingMessages ? (
-                <div className="text-center py-8 text-slate-400 text-xs">
-                    <Loader2 className="w-8 h-8 animate-spin mx-auto mb-2 opacity-50" />
-                    Memuat ucapan...
+                <div className="text-center py-10 text-slate-400 text-[10px] font-black uppercase tracking-widest">
+                    <Loader2 className="w-8 h-8 animate-spin mx-auto mb-3 opacity-20" />
+                    Memperbarui Daftar...
                 </div>
             ) : messages.length === 0 ? (
-                <div className="text-center py-8 text-slate-400 text-xs italic bg-white/50 backdrop-blur-sm rounded-xl border border-dashed">
-                    Belum ada ucapan. Jadilah yang pertama memberikan doa restu!
+                <div className="text-center py-12 text-slate-400 text-xs italic bg-white/40 rounded-[2rem] border border-dashed border-slate-200">
+                    Belum ada ucapan. Jadilah yang pertama!
                 </div>
             ) : (
                 messages.map((msg, idx) => (
                     <ScrollReveal key={msg.id || idx} delay={idx * 50} direction="up">
-                        <div className="bg-white/80 backdrop-blur-md p-4 rounded-2xl shadow-sm border border-slate-100 flex gap-4 transition-transform hover:scale-[1.01]">
+                        <div className="bg-white/90 backdrop-blur-md p-5 rounded-[2rem] shadow-sm border border-slate-50 flex gap-4 hover:shadow-md transition-all">
                             <div className="flex-shrink-0">
-                                <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-white text-lg ${
+                                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center font-black text-white text-xl shadow-inner ${
                                     msg.attendance === 'hadir' ? 'bg-blue-900' : 
-                                    msg.attendance === 'ragu' ? 'bg-yellow-500' : 'bg-slate-400'
+                                    msg.attendance === 'ragu' ? 'bg-amber-500' : 'bg-slate-400'
                                 }`}>
                                     {(msg.name || 'A').charAt(0).toUpperCase()}
                                 </div>
                             </div>
-                            <div className="flex-1">
-                                <div className="flex justify-between items-start mb-1">
-                                    <h4 className="font-bold text-slate-800 text-sm capitalize animate-fade-in-up">{msg.name}</h4>
-                                    <div className="flex items-center gap-1 bg-slate-50 px-2 py-0.5 rounded-full border border-slate-100 animate-fade-in-up">
+                            <div className="flex-1 min-w-0">
+                                <div className="flex justify-between items-start mb-2">
+                                    <h4 className="font-black text-slate-800 text-xs capitalize truncate pr-2">{msg.name}</h4>
+                                    <div className="flex items-center gap-1.5 bg-slate-50 px-2 py-1 rounded-lg border border-slate-100 flex-shrink-0">
                                         {getAttendanceIcon(msg.attendance)}
-                                        <span className="text-[8px] uppercase font-bold text-slate-500">{getAttendanceLabel(msg.attendance)}</span>
+                                        <span className="text-[7px] uppercase font-black text-slate-500 tracking-tighter">{getAttendanceLabel(msg.attendance)}</span>
                                     </div>
                                 </div>
-                                <p className="text-xs text-slate-600 leading-relaxed mb-2 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>{msg.message}</p>
-                                <span className="text-[10px] text-slate-300 block animate-fade-in-up" style={{ animationDelay: '0.2s' }}>{msg.timestamp}</span>
+                                <p className="text-xs text-slate-600 leading-relaxed mb-3 italic">"{msg.message}"</p>
+                                <div className="flex items-center justify-end">
+                                    <span className="text-[9px] font-bold text-slate-300 uppercase tracking-widest">{msg.timestamp}</span>
+                                </div>
                             </div>
                         </div>
                     </ScrollReveal>
@@ -249,10 +255,10 @@ const GuestBook: React.FC<GuestBookProps> = ({ guestName, bgUrl }) => {
             width: 4px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
-            background: #f1f5f9;
+            background: transparent;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
+            background: #e2e8f0;
             border-radius: 10px;
         }
       `}</style>
