@@ -2,14 +2,14 @@
 import { WeddingData, GuestMessage, InvitationTemplate } from './types';
 
 /**
- * GOOGLE APPS SCRIPT BACKEND V2 (Salin & Tempel di Google Apps Script)
+ * GOOGLE APPS SCRIPT BACKEND V3 (Salin & Tempel di Google Apps Script)
  * -----------------------------------------------------------------------------
  * function doPost(e) {
  *   var data = JSON.parse(e.postData.contents);
  *   var ss = SpreadsheetApp.getActiveSpreadsheet();
  *   var action = data.action;
  *   
- *   // 1. Simpan Ucapan Tamu (Guestbook)
+ *   // 1. GUESTBOOK: Simpan ucapan (Satu Ucapan = Satu Baris Baru)
  *   if (action === 'submit_message') {
  *     var sheet = ss.getSheetByName('guestbook') || ss.insertSheet('guestbook');
  *     if (sheet.getLastRow() === 0) {
@@ -19,21 +19,30 @@ import { WeddingData, GuestMessage, InvitationTemplate } from './types';
  *     return ContentService.createTextOutput("Success").setMimeType(ContentService.MimeType.TEXT);
  *   }
  *   
- *   // 2. Simpan Pengaturan Undangan (Settings)
+ *   // 2. SETTINGS: Simpan konfigurasi (Vertikal: Key | Value)
  *   if (action === 'update_settings') {
  *     var sheet = ss.getSheetByName('settings') || ss.insertSheet('settings');
  *     sheet.clear();
- *     sheet.appendRow(['Data_JSON']);
- *     sheet.appendRow([JSON.stringify(data)]);
+ *     sheet.appendRow(['PENGATURAN', 'NILAI / DATA']); // Header
+ *     
+ *     for (var key in data) {
+ *       if (key === 'action') continue;
+ *       var val = data[key];
+ *       // Jika data berupa objek/array, simpan sebagai string agar sistem tetap bisa baca
+ *       if (typeof val === 'object') {
+ *         val = JSON.stringify(val);
+ *       }
+ *       sheet.appendRow([key, val]);
+ *     }
  *     return ContentService.createTextOutput("Success").setMimeType(ContentService.MimeType.TEXT);
  *   }
  *   
- *   // 3. Simpan Katalog Template (Catalog)
+ *   // 3. CATALOG: Simpan katalog template (Vertikal: Key | Value)
  *   if (action === 'update_catalog') {
  *     var sheet = ss.getSheetByName('catalog') || ss.insertSheet('catalog');
  *     sheet.clear();
- *     sheet.appendRow(['Catalog_JSON']);
- *     sheet.appendRow([JSON.stringify(data.catalog)]);
+ *     sheet.appendRow(['Catalog_ID', 'Data_JSON']);
+ *     sheet.appendRow(['ALL_TEMPLATES', JSON.stringify(data.catalog)]);
  *     return ContentService.createTextOutput("Success").setMimeType(ContentService.MimeType.TEXT);
  *   }
  * }
@@ -42,29 +51,42 @@ import { WeddingData, GuestMessage, InvitationTemplate } from './types';
  *   var action = e.parameter.action;
  *   var ss = SpreadsheetApp.getActiveSpreadsheet();
  *   
- *   // Ambil Katalog
  *   if (action === 'get_catalog') {
  *     var sheet = ss.getSheetByName('catalog');
  *     if (!sheet || sheet.getLastRow() < 2) return ContentService.createTextOutput("[]").setMimeType(ContentService.MimeType.JSON);
- *     return ContentService.createTextOutput(sheet.getRange(2, 1).getValue()).setMimeType(ContentService.MimeType.JSON);
+ *     return ContentService.createTextOutput(sheet.getRange(2, 2).getValue()).setMimeType(ContentService.MimeType.JSON);
  *   }
  *   
- *   // Ambil Pesan Tamu
  *   if (action === 'get_messages') {
  *     var sheet = ss.getSheetByName('guestbook');
  *     if (!sheet) return ContentService.createTextOutput("[]").setMimeType(ContentService.MimeType.JSON);
  *     var rows = sheet.getDataRange().getValues();
- *     rows.shift(); // Hapus header
+ *     rows.shift();
  *     var messages = rows.map(function(row) {
  *       return { id: row[0], name: row[1], attendance: row[2], message: row[3], timestamp: row[4] };
  *     });
  *     return ContentService.createTextOutput(JSON.stringify(messages)).setMimeType(ContentService.MimeType.JSON);
  *   }
  *   
- *   // Default: Ambil Pengaturan Undangan (Settings)
+ *   // Default Action: Get Settings (Rekonstruksi dari Vertikal ke Objek)
  *   var sheet = ss.getSheetByName('settings');
  *   if (!sheet || sheet.getLastRow() < 2) return ContentService.createTextOutput(JSON.stringify({})).setMimeType(ContentService.MimeType.JSON);
- *   return ContentService.createTextOutput(sheet.getRange(2, 1).getValue()).setMimeType(ContentService.MimeType.JSON);
+ *   
+ *   var rows = sheet.getDataRange().getValues();
+ *   rows.shift(); // Skip Header
+ *   var settings = {};
+ *   rows.forEach(function(row) {
+ *     var key = row[0];
+ *     var val = row[1];
+ *     try {
+ *       // Coba parse jika itu string JSON (objek/array)
+ *       settings[key] = JSON.parse(val);
+ *     } catch(e) {
+ *       // Jika bukan JSON, biarkan sebagai string biasa
+ *       settings[key] = val;
+ *     }
+ *   });
+ *   return ContentService.createTextOutput(JSON.stringify(settings)).setMimeType(ContentService.MimeType.JSON);
  * }
  */
 
@@ -151,9 +173,6 @@ export const getDriveMediaUrl = (url: string, type: 'image' | 'audio' = 'image')
   return url;
 };
 
-// ---------------------------------------------------------
-// 1. KATALOG TEMPLATE (Sheet: catalog)
-// ---------------------------------------------------------
 export const fetchTemplateCatalog = async (): Promise<InvitationTemplate[]> => {
   if (!GOOGLE_SHEET_API_URL || GOOGLE_SHEET_API_URL.includes("XXXXXXXX")) {
     const saved = localStorage.getItem('vell_invitation_templates');
@@ -185,9 +204,6 @@ export const saveTemplateCatalogToCloud = async (templates: InvitationTemplate[]
   } catch (error) { console.error(error); }
 };
 
-// ---------------------------------------------------------
-// 2. SETTINGAN UNDANGAN (Sheet: settings)
-// ---------------------------------------------------------
 export const fetchWeddingData = async (): Promise<WeddingData> => {
   if (!GOOGLE_SHEET_API_URL || GOOGLE_SHEET_API_URL.includes("XXXXXXXX")) {
     const saved = localStorage.getItem('wedding_invitation_data');
@@ -198,8 +214,8 @@ export const fetchWeddingData = async (): Promise<WeddingData> => {
     const response = await fetch(GOOGLE_SHEET_API_URL);
     if (!response.ok) throw new Error('Network response was not ok');
     const data = await response.json();
-    // Menggabungkan data dari cloud dengan default untuk memastikan aset tidak hilang
-    return { ...DEFAULT_WEDDING_DATA, ...(data.groomName ? data : data.settings) };
+    // Data settings sekarang berbentuk objek hasil rekonstruksi dari baris vertikal
+    return { ...DEFAULT_WEDDING_DATA, ...data };
   } catch (error) {
     const saved = localStorage.getItem('wedding_invitation_data');
     return saved ? JSON.parse(saved) : DEFAULT_WEDDING_DATA;
@@ -220,9 +236,6 @@ export const saveWeddingDataToCloud = async (data: WeddingData) => {
   } catch (error) { throw error; }
 };
 
-// ---------------------------------------------------------
-// 3. GUESTBOOK (Sheet: guestbook)
-// ---------------------------------------------------------
 export const fetchGuestMessages = async (): Promise<GuestMessage[]> => {
     if (!GOOGLE_SHEET_API_URL || GOOGLE_SHEET_API_URL.includes("XXXXXXXX")) return [];
 
