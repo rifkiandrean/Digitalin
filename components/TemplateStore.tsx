@@ -163,12 +163,12 @@ const TemplateStore: React.FC = () => {
         </div>
       </div>
 
-      {/* Navbar - Truly Full Width */}
-      <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl border-b border-slate-100 h-16 px-4">
-        <div className="w-full h-full flex items-center justify-between">
+      {/* Navbar - Same as Landing Page (max-w-6xl) */}
+      <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl border-b border-slate-100 h-16 px-6">
+        <div className="max-w-6xl mx-auto h-full flex items-center justify-between">
           <button 
             onClick={toggleSidebar}
-            className="p-3 text-slate-800 hover:bg-slate-50 rounded-full transition-colors"
+            className="p-3 -ml-3 text-slate-800 hover:bg-slate-50 rounded-full transition-colors"
           >
             <Menu size={24} />
           </button>
@@ -186,7 +186,7 @@ const TemplateStore: React.FC = () => {
           <div className="flex items-center">
             <a 
               href="/" 
-              className="p-3 text-slate-400 hover:text-indigo-600 transition-colors rounded-full hover:bg-slate-50"
+              className="p-3 -mr-3 text-slate-400 hover:text-indigo-600 transition-colors rounded-full hover:bg-slate-50"
             >
               <Home size={20} />
             </a>
@@ -194,8 +194,8 @@ const TemplateStore: React.FC = () => {
         </div>
       </nav>
 
-      {/* Main Content Area - Full Width */}
-      <main className="w-full overflow-x-hidden">
+      {/* Main Content Area - Same as Landing Page Container */}
+      <main className="max-w-6xl mx-auto overflow-x-hidden">
         {/* Hero Section */}
         <section className="pt-24 pb-6 px-6 text-center">
           <ScrollReveal>
@@ -203,11 +203,11 @@ const TemplateStore: React.FC = () => {
               <Sparkles size={10} className="animate-pulse" />
               Latest Collection
             </div>
-            <h1 className="text-3xl font-black text-slate-800 mb-2 leading-tight">
+            <h1 className="text-3xl md:text-5xl font-black text-slate-900 mb-6 leading-tight">
               Katalog <br />
               <span className="text-indigo-600">Undangan Digital</span>
             </h1>
-            <p className="text-slate-400 text-[10px] font-medium leading-relaxed">
+            <p className="text-slate-500 text-sm md:text-lg font-medium leading-relaxed">
               Momen indah dimulai dengan desain yang istimewa. <br/>
               Kategori: <span className="text-indigo-600 font-bold">{selectedCategory}</span>
             </p>
@@ -225,8 +225,8 @@ const TemplateStore: React.FC = () => {
             </button>
         </div>
 
-        {/* Catalog Grid - Truly Edge to Edge */}
-        <div className="w-full mt-4">
+        {/* Catalog Grid - Edge to Edge on mobile, but inside container */}
+        <div className="w-full mt-4 md:px-6">
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-24 text-slate-300">
               <Loader2 size={32} className="animate-spin mb-3 text-indigo-600" />
@@ -238,17 +238,17 @@ const TemplateStore: React.FC = () => {
                   <p className="text-sm font-medium">Belum ada desain di kategori ini.</p>
               </div>
           ) : (
-            <div className="flex flex-col divide-y divide-slate-100">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 md:gap-8 divide-y md:divide-y-0 divide-slate-100">
               {filteredTemplates.map((template, idx) => (
                 <ScrollReveal key={template.id} delay={idx * 50} direction="up" className="w-full">
-                  <div className="bg-white group flex flex-col w-full">
+                  <div className="bg-white group flex flex-col w-full md:rounded-[2.5rem] md:border md:border-slate-100 md:overflow-hidden md:shadow-sm md:hover:shadow-xl transition-all">
                     
-                    {/* Media Container - Full Bleed */}
+                    {/* Media Container - Full Bleed on Mobile */}
                     <div className="aspect-[4/5] relative overflow-hidden w-full">
                       <img 
                         src={template.previewImageUrl} 
                         alt={template.name} 
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2000ms]"
                       />
                       
                       {/* Floating Badges */}
@@ -263,7 +263,7 @@ const TemplateStore: React.FC = () => {
                         </div>
                       </div>
 
-                      {/* Info Overlay Bottom - Edge to Edge Gradient */}
+                      {/* Info Overlay Bottom */}
                       <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-900/80 via-slate-900/30 to-transparent p-8 pt-20 text-white pointer-events-none">
                          <h3 className="text-2xl font-black mb-1.5 drop-shadow-md">{template.name}</h3>
                          <div className="flex items-center gap-2 opacity-100">
@@ -275,7 +275,7 @@ const TemplateStore: React.FC = () => {
                       </div>
                     </div>
 
-                    {/* Action Bar - Full Width Buttons */}
+                    {/* Action Bar */}
                     <div className="p-6 bg-white flex gap-3">
                       <button 
                         onClick={() => handleOrder(template)}
@@ -299,25 +299,25 @@ const TemplateStore: React.FC = () => {
         </div>
 
         {/* Benefits Section */}
-        <section className="px-6 mt-16 space-y-3">
+        <section className="px-6 mt-16 space-y-4 md:grid md:grid-cols-3 md:gap-6 md:space-y-0">
           {[
             { icon: Zap, title: "Cepat", desc: "Selesai dalam 24 jam." },
             { icon: CheckCircle2, title: "Custom", desc: "Bisa ubah foto & lagu." },
             { icon: Smartphone, title: "Responsif", desc: "Tampil oke di semua HP." }
           ].map((benefit, i) => (
-            <div key={i} className="bg-slate-50 p-5 rounded-2xl flex items-center gap-4 border border-slate-100">
-              <div className="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center text-indigo-600 shrink-0">
-                <benefit.icon size={18} />
+            <div key={i} className="bg-slate-50 p-6 rounded-3xl flex items-center gap-4 border border-slate-100">
+              <div className="w-12 h-12 bg-indigo-100 rounded-2xl flex items-center justify-center text-indigo-600 shrink-0">
+                <benefit.icon size={22} />
               </div>
               <div>
-                <h4 className="font-black text-[10px] uppercase text-slate-800 tracking-tight">{benefit.title}</h4>
-                <p className="text-slate-400 text-[9px] font-medium leading-none mt-1">{benefit.desc}</p>
+                <h4 className="font-black text-xs uppercase text-slate-800 tracking-tight">{benefit.title}</h4>
+                <p className="text-slate-500 text-[10px] font-medium leading-tight mt-1">{benefit.desc}</p>
               </div>
             </div>
           ))}
         </section>
 
-        {/* Footer */}
+        {/* Footer - Same as Landing Page Footer Background */}
         <footer className="py-16 text-center mt-12 bg-slate-50 border-t border-slate-100 px-6">
           <div className="flex items-center justify-center gap-2 mb-4">
               <div className="w-7 h-7 bg-indigo-100 rounded-lg flex items-center justify-center">
@@ -326,7 +326,7 @@ const TemplateStore: React.FC = () => {
               <span className="font-black text-sm tracking-tight text-slate-400">Vell Store</span>
           </div>
           <p className="text-slate-300 text-[7px] font-black uppercase tracking-[0.4em]">
-            © 2026 Crafted with Excellence
+            © 2026 Crafted with Excellence by Vell Digital
           </p>
         </footer>
       </main>
