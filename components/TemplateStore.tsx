@@ -165,12 +165,12 @@ const TemplateStore: React.FC = () => {
         </div>
       </div>
 
-      {/* Navbar - Tight Padding (px-4) for full screen feel */}
-      <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl border-b border-slate-100 h-16 px-4">
+      {/* Navbar - Optimized for full screen edge access */}
+      <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl border-b border-slate-100 h-16 px-2">
         <div className="max-w-md mx-auto h-full flex items-center justify-between">
           <button 
             onClick={toggleSidebar}
-            className="p-2 text-slate-800 hover:bg-slate-50 rounded-full transition-colors"
+            className="p-3 text-slate-800 hover:bg-slate-50 rounded-full transition-colors"
           >
             <Menu size={22} />
           </button>
@@ -188,7 +188,7 @@ const TemplateStore: React.FC = () => {
           <div className="flex items-center">
             <a 
               href="/" 
-              className="p-2 text-slate-400 hover:text-indigo-600 transition-colors rounded-full hover:bg-slate-50"
+              className="p-3 text-slate-400 hover:text-indigo-600 transition-colors rounded-full hover:bg-slate-50"
               title="Beranda"
             >
               <Home size={18} />
@@ -198,9 +198,9 @@ const TemplateStore: React.FC = () => {
       </nav>
 
       {/* Main Content Area */}
-      <main className="max-w-md mx-auto">
+      <main className="max-w-md mx-auto overflow-x-hidden">
         {/* Hero Section */}
-        <section className="pt-24 pb-6 px-4 text-center">
+        <section className="pt-24 pb-6 px-6 text-center">
           <ScrollReveal>
             <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-indigo-50 text-indigo-600 rounded-full text-[8px] font-black uppercase tracking-widest mb-3 border border-indigo-100/50">
               <Sparkles size={10} className="animate-pulse" />
@@ -218,7 +218,7 @@ const TemplateStore: React.FC = () => {
         </section>
 
         {/* Selected Category Chip - Visual Feedback */}
-        <div className="px-4 pb-2">
+        <div className="px-6 pb-2">
             <button 
                 onClick={toggleSidebar}
                 className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-100 rounded-full text-[9px] font-black uppercase tracking-widest text-slate-400 hover:bg-slate-50 shadow-sm"
@@ -228,34 +228,34 @@ const TemplateStore: React.FC = () => {
             </button>
         </div>
 
-        {/* Catalog Grid - Tight Padding (px-4) */}
-        <div className="px-4 mt-4">
+        {/* Catalog Grid - Edge to Edge (px-0) */}
+        <div className="px-0 mt-4">
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-20 text-slate-300">
               <Loader2 size={28} className="animate-spin mb-3 text-indigo-600" />
               <p className="text-[9px] font-black uppercase tracking-widest">Memuat Katalog...</p>
             </div>
           ) : filteredTemplates.length === 0 ? (
-              <div className="py-20 text-center text-slate-400 bg-white rounded-[2rem] border border-dashed border-slate-200">
+              <div className="py-20 text-center text-slate-400 bg-white mx-6 rounded-[2rem] border border-dashed border-slate-200">
                   <ShoppingBag size={32} className="mx-auto mb-3 opacity-20" />
                   <p className="text-xs font-medium">Belum ada desain di kategori ini.</p>
               </div>
           ) : (
-            <div className="grid grid-cols-1 gap-6">
+            <div className="grid grid-cols-1 gap-1">
               {filteredTemplates.map((template, idx) => (
-                <ScrollReveal key={template.id} delay={idx * 50} direction="up">
-                  <div className="bg-white rounded-[2rem] border border-slate-100 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 group flex flex-col h-full">
+                <ScrollReveal key={template.id} delay={idx * 50} direction="up" className="w-full">
+                  <div className="bg-white border-y border-slate-100 overflow-hidden shadow-none group flex flex-col h-full">
                     
-                    {/* Media Container */}
-                    <div className="aspect-[4/5] relative overflow-hidden m-2 rounded-[1.8rem]">
+                    {/* Media Container - Full Width */}
+                    <div className="aspect-[4/5] relative overflow-hidden">
                       <img 
                         src={template.previewImageUrl} 
                         alt={template.name} 
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[1500ms]"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2000ms]"
                       />
                       
-                      {/* Status Labels */}
-                      <div className="absolute top-3 left-3 flex flex-col gap-1.5 pointer-events-none">
+                      {/* Status Labels - Floated */}
+                      <div className="absolute top-4 left-4 flex flex-col gap-1.5 pointer-events-none">
                         {template.isPopular && (
                           <div className="bg-amber-400 text-white px-3 py-1.5 rounded-full text-[8px] font-black uppercase tracking-widest shadow-lg flex items-center gap-1">
                             <Star size={10} fill="currentColor" /> Terlaris
@@ -266,32 +266,30 @@ const TemplateStore: React.FC = () => {
                         </div>
                       </div>
 
-                      {/* Quick Preview Hover */}
-                      <div className="absolute inset-0 bg-indigo-900/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
-                          <div className="bg-white/30 backdrop-blur-md p-4 rounded-full border border-white/40 scale-50 group-hover:scale-100 transition-transform duration-500">
-                              <ShoppingBag size={20} className="text-white" />
-                          </div>
+                      {/* Info Overlay Bottom - Modern feel */}
+                      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-900/60 to-transparent p-6 pt-12 text-white pointer-events-none">
+                         <h3 className="text-xl font-black mb-1 drop-shadow-sm">{template.name}</h3>
+                         <div className="flex items-center gap-2 opacity-90">
+                           <Tag size={10} className="text-indigo-300" />
+                           <span className="font-bold text-xs">{formatPrice(template.price)}</span>
+                         </div>
                       </div>
                     </div>
 
-                    {/* Product Details */}
-                    <div className="p-6 pt-2 flex flex-col flex-1">
-                      <div className="mb-5 text-center">
-                        <h3 className="text-lg font-black text-slate-800 mb-1.5 group-hover:text-indigo-600 transition-colors">
-                            {template.name}
-                        </h3>
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 text-slate-600 rounded-xl border border-slate-100">
-                          <Tag size={10} className="opacity-50" />
-                          <span className="font-black text-xs tracking-tight">{formatPrice(template.price)}</span>
-                        </div>
-                      </div>
-
+                    {/* Action Bar - Edge to Edge */}
+                    <div className="p-4 border-b border-slate-50 flex gap-2">
                       <button 
                         onClick={() => handleOrder(template)}
-                        className="mt-auto w-full bg-slate-900 text-white py-4.5 rounded-2xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-indigo-600 transition-all active:scale-[0.98] shadow-lg shadow-slate-100"
+                        className="flex-1 bg-slate-900 text-white py-4 rounded-xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-indigo-600 transition-all active:scale-[0.98]"
                       >
                         <MessageSquare size={14} />
                         Pesan Sekarang
+                      </button>
+                      <button 
+                         className="px-4 bg-slate-100 text-slate-800 rounded-xl flex items-center justify-center"
+                         onClick={() => window.open(template.previewImageUrl, '_blank')}
+                      >
+                        <Grid size={16} />
                       </button>
                     </div>
                   </div>
@@ -301,8 +299,8 @@ const TemplateStore: React.FC = () => {
           )}
         </div>
 
-        {/* Benefits Section */}
-        <section className="px-4 mt-12 space-y-3">
+        {/* Benefits Section - Back to standard padding for text safety */}
+        <section className="px-6 mt-12 space-y-3">
           {[
             { icon: Zap, title: "Cepat", desc: "Selesai dalam 24 jam." },
             { icon: CheckCircle2, title: "Custom", desc: "Bisa ubah foto & lagu." },
@@ -321,7 +319,7 @@ const TemplateStore: React.FC = () => {
         </section>
 
         {/* Footer */}
-        <footer className="py-12 text-center mt-12 px-4">
+        <footer className="py-12 text-center mt-12 px-6">
           <div className="flex items-center justify-center gap-2 mb-4">
               <div className="w-6 h-6 bg-slate-200 rounded-lg flex items-center justify-center">
                 <Zap size={12} className="text-slate-400 fill-current" />
