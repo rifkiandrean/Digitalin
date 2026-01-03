@@ -67,7 +67,6 @@ const TemplateStore: React.FC = () => {
         if (cloudTemplates && cloudTemplates.length > 0) {
           setTemplates(cloudTemplates);
         } else {
-          // Check local storage if cloud is empty
           const saved = localStorage.getItem('vell_invitation_templates');
           if (saved) {
             setTemplates(JSON.parse(saved));
@@ -101,31 +100,31 @@ const TemplateStore: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans text-slate-900 pb-20">
-      {/* Navbar - Refined for single column focus */}
-      <nav className="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-xl border-b border-slate-100 h-16 sm:h-20 px-4 sm:px-8">
+    <div className="min-h-screen bg-white font-sans text-slate-900 pb-24">
+      {/* Navbar - More compact for mobile */}
+      <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl border-b border-slate-50 h-14 sm:h-20 px-4">
         <div className="max-w-md mx-auto h-full flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center shadow-lg shadow-indigo-100 group">
-              <Zap size={18} className="text-white fill-current group-hover:scale-110 transition-transform" />
+          <div className="flex items-center gap-2.5">
+            <div className="w-7 h-7 bg-indigo-600 rounded-lg flex items-center justify-center shadow-lg shadow-indigo-100 group">
+              <Zap size={16} className="text-white fill-current group-hover:rotate-12 transition-transform" />
             </div>
-            <div>
-              <span className="font-black text-sm sm:text-lg tracking-tight text-slate-800 block leading-none">Vell Store</span>
-              <span className="text-[8px] font-bold text-indigo-600 uppercase tracking-widest">Premium Invitation</span>
+            <div className="flex flex-col">
+              <span className="font-black text-sm tracking-tight text-slate-800 leading-none">Vell Store</span>
+              <span className="text-[7px] font-black text-indigo-500 uppercase tracking-[0.2em] mt-0.5">Premium Design</span>
             </div>
           </div>
           
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
             <a 
               href="/" 
-              className="p-2 text-slate-500 hover:text-indigo-600 transition-colors"
+              className="p-1.5 text-slate-400 hover:text-indigo-600 transition-colors rounded-full hover:bg-slate-50"
               title="Beranda"
             >
               <ArrowLeft size={18} />
             </a>
             <a 
               href="/undangan/admin" 
-              className="bg-slate-900 text-white px-4 py-2 rounded-full text-[9px] font-black uppercase tracking-widest hover:bg-indigo-600 transition-all active:scale-95"
+              className="bg-slate-900 text-white px-3.5 py-1.5 rounded-full text-[8px] font-black uppercase tracking-widest hover:bg-indigo-600 transition-all active:scale-95 shadow-sm"
             >
               Admin
             </a>
@@ -133,36 +132,36 @@ const TemplateStore: React.FC = () => {
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section className="pt-24 pb-8 px-6 text-center">
+      {/* Hero Section - Refined spacing */}
+      <section className="pt-20 pb-6 px-6 text-center">
         <div className="max-w-md mx-auto">
           <ScrollReveal>
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-rose-50 text-rose-500 rounded-full text-[9px] font-black uppercase tracking-[0.2em] mb-4 border border-rose-100/50">
-              <Sparkles size={12} className="animate-pulse" />
-              Special Occasion
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-indigo-50 text-indigo-600 rounded-full text-[8px] font-black uppercase tracking-widest mb-3 border border-indigo-100/50">
+              <Sparkles size={10} className="animate-pulse" />
+              Latest Collection
             </div>
-            <h1 className="text-3xl font-black text-slate-800 mb-3 leading-tight">
-              Katalog <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-blue-500">Undangan Digital</span>
+            <h1 className="text-2xl font-black text-slate-800 mb-2 leading-tight">
+              Pilih Desain <br />
+              <span className="text-indigo-600">Undangan Digital</span>
             </h1>
-            <p className="text-slate-400 text-xs leading-relaxed px-4">
-              Pilih desain premium favoritmu dan buat momen bahagiamu semakin berkesan.
+            <p className="text-slate-400 text-[10px] font-medium leading-relaxed px-6">
+              Momen indah dimulai dengan undangan yang istimewa.
             </p>
           </ScrollReveal>
         </div>
       </section>
 
-      {/* Filter Chips - Center Aligned */}
-      <div className="sticky top-16 z-40 bg-white/95 backdrop-blur-md border-b border-slate-100 py-3">
-        <div className="max-w-md mx-auto px-4 overflow-x-auto no-scrollbar flex items-center gap-2 justify-start sm:justify-center">
+      {/* Filter Chips - Compact & Sticky right below Navbar */}
+      <div className="sticky top-14 z-40 bg-white/90 backdrop-blur-md border-b border-slate-50 py-3 shadow-[0_4px_12px_-4px_rgba(0,0,0,0.02)]">
+        <div className="max-w-md mx-auto px-4 flex items-center gap-2 overflow-x-auto no-scrollbar scroll-smooth">
           {categories.map(cat => (
             <button
               key={cat}
               onClick={() => setSelectedCategory(cat)}
-              className={`px-5 py-2.5 rounded-xl text-[9px] font-black uppercase tracking-widest whitespace-nowrap transition-all border shrink-0 ${
+              className={`px-4 py-2 rounded-full text-[9px] font-bold uppercase tracking-widest whitespace-nowrap transition-all border shrink-0 ${
                 selectedCategory === cat 
-                ? 'bg-indigo-600 text-white border-indigo-600 shadow-lg shadow-indigo-100' 
-                : 'bg-white text-slate-400 border-slate-100 hover:border-indigo-200 hover:text-indigo-600'
+                ? 'bg-indigo-600 text-white border-indigo-600 shadow-md shadow-indigo-100' 
+                : 'bg-slate-50 text-slate-500 border-slate-100 hover:border-indigo-100'
               }`}
             >
               {cat}
@@ -171,63 +170,69 @@ const TemplateStore: React.FC = () => {
         </div>
       </div>
 
-      {/* Product Grid - Single Column Focused */}
-      <div className="max-w-md mx-auto px-6 mt-8">
+      {/* Catalog Grid */}
+      <div className="max-w-md mx-auto px-5 mt-6">
         {isLoading ? (
-          <div className="flex flex-col items-center justify-center py-24 text-slate-400">
-            <Loader2 size={32} className="animate-spin mb-4 text-indigo-600" />
-            <p className="text-[10px] font-black uppercase tracking-widest">Loading Catalog...</p>
+          <div className="flex flex-col items-center justify-center py-20 text-slate-300">
+            <Loader2 size={28} className="animate-spin mb-3 text-indigo-600" />
+            <p className="text-[9px] font-black uppercase tracking-widest">Memuat Katalog...</p>
           </div>
+        ) : filteredTemplates.length === 0 ? (
+            <div className="py-20 text-center text-slate-400 bg-slate-50 rounded-[2rem] border border-dashed border-slate-200">
+                <ShoppingBag size={32} className="mx-auto mb-3 opacity-20" />
+                <p className="text-xs font-medium">Belum ada desain di kategori ini.</p>
+            </div>
         ) : (
-          <div className="grid grid-cols-1 gap-10">
+          <div className="grid grid-cols-1 gap-8">
             {filteredTemplates.map((template, idx) => (
               <ScrollReveal key={template.id} delay={idx * 50} direction="up">
-                <div className="bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 group flex flex-col h-full">
+                <div className="bg-white rounded-[2rem] border border-slate-100 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 group flex flex-col h-full">
                   
                   {/* Media Container */}
-                  <div className="aspect-[4/5] relative overflow-hidden m-3.5 rounded-[2rem]">
+                  <div className="aspect-[4/5] relative overflow-hidden m-2 rounded-[1.8rem]">
                     <img 
                       src={template.previewImageUrl} 
                       alt={template.name} 
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2000ms] ease-out"
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[1500ms]"
                     />
                     
-                    {/* Floating Labels */}
-                    <div className="absolute top-4 left-4 flex flex-col gap-2 pointer-events-none">
+                    {/* Status Labels */}
+                    <div className="absolute top-3 left-3 flex flex-col gap-1.5 pointer-events-none">
                       {template.isPopular && (
-                        <div className="bg-[#fbbf24] text-white px-4 py-2 rounded-full text-[9px] font-black uppercase tracking-widest shadow-xl border border-white/20 flex items-center gap-1 backdrop-blur-sm bg-[#fbbf24]/90">
-                          <Star size={10} fill="currentColor" /> Best
+                        <div className="bg-amber-400 text-white px-3 py-1.5 rounded-full text-[8px] font-black uppercase tracking-widest shadow-lg flex items-center gap-1">
+                          <Star size={10} fill="currentColor" /> Terlaris
                         </div>
                       )}
-                      <div className="bg-white/95 text-slate-800 px-4 py-2 rounded-full text-[9px] font-black uppercase tracking-widest shadow-md border border-slate-100/50">
+                      <div className="bg-white/90 backdrop-blur-sm text-slate-800 px-3 py-1.5 rounded-full text-[8px] font-black uppercase tracking-widest shadow-sm border border-slate-100/50">
                         {template.category}
                       </div>
                     </div>
 
-                    <div className="absolute inset-0 bg-indigo-600/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                        <div className="bg-white p-5 rounded-full shadow-2xl scale-50 group-hover:scale-100 transition-transform duration-500">
-                            <ShoppingBag size={24} className="text-indigo-600" />
+                    {/* Quick Preview Hover */}
+                    <div className="absolute inset-0 bg-indigo-900/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+                        <div className="bg-white/30 backdrop-blur-md p-4 rounded-full border border-white/40 scale-50 group-hover:scale-100 transition-transform duration-500">
+                            <ShoppingBag size={20} className="text-white" />
                         </div>
                     </div>
                   </div>
 
-                  {/* Product Info */}
-                  <div className="p-7 pt-2 flex flex-col flex-1">
-                    <div className="mb-6 text-center">
-                      <h3 className="text-xl font-bold text-slate-800 mb-2 group-hover:text-indigo-600 transition-colors">
+                  {/* Product Details */}
+                  <div className="p-6 pt-2 flex flex-col flex-1">
+                    <div className="mb-5 text-center">
+                      <h3 className="text-lg font-black text-slate-800 mb-1.5 group-hover:text-indigo-600 transition-colors">
                           {template.name}
                       </h3>
-                      <div className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-50/50 text-indigo-600 rounded-xl border border-indigo-50">
-                        <Tag size={12} className="opacity-70" />
-                        <span className="font-black text-sm tracking-tight">{formatPrice(template.price)}</span>
+                      <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 text-slate-600 rounded-xl border border-slate-100">
+                        <Tag size={10} className="opacity-50" />
+                        <span className="font-black text-xs tracking-tight">{formatPrice(template.price)}</span>
                       </div>
                     </div>
 
                     <button 
                       onClick={() => handleOrder(template)}
-                      className="mt-auto w-full bg-slate-900 text-white py-5 rounded-[1.5rem] font-black text-[11px] uppercase tracking-[0.2em] flex items-center justify-center gap-3 hover:bg-indigo-600 transition-all active:scale-[0.97] shadow-lg shadow-slate-100 group-hover:shadow-indigo-100"
+                      className="mt-auto w-full bg-slate-900 text-white py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-indigo-600 transition-all active:scale-[0.98] shadow-lg shadow-slate-100"
                     >
-                      <MessageSquare size={18} />
+                      <MessageSquare size={14} />
                       Pesan Sekarang
                     </button>
                   </div>
@@ -238,40 +243,36 @@ const TemplateStore: React.FC = () => {
         )}
       </div>
 
-      {/* Benefits Section */}
-      <section className="max-w-md mx-auto px-6 mt-16">
-        <div className="space-y-4">
-          {[
-            { icon: Zap, title: "Pengerjaan Cepat", desc: "Undangan siap digunakan dalam waktu kurang dari 24 jam." },
-            { icon: CheckCircle2, title: "Full Kustomisasi", desc: "Ubah teks, foto, dan lagu sesuai keinginan tanpa biaya tambahan." },
-            { icon: Smartphone, title: "Mobile Optimized", desc: "Tampilan sempurna di semua jenis perangkat smartphone." }
-          ].map((benefit, i) => (
-            <div key={i} className="bg-white p-6 rounded-[1.8rem] border border-slate-100 shadow-sm flex items-center gap-4">
-              <div className="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600 shrink-0">
-                <benefit.icon size={22} />
-              </div>
-              <div>
-                <h4 className="font-bold text-sm mb-0.5">{benefit.title}</h4>
-                <p className="text-slate-400 text-[10px] leading-relaxed">{benefit.desc}</p>
-              </div>
+      {/* Benefits - Modern Small Icons */}
+      <section className="max-w-md mx-auto px-5 mt-16 space-y-3">
+        {[
+          { icon: Zap, title: "Cepat", desc: "Selesai dalam 24 jam." },
+          { icon: CheckCircle2, title: "Custom", desc: "Bisa ubah foto & lagu." },
+          { icon: Smartphone, title: "Responsif", desc: "Tampil oke di semua HP." }
+        ].map((benefit, i) => (
+          <div key={i} className="bg-slate-50 p-4 rounded-2xl flex items-center gap-4 border border-slate-100/50">
+            <div className="w-9 h-9 bg-white rounded-xl flex items-center justify-center text-indigo-500 shadow-sm shrink-0 border border-slate-100">
+              <benefit.icon size={16} />
             </div>
-          ))}
-        </div>
+            <div>
+              <h4 className="font-black text-[10px] uppercase text-slate-800 tracking-tight">{benefit.title}</h4>
+              <p className="text-slate-400 text-[9px] font-medium leading-none mt-0.5">{benefit.desc}</p>
+            </div>
+          </div>
+        ))}
       </section>
 
-      {/* Footer */}
-      <footer className="py-16 text-center border-t border-slate-100 mt-16 px-6">
-        <div className="max-w-md mx-auto flex flex-col items-center gap-6">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center">
-              <Zap size={16} className="text-slate-400 fill-current" />
+      {/* Footer - Minimalist */}
+      <footer className="py-12 text-center mt-12 px-6">
+        <div className="flex items-center justify-center gap-2 mb-4">
+            <div className="w-6 h-6 bg-slate-100 rounded-lg flex items-center justify-center">
+              <Zap size={12} className="text-slate-300 fill-current" />
             </div>
-            <span className="font-bold text-base tracking-tight text-slate-400">Vell Digital</span>
-          </div>
-          <p className="text-slate-300 text-[8px] font-black uppercase tracking-[0.4em]">
-            © 2026 Premium Wedding Service
-          </p>
+            <span className="font-black text-xs tracking-tight text-slate-300">Vell Store</span>
         </div>
+        <p className="text-slate-300 text-[7px] font-black uppercase tracking-[0.4em]">
+          © 2026 Crafted with Excellence
+        </p>
       </footer>
       
       <style>{`
