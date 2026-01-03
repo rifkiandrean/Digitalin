@@ -165,8 +165,8 @@ const TemplateStore: React.FC = () => {
         </div>
       </div>
 
-      {/* Navbar - Simplified Header */}
-      <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl border-b border-slate-100 h-14 px-4">
+      {/* Navbar - Tight Padding (px-4) for full screen feel */}
+      <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl border-b border-slate-100 h-16 px-4">
         <div className="max-w-md mx-auto h-full flex items-center justify-between">
           <button 
             onClick={toggleSidebar}
@@ -200,7 +200,7 @@ const TemplateStore: React.FC = () => {
       {/* Main Content Area */}
       <main className="max-w-md mx-auto">
         {/* Hero Section */}
-        <section className="pt-24 pb-6 px-6 text-center">
+        <section className="pt-24 pb-6 px-4 text-center">
           <ScrollReveal>
             <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-indigo-50 text-indigo-600 rounded-full text-[8px] font-black uppercase tracking-widest mb-3 border border-indigo-100/50">
               <Sparkles size={10} className="animate-pulse" />
@@ -210,7 +210,7 @@ const TemplateStore: React.FC = () => {
               Katalog <br />
               <span className="text-indigo-600">Undangan Digital</span>
             </h1>
-            <p className="text-slate-400 text-[10px] font-medium leading-relaxed px-6">
+            <p className="text-slate-400 text-[10px] font-medium leading-relaxed">
               Momen indah dimulai dengan desain yang istimewa. <br/>
               Kategori: <span className="text-indigo-600 font-bold">{selectedCategory}</span>
             </p>
@@ -218,7 +218,7 @@ const TemplateStore: React.FC = () => {
         </section>
 
         {/* Selected Category Chip - Visual Feedback */}
-        <div className="px-6 pb-2">
+        <div className="px-4 pb-2">
             <button 
                 onClick={toggleSidebar}
                 className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-100 rounded-full text-[9px] font-black uppercase tracking-widest text-slate-400 hover:bg-slate-50 shadow-sm"
@@ -228,8 +228,8 @@ const TemplateStore: React.FC = () => {
             </button>
         </div>
 
-        {/* Catalog Grid */}
-        <div className="px-5 mt-6">
+        {/* Catalog Grid - Tight Padding (px-4) */}
+        <div className="px-4 mt-4">
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-20 text-slate-300">
               <Loader2 size={28} className="animate-spin mb-3 text-indigo-600" />
@@ -241,7 +241,7 @@ const TemplateStore: React.FC = () => {
                   <p className="text-xs font-medium">Belum ada desain di kategori ini.</p>
               </div>
           ) : (
-            <div className="grid grid-cols-1 gap-8">
+            <div className="grid grid-cols-1 gap-6">
               {filteredTemplates.map((template, idx) => (
                 <ScrollReveal key={template.id} delay={idx * 50} direction="up">
                   <div className="bg-white rounded-[2rem] border border-slate-100 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 group flex flex-col h-full">
@@ -288,7 +288,7 @@ const TemplateStore: React.FC = () => {
 
                       <button 
                         onClick={() => handleOrder(template)}
-                        className="mt-auto w-full bg-slate-900 text-white py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-indigo-600 transition-all active:scale-[0.98] shadow-lg shadow-slate-100"
+                        className="mt-auto w-full bg-slate-900 text-white py-4.5 rounded-2xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-indigo-600 transition-all active:scale-[0.98] shadow-lg shadow-slate-100"
                       >
                         <MessageSquare size={14} />
                         Pesan Sekarang
@@ -302,7 +302,7 @@ const TemplateStore: React.FC = () => {
         </div>
 
         {/* Benefits Section */}
-        <section className="px-5 mt-16 space-y-3">
+        <section className="px-4 mt-12 space-y-3">
           {[
             { icon: Zap, title: "Cepat", desc: "Selesai dalam 24 jam." },
             { icon: CheckCircle2, title: "Custom", desc: "Bisa ubah foto & lagu." },
@@ -321,7 +321,7 @@ const TemplateStore: React.FC = () => {
         </section>
 
         {/* Footer */}
-        <footer className="py-12 text-center mt-12 px-6">
+        <footer className="py-12 text-center mt-12 px-4">
           <div className="flex items-center justify-center gap-2 mb-4">
               <div className="w-6 h-6 bg-slate-200 rounded-lg flex items-center justify-center">
                 <Zap size={12} className="text-slate-400 fill-current" />
