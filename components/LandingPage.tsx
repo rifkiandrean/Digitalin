@@ -105,7 +105,7 @@ const featuredProjects = [
 
 const LandingPage: React.FC = () => {
   return (
-    <div className="min-h-screen bg-white font-sans text-slate-900 w-full">
+    <div className="min-h-screen bg-white font-sans text-slate-900 w-full overflow-x-hidden">
       {/* Navbar - Fixed centering for Desktop */}
       <nav className="fixed top-0 left-0 right-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-100">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -132,7 +132,7 @@ const LandingPage: React.FC = () => {
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-6">
+      <section className="pt-32 pb-20 px-6 overflow-hidden">
         <div className="max-w-6xl mx-auto text-center">
           <ScrollReveal>
             <span className="inline-block px-4 py-1.5 bg-indigo-50 text-indigo-600 rounded-full text-xs font-bold uppercase tracking-widest mb-6">
@@ -158,7 +158,7 @@ const LandingPage: React.FC = () => {
       </section>
 
       {/* Services Section */}
-      <section id="services" className="py-20 bg-slate-50 px-6">
+      <section id="services" className="py-20 bg-slate-50 px-6 overflow-hidden">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <ScrollReveal>
@@ -231,7 +231,7 @@ const LandingPage: React.FC = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="py-20 px-6 bg-indigo-900 text-white">
+      <section className="py-20 px-6 bg-indigo-900 text-white overflow-hidden">
         <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
           <ScrollReveal>
             <div className="text-4xl font-black mb-2">100+</div>
@@ -253,7 +253,7 @@ const LandingPage: React.FC = () => {
       </section>
 
       {/* Why Us */}
-      <section className="py-24 px-6 bg-white">
+      <section className="py-24 px-6 bg-white overflow-hidden">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-16">
           <div className="flex-1">
             <ScrollReveal direction="left">
@@ -289,15 +289,18 @@ const LandingPage: React.FC = () => {
               </div>
             </ScrollReveal>
           </div>
-          <div className="flex-1 w-full">
+          <div className="flex-1 w-full overflow-hidden">
             <ScrollReveal direction="right">
               <div className="relative">
-                <div className="absolute -inset-4 bg-indigo-100 rounded-[3rem] rotate-3 -z-10"></div>
-                <img 
-                  src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800" 
-                  alt="Modern Office" 
-                  className="w-full rounded-[3rem] shadow-2xl"
-                />
+                {/* Decoration fixed with overflow containment */}
+                <div className="absolute -inset-4 bg-indigo-100 rounded-[3rem] rotate-3 -z-10 opacity-70"></div>
+                <div className="relative rounded-[3rem] overflow-hidden shadow-2xl">
+                  <img 
+                    src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800" 
+                    alt="Modern Office" 
+                    className="w-full"
+                  />
+                </div>
               </div>
             </ScrollReveal>
           </div>
@@ -305,7 +308,7 @@ const LandingPage: React.FC = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-slate-50 border-t py-12 px-6">
+      <footer className="bg-slate-50 border-t py-12 px-6 overflow-hidden">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
