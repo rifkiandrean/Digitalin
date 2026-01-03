@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { LayoutDashboard, Plus, Trash2, Edit2, Save, X, Image as ImageIcon, ArrowLeft, Tag, DollarSign, Package, Star, CloudIcon, RefreshCw, Loader2 } from 'lucide-react';
+import { LayoutDashboard, Plus, Trash2, Edit2, Save, X, Image as ImageIcon, ArrowLeft, Tag, DollarSign, Package, Star, CloudIcon, RefreshCw, Loader2, CheckCircle2, Settings2 } from 'lucide-react';
 import { InvitationTemplate } from '../types';
 import { saveTemplateCatalogToCloud, fetchTemplateCatalog } from '../constants';
 
@@ -8,6 +8,7 @@ const UndanganAdmin: React.FC = () => {
   const [templates, setTemplates] = useState<InvitationTemplate[]>([]);
   const [isAdding, setIsAdding] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
+  const [syncSuccess, setSyncSuccess] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState<Partial<InvitationTemplate>>({
     name: '',
@@ -32,14 +33,25 @@ const UndanganAdmin: React.FC = () => {
   };
 
   const handleSyncToCloud = async () => {
+    if (templates.length === 0) {
+      alert("Tidak ada data untuk disinkronkan.");
+      return;
+    }
+    
     setIsSyncing(true);
+    setSyncSuccess(false);
+    
     try {
       await saveTemplateCatalogToCloud(templates);
-      alert("Katalog berhasil disinkronkan ke Spreadsheet (Database)!");
+      // Tunggu sejenak agar UI terasa natural
+      setTimeout(() => {
+        setIsSyncing(false);
+        setSyncSuccess(true);
+        setTimeout(() => setSyncSuccess(false), 3000);
+      }, 1000);
     } catch (error) {
-      alert("Gagal sinkronisasi. Periksa koneksi atau API URL Anda.");
-    } finally {
       setIsSyncing(false);
+      alert("Gagal sinkronisasi ke spreadsheet. Pastikan URL API benar.");
     }
   };
 
@@ -75,7 +87,7 @@ const UndanganAdmin: React.FC = () => {
   };
 
   const handleDelete = (id: string) => {
-    if (confirm("Hapus template ini?")) {
+    if (confirm("Hapus template ini dari daftar lokal? (Klik 'Sync to Cloud' setelahnya untuk memperbarui database)")) {
       saveToStorage(templates.filter(t => t.id !== id));
     }
   };
@@ -108,15 +120,19 @@ const UndanganAdmin: React.FC = () => {
             onClick={handleSyncToCloud}
             disabled={isSyncing}
             className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all ${
-              isSyncing ? 'bg-slate-100 text-slate-400' : 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100'
+              syncSuccess 
+              ? 'bg-green-50 text-green-600' 
+              : isSyncing 
+                ? 'bg-slate-100 text-slate-400' 
+                : 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100'
             }`}
           >
-            {isSyncing ? <Loader2 size={16} className="animate-spin" /> : <CloudIcon size={16} />}
-            Sync to Cloud
+            {isSyncing ? <Loader2 size={16} className="animate-spin" /> : syncSuccess ? <CheckCircle2 size={16} /> : <CloudIcon size={16} />}
+            {isSyncing ? 'Syncing...' : syncSuccess ? 'Synced!' : 'Sync to Cloud'}
           </button>
           <button 
             onClick={() => setIsAdding(true)}
-            className="bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 hover:bg-indigo-700 transition-all"
+            className="bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 hover:bg-indigo-700 transition-all shadow-md"
           >
             <Plus size={16} /> Tambah Desain
           </button>
@@ -124,6 +140,19 @@ const UndanganAdmin: React.FC = () => {
       </nav>
 
       <div className="max-w-6xl mx-auto px-6 py-8">
+        {/* Helper Note */}
+        <div className="mb-8 p-4 bg-indigo-50 border border-indigo-100 rounded-2xl flex items-start gap-4">
+           {/* Fix: Added missing Settings2 import from lucide-react */}
+           <div className="bg-white p-2 rounded-lg text-indigo-600 shadow-sm"><Settings2 size={20} className="w-5 h-5" /></div>
+           <div>
+              <p className="text-xs font-bold text-indigo-900 mb-1">Catatan Penting:</p>
+              <p className="text-[10px] text-indigo-700 leading-relaxed">
+                Data yang Anda tambahkan/edit di sini disimpan di browser Anda terlebih dahulu. <br/>
+                Pastikan menekan tombol <b>"Sync to Cloud"</b> untuk memperbarui database Spreadsheet utama agar perubahan muncul di halaman katalog pelanggan.
+              </p>
+           </div>
+        </div>
+
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
           <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm">
@@ -146,10 +175,12 @@ const UndanganAdmin: React.FC = () => {
           </div>
           <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm">
             <div className="flex items-center gap-4">
-              <div className="p-3 bg-emerald-50 text-emerald-600 rounded-2xl"><CloudIcon size={24} /></div>
+              <div className={`p-3 rounded-2xl ${syncSuccess ? 'bg-green-50 text-green-600' : 'bg-emerald-50 text-emerald-600'}`}>
+                <CloudIcon size={24} />
+              </div>
               <div>
-                <div className="text-2xl font-black">Connected</div>
-                <div className="text-xs text-slate-400 uppercase font-bold">Cloud Sync Status</div>
+                <div className="text-2xl font-black">{syncSuccess ? 'Updated' : 'Connected'}</div>
+                <div className="text-xs text-slate-400 uppercase font-bold">Database Status</div>
               </div>
             </div>
           </div>
@@ -216,7 +247,7 @@ const UndanganAdmin: React.FC = () => {
                 
                 <button 
                   onClick={handleSave}
-                  className="w-full bg-slate-900 text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-indigo-600 transition-all mt-4"
+                  className="w-full bg-slate-900 text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-indigo-600 transition-all mt-4 shadow-lg active:scale-95"
                 >
                   <Save size={18} /> Simpan Lokal
                 </button>
@@ -266,7 +297,7 @@ const UndanganAdmin: React.FC = () => {
               ))}
               {templates.length === 0 && (
                 <tr>
-                  <td colSpan={4} className="px-6 py-20 text-center text-slate-400 italic">Belum ada data template.</td>
+                  <td colSpan={4} className="px-6 py-20 text-center text-slate-400 italic">Belum ada data template. Silakan tambah data baru.</td>
                 </tr>
               )}
             </tbody>

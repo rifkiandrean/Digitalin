@@ -2,14 +2,14 @@
 import { WeddingData, GuestMessage, InvitationTemplate } from './types';
 
 /**
- * GOOGLE APPS SCRIPT BACKEND V3 (Salin & Tempel di Google Apps Script)
+ * GOOGLE APPS SCRIPT BACKEND V3.1 (Salin & Tempel di Google Apps Script)
  * -----------------------------------------------------------------------------
  * function doPost(e) {
  *   var data = JSON.parse(e.postData.contents);
  *   var ss = SpreadsheetApp.getActiveSpreadsheet();
  *   var action = data.action;
  *   
- *   // 1. GUESTBOOK: Simpan ucapan (Satu Ucapan = Satu Baris Baru)
+ *   // 1. GUESTBOOK: Simpan ucapan
  *   if (action === 'submit_message') {
  *     var sheet = ss.getSheetByName('guestbook') || ss.insertSheet('guestbook');
  *     if (sheet.getLastRow() === 0) {
@@ -19,25 +19,21 @@ import { WeddingData, GuestMessage, InvitationTemplate } from './types';
  *     return ContentService.createTextOutput("Success").setMimeType(ContentService.MimeType.TEXT);
  *   }
  *   
- *   // 2. SETTINGS: Simpan konfigurasi (Vertikal: Key | Value)
+ *   // 2. SETTINGS: Simpan konfigurasi Undangan (Hani & Pupud)
  *   if (action === 'update_settings') {
  *     var sheet = ss.getSheetByName('settings') || ss.insertSheet('settings');
  *     sheet.clear();
- *     sheet.appendRow(['PENGATURAN', 'NILAI / DATA']); // Header
- *     
+ *     sheet.appendRow(['PENGATURAN', 'NILAI / DATA']);
  *     for (var key in data) {
  *       if (key === 'action') continue;
  *       var val = data[key];
- *       // Jika data berupa objek/array, simpan sebagai string agar sistem tetap bisa baca
- *       if (typeof val === 'object') {
- *         val = JSON.stringify(val);
- *       }
+ *       if (typeof val === 'object') val = JSON.stringify(val);
  *       sheet.appendRow([key, val]);
  *     }
  *     return ContentService.createTextOutput("Success").setMimeType(ContentService.MimeType.TEXT);
  *   }
  *   
- *   // 3. CATALOG: Simpan katalog template (Vertikal: Key | Value)
+ *   // 3. CATALOG: Simpan katalog template (Database Utama Toko)
  *   if (action === 'update_catalog') {
  *     var sheet = ss.getSheetByName('catalog') || ss.insertSheet('catalog');
  *     sheet.clear();
@@ -54,7 +50,8 @@ import { WeddingData, GuestMessage, InvitationTemplate } from './types';
  *   if (action === 'get_catalog') {
  *     var sheet = ss.getSheetByName('catalog');
  *     if (!sheet || sheet.getLastRow() < 2) return ContentService.createTextOutput("[]").setMimeType(ContentService.MimeType.JSON);
- *     return ContentService.createTextOutput(sheet.getRange(2, 2).getValue()).setMimeType(ContentService.MimeType.JSON);
+ *     var val = sheet.getRange(2, 2).getValue();
+ *     return ContentService.createTextOutput(val).setMimeType(ContentService.MimeType.JSON);
  *   }
  *   
  *   if (action === 'get_messages') {
@@ -68,29 +65,21 @@ import { WeddingData, GuestMessage, InvitationTemplate } from './types';
  *     return ContentService.createTextOutput(JSON.stringify(messages)).setMimeType(ContentService.MimeType.JSON);
  *   }
  *   
- *   // Default Action: Get Settings (Rekonstruksi dari Vertikal ke Objek)
  *   var sheet = ss.getSheetByName('settings');
  *   if (!sheet || sheet.getLastRow() < 2) return ContentService.createTextOutput(JSON.stringify({})).setMimeType(ContentService.MimeType.JSON);
- *   
  *   var rows = sheet.getDataRange().getValues();
- *   rows.shift(); // Skip Header
+ *   rows.shift();
  *   var settings = {};
  *   rows.forEach(function(row) {
  *     var key = row[0];
  *     var val = row[1];
- *     try {
- *       // Coba parse jika itu string JSON (objek/array)
- *       settings[key] = JSON.parse(val);
- *     } catch(e) {
- *       // Jika bukan JSON, biarkan sebagai string biasa
- *       settings[key] = val;
- *     }
+ *     try { settings[key] = JSON.parse(val); } catch(e) { settings[key] = val; }
  *   });
  *   return ContentService.createTextOutput(JSON.stringify(settings)).setMimeType(ContentService.MimeType.JSON);
  * }
  */
 
-const GOOGLE_SHEET_API_URL = "https://script.google.com/macros/s/AKfycbzuUxxao2UkUJTGdeD5frqtDsdtcC65aSmUEwkWndEDiT1oEGrhP1JdJaI_EsiaxT-H/exec";
+const GOOGLE_SHEET_API_URL = "https://script.google.com/macros/s/AKfycbwry2veuiGew1xY_BCnBUnB6S9-PaRCEGOM0kFs5-ZlcbAvXm8QYhYEI4X8rx76lg6S/exec";
 
 const DEFAULT_MAPS_EMBED = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3952.936553835694!2d112.0116847!3d-7.8176885!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e785706598379c1%3A0xe5a3637e676100a7!2sMasjid%20Agung%20Kota%20Kediri!5e0!3m2!1sid!2sid!4v1710000000000!5m2!1sid!2sid";
 
@@ -185,23 +174,31 @@ export const fetchTemplateCatalog = async (): Promise<InvitationTemplate[]> => {
     const data = await response.json();
     return Array.isArray(data) ? data : [];
   } catch (error) {
+    console.error("Fetch catalog error:", error);
     const saved = localStorage.getItem('vell_invitation_templates');
     return saved ? JSON.parse(saved) : [];
   }
 };
 
 export const saveTemplateCatalogToCloud = async (templates: InvitationTemplate[]) => {
+  // Selalu simpan ke local storage sebagai backup
   localStorage.setItem('vell_invitation_templates', JSON.stringify(templates));
+  
   if (!GOOGLE_SHEET_API_URL || GOOGLE_SHEET_API_URL.includes("XXXXXXXX")) return;
 
   try {
-    await fetch(GOOGLE_SHEET_API_URL, {
+    const response = await fetch(GOOGLE_SHEET_API_URL, {
       method: 'POST',
-      mode: 'no-cors',
+      mode: 'no-cors', // Diperlukan agar tidak kena CORS error di GAS
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ action: 'update_catalog', catalog: templates })
     });
-  } catch (error) { console.error(error); }
+    // Karena no-cors, kita tidak bisa membaca respon, tapi fetch akan berhasil jika terkirim
+    return true;
+  } catch (error) { 
+    console.error("Save catalog error:", error);
+    throw error;
+  }
 };
 
 export const fetchWeddingData = async (): Promise<WeddingData> => {
@@ -214,7 +211,6 @@ export const fetchWeddingData = async (): Promise<WeddingData> => {
     const response = await fetch(GOOGLE_SHEET_API_URL);
     if (!response.ok) throw new Error('Network response was not ok');
     const data = await response.json();
-    // Data settings sekarang berbentuk objek hasil rekonstruksi dari baris vertikal
     return { ...DEFAULT_WEDDING_DATA, ...data };
   } catch (error) {
     const saved = localStorage.getItem('wedding_invitation_data');
