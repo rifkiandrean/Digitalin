@@ -86,6 +86,7 @@ export interface InvitationTemplate {
   name: string;
   price: number;
   previewImageUrl: string;
+  demoUrl?: string; // Menambahkan link demo live
   category: 'Modern' | 'Floral' | 'Minimalist' | 'Elegant';
   isPopular?: boolean;
 }
