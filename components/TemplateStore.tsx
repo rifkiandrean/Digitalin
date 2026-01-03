@@ -103,7 +103,7 @@ const TemplateStore: React.FC = () => {
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans text-slate-900 pb-24">
+    <div className="min-h-screen bg-white font-sans text-slate-900 pb-24">
       {/* Sidebar / Navigation Drawer */}
       <div className={`fixed inset-0 z-[100] transition-visibility duration-300 ${isSidebarOpen ? 'visible' : 'invisible'}`}>
         {/* Backdrop */}
@@ -125,7 +125,6 @@ const TemplateStore: React.FC = () => {
           </div>
 
           <div className="flex-1 overflow-y-auto py-6 px-4 space-y-8">
-            {/* Navigation Links */}
             <div className="space-y-1">
               <h3 className="px-4 text-[10px] font-black uppercase text-slate-400 tracking-widest mb-3">Navigasi Utama</h3>
               <a href="/" className="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-50 rounded-2xl transition-colors font-bold text-sm">
@@ -136,7 +135,6 @@ const TemplateStore: React.FC = () => {
               </a>
             </div>
 
-            {/* Categories Filter */}
             <div className="space-y-1">
               <h3 className="px-4 text-[10px] font-black uppercase text-slate-400 tracking-widest mb-3">Kategori Desain</h3>
               {categories.map((cat) => (
@@ -165,19 +163,19 @@ const TemplateStore: React.FC = () => {
         </div>
       </div>
 
-      {/* Navbar - Optimized for full screen edge access */}
-      <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl border-b border-slate-100 h-16 px-2">
-        <div className="max-w-md mx-auto h-full flex items-center justify-between">
+      {/* Navbar - Truly Full Width */}
+      <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl border-b border-slate-100 h-16 px-4">
+        <div className="w-full h-full flex items-center justify-between">
           <button 
             onClick={toggleSidebar}
             className="p-3 text-slate-800 hover:bg-slate-50 rounded-full transition-colors"
           >
-            <Menu size={22} />
+            <Menu size={24} />
           </button>
           
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 bg-indigo-600 rounded-lg flex items-center justify-center shadow-lg shadow-indigo-100">
-              <Zap size={16} className="text-white fill-current" />
+            <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center shadow-lg shadow-indigo-100">
+              <Zap size={18} className="text-white fill-current" />
             </div>
             <div className="flex flex-col">
               <span className="font-black text-sm tracking-tight text-slate-800 leading-none">Vell Store</span>
@@ -189,16 +187,15 @@ const TemplateStore: React.FC = () => {
             <a 
               href="/" 
               className="p-3 text-slate-400 hover:text-indigo-600 transition-colors rounded-full hover:bg-slate-50"
-              title="Beranda"
             >
-              <Home size={18} />
+              <Home size={20} />
             </a>
           </div>
         </div>
       </nav>
 
-      {/* Main Content Area */}
-      <main className="max-w-md mx-auto overflow-x-hidden">
+      {/* Main Content Area - Full Width */}
+      <main className="w-full overflow-x-hidden">
         {/* Hero Section */}
         <section className="pt-24 pb-6 px-6 text-center">
           <ScrollReveal>
@@ -206,7 +203,7 @@ const TemplateStore: React.FC = () => {
               <Sparkles size={10} className="animate-pulse" />
               Latest Collection
             </div>
-            <h1 className="text-2xl font-black text-slate-800 mb-2 leading-tight">
+            <h1 className="text-3xl font-black text-slate-800 mb-2 leading-tight">
               Katalog <br />
               <span className="text-indigo-600">Undangan Digital</span>
             </h1>
@@ -217,79 +214,81 @@ const TemplateStore: React.FC = () => {
           </ScrollReveal>
         </section>
 
-        {/* Selected Category Chip - Visual Feedback */}
+        {/* Filter Chip */}
         <div className="px-6 pb-2">
             <button 
                 onClick={toggleSidebar}
-                className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-100 rounded-full text-[9px] font-black uppercase tracking-widest text-slate-400 hover:bg-slate-50 shadow-sm"
+                className="flex items-center gap-2 px-4 py-2 bg-slate-50 border border-slate-100 rounded-full text-[9px] font-black uppercase tracking-widest text-slate-400 hover:bg-white shadow-sm"
             >
                 <Grid size={12} className="text-indigo-600" />
                 Filter: {selectedCategory}
             </button>
         </div>
 
-        {/* Catalog Grid - Edge to Edge (px-0) */}
-        <div className="px-0 mt-4">
+        {/* Catalog Grid - Truly Edge to Edge */}
+        <div className="w-full mt-4">
           {isLoading ? (
-            <div className="flex flex-col items-center justify-center py-20 text-slate-300">
-              <Loader2 size={28} className="animate-spin mb-3 text-indigo-600" />
-              <p className="text-[9px] font-black uppercase tracking-widest">Memuat Katalog...</p>
+            <div className="flex flex-col items-center justify-center py-24 text-slate-300">
+              <Loader2 size={32} className="animate-spin mb-3 text-indigo-600" />
+              <p className="text-[10px] font-black uppercase tracking-widest">Memuat Katalog...</p>
             </div>
           ) : filteredTemplates.length === 0 ? (
-              <div className="py-20 text-center text-slate-400 bg-white mx-6 rounded-[2rem] border border-dashed border-slate-200">
-                  <ShoppingBag size={32} className="mx-auto mb-3 opacity-20" />
-                  <p className="text-xs font-medium">Belum ada desain di kategori ini.</p>
+              <div className="py-24 text-center text-slate-400 bg-slate-50 mx-6 rounded-[2rem] border border-dashed border-slate-200">
+                  <ShoppingBag size={36} className="mx-auto mb-3 opacity-20" />
+                  <p className="text-sm font-medium">Belum ada desain di kategori ini.</p>
               </div>
           ) : (
-            <div className="grid grid-cols-1 gap-1">
+            <div className="flex flex-col divide-y divide-slate-100">
               {filteredTemplates.map((template, idx) => (
                 <ScrollReveal key={template.id} delay={idx * 50} direction="up" className="w-full">
-                  <div className="bg-white border-y border-slate-100 overflow-hidden shadow-none group flex flex-col h-full">
+                  <div className="bg-white group flex flex-col w-full">
                     
-                    {/* Media Container - Full Width */}
-                    <div className="aspect-[4/5] relative overflow-hidden">
+                    {/* Media Container - Full Bleed */}
+                    <div className="aspect-[4/5] relative overflow-hidden w-full">
                       <img 
                         src={template.previewImageUrl} 
                         alt={template.name} 
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2000ms]"
+                        className="w-full h-full object-cover"
                       />
                       
-                      {/* Status Labels - Floated */}
-                      <div className="absolute top-4 left-4 flex flex-col gap-1.5 pointer-events-none">
+                      {/* Floating Badges */}
+                      <div className="absolute top-6 left-6 flex flex-col gap-2 pointer-events-none">
                         {template.isPopular && (
-                          <div className="bg-amber-400 text-white px-3 py-1.5 rounded-full text-[8px] font-black uppercase tracking-widest shadow-lg flex items-center gap-1">
-                            <Star size={10} fill="currentColor" /> Terlaris
+                          <div className="bg-amber-400 text-white px-4 py-2 rounded-full text-[9px] font-black uppercase tracking-widest shadow-xl flex items-center gap-1.5">
+                            <Star size={12} fill="currentColor" /> Terlaris
                           </div>
                         )}
-                        <div className="bg-white/90 backdrop-blur-sm text-slate-800 px-3 py-1.5 rounded-full text-[8px] font-black uppercase tracking-widest shadow-sm border border-slate-100/50">
+                        <div className="bg-white/95 backdrop-blur-md text-slate-800 px-4 py-2 rounded-full text-[9px] font-black uppercase tracking-widest shadow-lg border border-white/20">
                           {template.category}
                         </div>
                       </div>
 
-                      {/* Info Overlay Bottom - Modern feel */}
-                      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-900/60 to-transparent p-6 pt-12 text-white pointer-events-none">
-                         <h3 className="text-xl font-black mb-1 drop-shadow-sm">{template.name}</h3>
-                         <div className="flex items-center gap-2 opacity-90">
-                           <Tag size={10} className="text-indigo-300" />
-                           <span className="font-bold text-xs">{formatPrice(template.price)}</span>
+                      {/* Info Overlay Bottom - Edge to Edge Gradient */}
+                      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-900/80 via-slate-900/30 to-transparent p-8 pt-20 text-white pointer-events-none">
+                         <h3 className="text-2xl font-black mb-1.5 drop-shadow-md">{template.name}</h3>
+                         <div className="flex items-center gap-2 opacity-100">
+                           <div className="bg-white/20 backdrop-blur-md px-3 py-1 rounded-lg flex items-center gap-1.5">
+                             <Tag size={12} className="text-indigo-300" />
+                             <span className="font-black text-sm">{formatPrice(template.price)}</span>
+                           </div>
                          </div>
                       </div>
                     </div>
 
-                    {/* Action Bar - Edge to Edge */}
-                    <div className="p-4 border-b border-slate-50 flex gap-2">
+                    {/* Action Bar - Full Width Buttons */}
+                    <div className="p-6 bg-white flex gap-3">
                       <button 
                         onClick={() => handleOrder(template)}
-                        className="flex-1 bg-slate-900 text-white py-4 rounded-xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-indigo-600 transition-all active:scale-[0.98]"
+                        className="flex-1 bg-slate-900 text-white py-4.5 rounded-2xl font-black text-[11px] uppercase tracking-widest flex items-center justify-center gap-2 active:scale-[0.97] transition-all shadow-xl shadow-slate-100"
                       >
-                        <MessageSquare size={14} />
+                        <MessageSquare size={16} />
                         Pesan Sekarang
                       </button>
                       <button 
-                         className="px-4 bg-slate-100 text-slate-800 rounded-xl flex items-center justify-center"
+                         className="w-14 h-14 bg-slate-50 text-slate-800 rounded-2xl flex items-center justify-center active:bg-slate-100 transition-colors border border-slate-100"
                          onClick={() => window.open(template.previewImageUrl, '_blank')}
                       >
-                        <Grid size={16} />
+                        <Grid size={20} />
                       </button>
                     </div>
                   </div>
@@ -299,32 +298,32 @@ const TemplateStore: React.FC = () => {
           )}
         </div>
 
-        {/* Benefits Section - Back to standard padding for text safety */}
-        <section className="px-6 mt-12 space-y-3">
+        {/* Benefits Section */}
+        <section className="px-6 mt-16 space-y-3">
           {[
             { icon: Zap, title: "Cepat", desc: "Selesai dalam 24 jam." },
             { icon: CheckCircle2, title: "Custom", desc: "Bisa ubah foto & lagu." },
             { icon: Smartphone, title: "Responsif", desc: "Tampil oke di semua HP." }
           ].map((benefit, i) => (
-            <div key={i} className="bg-white p-4 rounded-2xl flex items-center gap-4 border border-slate-100 shadow-sm">
-              <div className="w-9 h-9 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-500 shrink-0">
-                <benefit.icon size={16} />
+            <div key={i} className="bg-slate-50 p-5 rounded-2xl flex items-center gap-4 border border-slate-100">
+              <div className="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center text-indigo-600 shrink-0">
+                <benefit.icon size={18} />
               </div>
               <div>
                 <h4 className="font-black text-[10px] uppercase text-slate-800 tracking-tight">{benefit.title}</h4>
-                <p className="text-slate-400 text-[9px] font-medium leading-none mt-0.5">{benefit.desc}</p>
+                <p className="text-slate-400 text-[9px] font-medium leading-none mt-1">{benefit.desc}</p>
               </div>
             </div>
           ))}
         </section>
 
         {/* Footer */}
-        <footer className="py-12 text-center mt-12 px-6">
+        <footer className="py-16 text-center mt-12 bg-slate-50 border-t border-slate-100 px-6">
           <div className="flex items-center justify-center gap-2 mb-4">
-              <div className="w-6 h-6 bg-slate-200 rounded-lg flex items-center justify-center">
-                <Zap size={12} className="text-slate-400 fill-current" />
+              <div className="w-7 h-7 bg-indigo-100 rounded-lg flex items-center justify-center">
+                <Zap size={14} className="text-indigo-600 fill-current" />
               </div>
-              <span className="font-black text-xs tracking-tight text-slate-400">Vell Store</span>
+              <span className="font-black text-sm tracking-tight text-slate-400">Vell Store</span>
           </div>
           <p className="text-slate-300 text-[7px] font-black uppercase tracking-[0.4em]">
             © 2026 Crafted with Excellence
