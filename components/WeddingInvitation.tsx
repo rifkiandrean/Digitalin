@@ -130,22 +130,45 @@ const WeddingInvitation: React.FC = () => {
     <div className="max-w-[480px] w-full mx-auto bg-watercolor min-h-screen shadow-2xl relative overflow-x-hidden">{children}</div>
   );
 
+  // BAGIAN AWAL (COVER / SPLASH SCREEN)
   if (!isOpen) {
     return (
       <MobileWrapper>
-        <div className="absolute inset-0 z-0" style={{ backgroundImage: `url('${getDriveMediaUrl(weddingData.assets.splashBg)}')`, backgroundSize: 'cover', backgroundPosition: 'center top' }} />
-        <div className="absolute inset-0 bg-gradient-to-t from-white via-white/50 to-transparent z-0" />
+        {/* Background Layer - Fixed and Full Screen */}
+        <div 
+          className="absolute inset-0 z-0 transition-transform duration-[3s] scale-105" 
+          style={{ 
+            backgroundImage: `url('${getDriveMediaUrl(weddingData.assets.splashBg)}')`, 
+            backgroundSize: 'cover', 
+            backgroundPosition: 'center' 
+          }} 
+        />
+        
+        {/* Elegant Overlay Layer */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/10 to-black/60 z-0" />
+        
+        {/* Decorative Florals */}
         <FloralCorner position="top-left" assets={weddingData.assets} />
         <FloralCorner position="top-right" assets={weddingData.assets} />
-        <div className="z-10 relative flex flex-col h-screen justify-end pb-16 px-8 animate-fade-in-up">
-          <p className="text-slate-600 font-serif font-bold text-sm mb-2">The Wedding of</p>
-          <h1 className="text-5xl font-serif text-blue-900 mb-8 leading-none">
-            {weddingData.coupleShortName.split('&')[0]} <span className="font-script text-4xl">&</span> {weddingData.coupleShortName.split('&')[1]}
-          </h1>
-          <div className="w-full">
-            <p className="text-slate-500 text-sm font-bold mb-1">Kepada Bapak/Ibu/Saudara/i</p>
-            <h2 className="text-slate-800 text-2xl font-serif mb-6 capitalize">{guestName}</h2>
-            <button onClick={handleOpenInvitation} className="flex items-center gap-3 bg-blue-900 text-white px-6 py-3 rounded-full shadow-xl font-bold text-sm"><Mail className="w-4 h-4" /> Buka Undangan</button>
+        
+        {/* Content Layer */}
+        <div className="z-10 relative flex flex-col h-screen justify-end pb-20 px-8 animate-fade-in-up">
+          <div className="text-white drop-shadow-lg">
+            <p className="font-serif font-bold text-sm mb-2 tracking-[0.2em] opacity-90">The Wedding of</p>
+            <h1 className="text-6xl font-serif mb-8 leading-none">
+              {weddingData.coupleShortName.split('&')[0]} <span className="font-script text-4xl block mt-2">&</span> {weddingData.coupleShortName.split('&')[1]}
+            </h1>
+            
+            <div className="w-full bg-white/10 backdrop-blur-md p-6 rounded-[2rem] border border-white/20 shadow-2xl">
+              <p className="text-white/80 text-[10px] font-black uppercase tracking-widest mb-1">Kepada Bapak/Ibu/Saudara/i</p>
+              <h2 className="text-white text-2xl font-serif mb-6 capitalize">{guestName}</h2>
+              <button 
+                onClick={handleOpenInvitation} 
+                className="w-full flex items-center justify-center gap-3 bg-white text-blue-900 px-6 py-4 rounded-2xl shadow-xl font-black uppercase tracking-widest text-[11px] hover:bg-blue-50 transition-all active:scale-95"
+              >
+                <Mail className="w-4 h-4" /> Buka Undangan
+              </button>
+            </div>
           </div>
         </div>
       </MobileWrapper>
@@ -157,11 +180,15 @@ const WeddingInvitation: React.FC = () => {
       <div className="font-sans pb-24">
         <FloatingMusic audioUrl={weddingData.audioUrl} />
         
-        {/* HERO SECTION */}
-        <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-6 pt-12">
+        {/* HERO SECTION (SETELAH DIBUKA) */}
+        <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-6 pt-12 overflow-hidden">
+          {/* Subtle Background for Main Hero */}
+          <div className="absolute inset-0 opacity-10 pointer-events-none" style={getSectionStyle(weddingData.assets.splashBg)} />
+          
           <FloralCorner position="top-left" assets={weddingData.assets} />
           <FloralCorner position="top-right" assets={weddingData.assets} />
-          <div className="animate-fade-in-up w-full">
+          
+          <div className="animate-fade-in-up w-full relative z-10">
             <p className="text-blue-900 font-serif tracking-[0.4em] mb-8 text-xs uppercase font-bold">Save Our Date</p>
             <div className="arched-image w-64 border-[6px] border-white shadow-xl mx-auto mb-10 overflow-hidden bg-white">
               <img src={getDriveMediaUrl(weddingData.assets.heroImage)} className="w-full h-full object-cover" />
@@ -181,7 +208,7 @@ const WeddingInvitation: React.FC = () => {
           <div className="relative z-10">
             <ScrollReveal>
               <div className="font-script text-4xl text-blue-900 mb-2">Assalamu'alaikum Wr. Wb.</div>
-              <p className="text-slate-600 mb-16 leading-relaxed text-sm font-light">Maha Suci Allah yang telah menciptakan mahluk-Nya berpasang-pasangan...</p>
+              <p className="text-slate-600 mb-16 leading-relaxed text-sm font-light px-4">Maha Suci Allah yang telah menciptakan mahluk-Nya berpasang-pasangan...</p>
             </ScrollReveal>
             <div className="flex flex-col gap-16 items-center">
               <ScrollReveal direction="left" delay={200} className="w-full text-center">
