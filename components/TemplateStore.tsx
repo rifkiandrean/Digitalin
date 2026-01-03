@@ -163,27 +163,30 @@ const TemplateStore: React.FC = () => {
         </div>
       </div>
 
-      {/* Navbar - Same as Landing Page (max-w-6xl) */}
+      {/* Navbar - Centered Header Logic */}
       <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl border-b border-slate-100 h-16 px-6">
-        <div className="max-w-6xl mx-auto h-full flex items-center justify-between">
+        <div className="max-w-6xl mx-auto h-full relative flex items-center justify-between">
+          {/* Left: Sidebar Toggle */}
           <button 
             onClick={toggleSidebar}
-            className="p-3 -ml-3 text-slate-800 hover:bg-slate-50 rounded-full transition-colors"
+            className="p-3 -ml-3 text-slate-800 hover:bg-slate-50 rounded-full transition-colors z-10"
           >
             <Menu size={24} />
           </button>
           
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center shadow-lg shadow-indigo-100">
+          {/* Center: Branding (Rata Tengah) */}
+          <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2 pointer-events-none sm:pointer-events-auto">
+            <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center shadow-lg shadow-indigo-100 hidden xs:flex">
               <Zap size={18} className="text-white fill-current" />
             </div>
-            <div className="flex flex-col">
+            <div className="flex flex-col items-center">
               <span className="font-black text-sm tracking-tight text-slate-800 leading-none">Vell Store</span>
               <span className="text-[7px] font-black text-indigo-500 uppercase tracking-[0.2em] mt-0.5">Premium Design</span>
             </div>
           </div>
           
-          <div className="flex items-center">
+          {/* Right: Home Button */}
+          <div className="flex items-center z-10">
             <a 
               href="/" 
               className="p-3 -mr-3 text-slate-400 hover:text-indigo-600 transition-colors rounded-full hover:bg-slate-50"
@@ -194,7 +197,7 @@ const TemplateStore: React.FC = () => {
         </div>
       </nav>
 
-      {/* Main Content Area - Same as Landing Page Container */}
+      {/* Main Content Area */}
       <main className="max-w-6xl mx-auto overflow-x-hidden">
         {/* Hero Section */}
         <section className="pt-24 pb-6 px-6 text-center">
@@ -225,7 +228,7 @@ const TemplateStore: React.FC = () => {
             </button>
         </div>
 
-        {/* Catalog Grid - Edge to Edge on mobile, but inside container */}
+        {/* Catalog Grid */}
         <div className="w-full mt-4 md:px-6">
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-24 text-slate-300">
@@ -243,7 +246,7 @@ const TemplateStore: React.FC = () => {
                 <ScrollReveal key={template.id} delay={idx * 50} direction="up" className="w-full">
                   <div className="bg-white group flex flex-col w-full md:rounded-[2.5rem] md:border md:border-slate-100 md:overflow-hidden md:shadow-sm md:hover:shadow-xl transition-all">
                     
-                    {/* Media Container - Full Bleed on Mobile */}
+                    {/* Media Container */}
                     <div className="aspect-[4/5] relative overflow-hidden w-full">
                       <img 
                         src={template.previewImageUrl} 
@@ -317,7 +320,7 @@ const TemplateStore: React.FC = () => {
           ))}
         </section>
 
-        {/* Footer - Same as Landing Page Footer Background */}
+        {/* Footer */}
         <footer className="py-16 text-center mt-12 bg-slate-50 border-t border-slate-100 px-6">
           <div className="flex items-center justify-center gap-2 mb-4">
               <div className="w-7 h-7 bg-indigo-100 rounded-lg flex items-center justify-center">
@@ -341,6 +344,9 @@ const TemplateStore: React.FC = () => {
         }
         .transition-visibility {
           transition-property: visibility;
+        }
+        @media (max-width: 400px) {
+          .xs\:flex { display: flex; }
         }
       `}</style>
     </div>
