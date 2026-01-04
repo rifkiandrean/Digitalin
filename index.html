@@ -44,6 +44,27 @@
             position: relative;
         }
 
+        /* Text Shadow & Glow Utilities */
+        .text-shadow-soft {
+            text-shadow: 0 1px 2px rgba(0,0,0,0.15);
+        }
+        
+        .text-shadow-md {
+            text-shadow: 0 2px 4px rgba(0,0,0,0.25);
+        }
+
+        .text-shadow-strong {
+            text-shadow: 0 4px 8px rgba(0,0,0,0.4), 0 0 10px rgba(255,255,255,0.5);
+        }
+
+        .text-glow-white {
+            text-shadow: 0 0 12px rgba(255,255,255,1), 0 0 6px rgba(255,255,255,0.8), 0 0 2px rgba(255,255,255,0.5);
+        }
+
+        .text-shadow-deep {
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
         @keyframes fade-in-up {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }

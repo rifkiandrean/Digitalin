@@ -143,13 +143,13 @@ const WeddingInvitation: React.FC = () => {
         <FloralCorner position="top-left" assets={weddingData.assets} />
         <FloralCorner position="top-right" assets={weddingData.assets} />
         <div className="z-10 relative flex flex-col h-screen justify-end pb-16 px-8 animate-fade-in-up">
-          <p className="text-slate-600 font-serif font-bold text-sm mb-2 uppercase tracking-widest">The Wedding of</p>
-          <h1 className="text-5xl font-serif text-blue-900 mb-8 leading-none">
-            {weddingData.coupleShortName.split('&')[0]} <span className="font-script text-4xl">&</span> {weddingData.coupleShortName.split('&')[1]}
+          <p className="text-slate-600 font-serif font-bold text-sm mb-2 uppercase tracking-widest text-shadow-soft text-glow-white">The Wedding of</p>
+          <h1 className="text-5xl font-serif text-blue-900 mb-8 leading-none text-shadow-md text-glow-white">
+            {weddingData.coupleShortName.split('&')[0]} <span className="font-script text-4xl text-shadow-soft">&</span> {weddingData.coupleShortName.split('&')[1]}
           </h1>
           <div className="w-full">
-            <p className="text-slate-500 text-sm font-bold mb-1">Kepada Bapak/Ibu/Saudara/i</p>
-            <h2 className="text-slate-800 text-2xl font-serif mb-6 capitalize">{guestName}</h2>
+            <p className="text-slate-500 text-sm font-bold mb-1 text-shadow-soft text-glow-white">Kepada Bapak/Ibu/Saudara/i</p>
+            <h2 className="text-slate-800 text-2xl font-serif mb-6 capitalize text-shadow-soft text-glow-white">{guestName}</h2>
             <button onClick={handleOpenInvitation} className="flex items-center gap-3 bg-blue-900 text-white px-6 py-3 rounded-full shadow-xl font-bold text-sm"><Mail className="w-4 h-4" /> Buka Undangan</button>
           </div>
         </div>
@@ -162,7 +162,7 @@ const WeddingInvitation: React.FC = () => {
       <div className="font-sans pb-24">
         <FloatingMusic audioUrl={weddingData.audioUrl} />
         
-        {/* HERO SECTION - SUPPORTS DRIVE BACKGROUND */}
+        {/* HERO SECTION */}
         <section 
           className="relative min-h-screen flex flex-col items-center justify-center text-center px-6 pt-12 overflow-visible"
           style={getSectionStyle(weddingData.assets.heroBg)}
@@ -172,7 +172,7 @@ const WeddingInvitation: React.FC = () => {
           <FloralCorner position="top-right" assets={weddingData.assets} />
           
           <div className="animate-fade-in-up w-full relative z-10 flex flex-col items-center">
-            <p className="text-blue-900 font-serif tracking-[0.4em] mb-12 text-xs uppercase font-bold">The Wedding of</p>
+            <p className="text-blue-900 font-serif tracking-[0.4em] mb-12 text-xs uppercase font-bold text-shadow-soft text-glow-white">The Wedding of</p>
             
             {/* Arched Image with Floral Backdrop Peeking Out */}
             <div className="relative w-64 mb-10 group">
@@ -185,17 +185,17 @@ const WeddingInvitation: React.FC = () => {
                </div>
             </div>
 
-            <h2 className="font-script text-6xl text-blue-900 mb-6 leading-none drop-shadow-sm">
-              {weddingData.coupleShortName.split('&')[0]} <span className="font-script text-4xl">&</span> {weddingData.coupleShortName.split('&')[1]}
+            <h2 className="font-script text-6xl text-blue-900 mb-6 leading-none drop-shadow-sm text-shadow-md text-glow-white">
+              {weddingData.coupleShortName.split('&')[0]} <span className="font-script text-4xl text-shadow-soft">&</span> {weddingData.coupleShortName.split('&')[1]}
             </h2>
             
-            <p className="text-slate-500 text-[11px] font-medium leading-relaxed px-10 mb-8">
+            <p className="text-slate-500 text-[11px] font-medium leading-relaxed px-10 mb-8 text-shadow-soft text-glow-white">
                 Kami berharap Anda menjadi bagian dari hari istimewa kami!
             </p>
             
             <Countdown targetDate={weddingData.weddingDate} />
             
-            <p className="text-blue-900 font-serif tracking-[0.1em] mt-10 text-xs font-bold uppercase">
+            <p className="text-blue-900 font-serif tracking-[0.1em] mt-10 text-xs font-bold uppercase text-shadow-soft text-glow-white">
                 {new Date(weddingData.weddingDate).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
             </p>
             
@@ -216,23 +216,23 @@ const WeddingInvitation: React.FC = () => {
           <FloralSideDecoration side="right" top="60%" assets={weddingData.assets} />
           <div className="relative z-10">
             <ScrollReveal>
-              <div className="font-script text-4xl text-blue-900 mb-2">Assalamu'alaikum Wr. Wb.</div>
-              <p className="text-slate-600 mb-16 leading-relaxed text-sm font-light">Maha Suci Allah yang telah menciptakan mahluk-Nya berpasang-pasangan...</p>
+              <div className="font-script text-4xl text-blue-900 mb-2 text-shadow-soft text-glow-white">Assalamu'alaikum Wr. Wb.</div>
+              <p className="text-slate-600 mb-16 leading-relaxed text-sm font-light text-shadow-soft text-glow-white">Maha Suci Allah yang telah menciptakan mahluk-Nya berpasang-pasangan...</p>
             </ScrollReveal>
             <div className="flex flex-col gap-16 items-center">
               <ScrollReveal direction="left" delay={200} className="w-full text-center">
                 <div className="arched-image w-56 mx-auto mb-6 border-[5px] border-white shadow-xl">
                   <img src={getDriveMediaUrl(weddingData.assets.bridePhoto)} className="w-full h-full object-cover" />
                 </div>
-                <h3 className="font-script text-4xl text-blue-900 mb-2">{weddingData.brideName}</h3>
-                <p className="text-slate-500 italic mb-4 text-xs">Putri dari {weddingData.brideParents}</p>
+                <h3 className="font-script text-4xl text-blue-900 mb-2 text-shadow-soft text-glow-white">{weddingData.brideName}</h3>
+                <p className="text-slate-500 italic mb-4 text-xs text-shadow-soft text-glow-white">Putri dari {weddingData.brideParents}</p>
               </ScrollReveal>
               <ScrollReveal direction="right" delay={400} className="w-full text-center">
                 <div className="arched-image w-56 mx-auto mb-6 border-[5px] border-white shadow-xl">
                   <img src={getDriveMediaUrl(weddingData.assets.groomPhoto)} className="w-full h-full object-cover" />
                 </div>
-                <h3 className="font-script text-4xl text-blue-900 mb-2">{weddingData.groomName}</h3>
-                <p className="text-slate-500 italic mb-4 text-xs">Putra dari {weddingData.groomParents}</p>
+                <h3 className="font-script text-4xl text-blue-900 mb-2 text-shadow-soft text-glow-white">{weddingData.groomName}</h3>
+                <p className="text-slate-500 italic mb-4 text-xs text-shadow-soft text-glow-white">Putra dari {weddingData.groomParents}</p>
               </ScrollReveal>
             </div>
           </div>
@@ -243,18 +243,18 @@ const WeddingInvitation: React.FC = () => {
           <FloralSideDecoration side="right" top="20%" assets={weddingData.assets} />
           <FloralSideDecoration side="left" top="70%" assets={weddingData.assets} />
           <div className="w-full relative z-10">
-            <ScrollReveal><h2 className="font-script text-5xl text-blue-900 text-center mb-12">Waktu & Tempat</h2></ScrollReveal>
+            <ScrollReveal><h2 className="font-script text-5xl text-blue-900 text-center mb-12 text-shadow-soft text-glow-white">Waktu & Tempat</h2></ScrollReveal>
             <div className="flex flex-col gap-8">
               {weddingData.events.map((event, idx) => (
                 <ScrollReveal key={idx} delay={idx * 200} direction="up">
                   <div className="bg-white p-8 rounded-[2rem] shadow-xl border border-blue-50 text-center">
-                    <h3 className="font-serif text-2xl text-blue-900 mb-6 border-b-2 border-blue-50 pb-4 uppercase">{event.title}</h3>
-                    <p className="text-slate-800 font-bold text-lg mb-2">{formatEventDate(event.date)}</p>
-                    <p className="text-blue-900 font-medium mb-6 text-sm">Pukul {event.time}</p>
+                    <h3 className="font-serif text-2xl text-blue-900 mb-6 border-b-2 border-blue-50 pb-4 uppercase text-shadow-soft">{event.title}</h3>
+                    <p className="text-slate-800 font-bold text-lg mb-2 text-shadow-soft">{formatEventDate(event.date)}</p>
+                    <p className="text-blue-900 font-medium mb-6 text-sm text-shadow-soft">Pukul {event.time}</p>
                     <div className="space-y-4">
                       <MapPin className="text-red-400 w-8 h-8 mx-auto animate-pulse" />
-                      <h4 className="font-bold text-slate-800 text-base">{event.location}</h4>
-                      <p className="text-xs text-slate-500 leading-relaxed px-2">{event.address}</p>
+                      <h4 className="font-bold text-slate-800 text-base text-shadow-soft">{event.location}</h4>
+                      <p className="text-xs text-slate-500 leading-relaxed px-2 text-shadow-soft">{event.address}</p>
                       <a href={event.mapsUrl} target="_blank" rel="noreferrer" className="block w-full bg-blue-900 text-white px-6 py-3 rounded-xl font-bold uppercase tracking-widest text-[10px]">Buka Google Maps</a>
                     </div>
                   </div>
@@ -268,7 +268,7 @@ const WeddingInvitation: React.FC = () => {
         <section className="py-20 px-4 relative" style={getSectionStyle(weddingData.assets.galleryBg)}>
           <FloralSideDecoration side="left" top="5%" assets={weddingData.assets} />
           <div className="relative z-10 text-center">
-            <ScrollReveal><h2 className="font-script text-5xl text-blue-900 mb-8">Momen Bahagia</h2></ScrollReveal>
+            <ScrollReveal><h2 className="font-script text-5xl text-blue-900 mb-8 text-shadow-soft text-glow-white">Momen Bahagia</h2></ScrollReveal>
             <div className="grid grid-cols-2 gap-3 p-2">
               {weddingData.gallery.map((img, idx) => (
                 <ScrollReveal key={img.id} delay={idx * 100} direction={idx % 2 === 0 ? "left" : "right"}>
@@ -285,15 +285,15 @@ const WeddingInvitation: React.FC = () => {
         <section ref={giftSectionRef} className="py-20 px-6 relative bg-blue-50/50" style={getSectionStyle(weddingData.assets.giftBg)}>
           <FloralSideDecoration side="right" top="15%" assets={weddingData.assets} />
           <div className="w-full relative z-10 max-w-sm mx-auto text-center">
-            <ScrollReveal><h2 className="font-script text-5xl text-blue-900 mb-10">Wedding Gift</h2></ScrollReveal>
+            <ScrollReveal><h2 className="font-script text-5xl text-blue-900 mb-10 text-shadow-soft text-glow-white">Wedding Gift</h2></ScrollReveal>
             <div className="flex flex-col gap-10">
               {weddingData.bankAccounts.map((bank, idx) => (
                 <ScrollReveal key={idx} delay={idx * 150} direction="up">
                   <div className="bg-indigo-900 p-6 rounded-[1.5rem] text-white shadow-2xl relative text-left overflow-hidden">
-                    <div className="font-bold mb-8 opacity-90">{bank.bankName}</div>
-                    <div className="font-mono text-xl mb-6 tracking-widest">{bank.accountNumber}</div>
-                    <div className="text-[10px] uppercase opacity-60">Atas Nama</div>
-                    <div className="font-bold text-sm uppercase">{bank.accountHolder}</div>
+                    <div className="font-bold mb-8 opacity-90 text-shadow-md">{bank.bankName}</div>
+                    <div className="font-mono text-xl mb-6 tracking-widest text-shadow-md">{bank.accountNumber}</div>
+                    <div className="text-[10px] uppercase opacity-60 text-shadow-soft">Atas Nama</div>
+                    <div className="font-bold text-sm uppercase text-shadow-md">{bank.accountHolder}</div>
                     <button onClick={() => copyToClipboard(bank.accountNumber, idx)} className="absolute bottom-4 right-4 bg-white text-blue-900 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase shadow-lg flex items-center gap-1">
                       {copiedIndex === idx ? <Check size={12} /> : <Copy size={12} />} {copiedIndex === idx ? 'Tersalin' : 'Salin'}
                     </button>
@@ -309,13 +309,13 @@ const WeddingInvitation: React.FC = () => {
 
         {/* FOOTER SECTION */}
         <footer className="py-12 px-6 text-center bg-white relative">
-          <p className="text-slate-400 text-[10px] mb-4 tracking-[0.4em] font-bold uppercase">Kami Yang Berbahagia</p>
-          <ScrollReveal><p className="font-script text-5xl text-blue-900 mb-10">{weddingData.coupleShortName}</p></ScrollReveal>
+          <p className="text-slate-400 text-[10px] mb-4 tracking-[0.4em] font-bold uppercase text-shadow-soft text-glow-white">Kami Yang Berbahagia</p>
+          <ScrollReveal><p className="font-script text-5xl text-blue-900 mb-10 text-shadow-soft text-glow-white">{weddingData.coupleShortName}</p></ScrollReveal>
           <button onClick={() => setShowPinPrompt(true)} className="p-4 text-slate-300 hover:text-blue-900 transition-all flex flex-col items-center mx-auto">
             <UserCircle className="w-8 h-8 opacity-30" />
-            <span className="text-[8px] uppercase tracking-widest mt-1 font-bold">Akses Dasbor</span>
+            <span className="text-[8px] uppercase tracking-widest mt-1 font-bold text-shadow-soft text-glow-white">Akses Dasbor</span>
           </button>
-          <div className="text-[8px] tracking-[0.4em] text-slate-300 uppercase font-black mt-10">Digital Invitation • 2026</div>
+          <div className="text-[8px] tracking-[0.4em] text-slate-300 uppercase font-black mt-10 text-shadow-soft text-glow-white">Digital Invitation • 2026</div>
         </footer>
       </div>
     </MobileWrapper>
