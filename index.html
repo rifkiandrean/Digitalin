@@ -61,8 +61,14 @@
             text-shadow: 0 0 12px rgba(255,255,255,1), 0 0 6px rgba(255,255,255,0.8), 0 0 2px rgba(255,255,255,0.5);
         }
 
-        .text-shadow-deep {
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        /* Background Softening */
+        .bg-overlay-20 {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .bg-overlay-muted {
+            background-color: rgba(253, 250, 247, 0.4);
+            backdrop-filter: blur(1px);
         }
 
         @keyframes fade-in-up {
@@ -93,14 +99,13 @@
             animation: floral-sway-gentle 12s ease-in-out infinite;
         }
 
-        /* Menetapkan titik tumpu rotasi di pojok atas kiri gambar */
         .origin-base {
             transform-origin: 5% 5%;
         }
 
         .bg-watercolor {
             background-color: #fdfaf7;
-            background-image: radial-gradient(circle at 10% 20%, rgba(216, 241, 230, 0.2) 0%, rgba(233, 226, 226, 0.2) 90%);
+            background-image: radial-gradient(circle at 10% 20%, rgba(216, 241, 230, 0.1) 0%, rgba(233, 226, 226, 0.1) 90%);
         }
 
         .arched-image {
@@ -149,7 +154,6 @@
 </head>
 <body class="bg-slate-200 text-slate-800 selection:bg-blue-100 flex justify-center min-h-screen">
     <div id="root" class="w-full flex justify-center"></div>
-    <!-- Entry point script -->
     <script type="module" src="/index.tsx"></script>
 </body>
 </html>

@@ -117,7 +117,7 @@ const WeddingInvitation: React.FC = () => {
             <div className="bg-blue-50 p-3 rounded-2xl text-blue-900"><Lock className="w-6 h-6" /></div>
             <button onClick={() => setShowPinPrompt(false)} className="text-slate-400 hover:text-slate-600"><X className="w-6 h-6" /></button>
           </div>
-          <h2 className="text-2xl font-bold text-slate-800 mb-2">Akses Dasbor</h2>
+          <h2 className="text-2xl font-bold text-slate-800 mb-2 text-shadow-soft">Akses Dasbor</h2>
           <form onSubmit={handlePinSubmit} className="space-y-4">
             <input type="password" placeholder="Masukkan PIN" autoFocus value={pinInput} onChange={(e) => {setPinInput(e.target.value); setPinError(false);}} className={`w-full p-4 bg-slate-50 border ${pinError ? 'border-red-500' : 'border-slate-200'} rounded-2xl text-center text-xl tracking-widest`} />
             <button type="submit" className="w-full bg-blue-900 text-white py-4 rounded-2xl font-bold">Masuk Dasbor</button>
@@ -139,11 +139,14 @@ const WeddingInvitation: React.FC = () => {
     return (
       <MobileWrapper>
         <div className="absolute inset-0 z-0" style={{ backgroundImage: `url('${getDriveMediaUrl(weddingData.assets.splashBg)}')`, backgroundSize: 'cover', backgroundPosition: 'center top' }} />
-        <div className="absolute inset-0 bg-gradient-to-t from-white via-white/50 to-transparent z-0" />
+        {/* Samaran Overlay 20% */}
+        <div className="absolute inset-0 bg-white/20 z-[1]" />
+        <div className="absolute inset-0 bg-gradient-to-t from-white via-white/50 to-transparent z-[2]" />
+        
         <FloralCorner position="top-left" assets={weddingData.assets} />
         <FloralCorner position="top-right" assets={weddingData.assets} />
         <div className="z-10 relative flex flex-col h-screen justify-end pb-16 px-8 animate-fade-in-up">
-          <p className="text-slate-600 font-serif font-bold text-sm mb-2 uppercase tracking-widest text-shadow-soft text-glow-white">The Wedding of</p>
+          <p className="text-slate-700 font-serif font-bold text-base mb-2 uppercase tracking-widest text-shadow-soft text-glow-white">The Wedding of</p>
           <h1 className="text-5xl font-serif text-blue-900 mb-8 leading-none text-shadow-md text-glow-white">
             {weddingData.coupleShortName.split('&')[0]} <span className="font-script text-4xl text-shadow-soft">&</span> {weddingData.coupleShortName.split('&')[1]}
           </h1>
@@ -167,6 +170,9 @@ const WeddingInvitation: React.FC = () => {
           className="relative min-h-screen flex flex-col items-center justify-center text-center px-6 pt-12 overflow-visible"
           style={getSectionStyle(weddingData.assets.heroBg)}
         >
+          {/* Samaran Background Hero */}
+          <div className="absolute inset-0 bg-white/20 z-0" />
+          
           {/* Background Decorations */}
           <FloralCorner position="top-left" assets={weddingData.assets} />
           <FloralCorner position="top-right" assets={weddingData.assets} />
@@ -195,11 +201,14 @@ const WeddingInvitation: React.FC = () => {
             
             <Countdown targetDate={weddingData.weddingDate} />
             
-            <p className="text-blue-900 font-serif tracking-[0.1em] mt-10 text-xs font-bold uppercase text-shadow-soft text-glow-white">
-                {new Date(weddingData.weddingDate).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
-            </p>
+            {/* ENLARGED WEDDING DATE */}
+            <div className="mt-10 mb-2 py-2 border-y border-blue-900/10 w-full max-w-[280px]">
+              <p className="text-blue-900 font-serif tracking-[0.1em] text-lg md:text-xl font-black uppercase text-shadow-soft text-glow-white leading-relaxed">
+                  {new Date(weddingData.weddingDate).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+              </p>
+            </div>
             
-            <div className="mt-10">
+            <div className="mt-8">
                 <button 
                   onClick={() => giftSectionRef.current?.scrollIntoView({ behavior: 'smooth' })}
                   className="bg-blue-900 text-white px-10 py-3 rounded-full font-bold text-xs shadow-xl active:scale-95 transition-all uppercase tracking-widest"
@@ -212,8 +221,12 @@ const WeddingInvitation: React.FC = () => {
 
         {/* COUPLE SECTION */}
         <section className="py-20 px-6 text-center relative overflow-hidden" style={getSectionStyle(weddingData.assets.coupleBg)}>
+          {/* Samaran Background Couple */}
+          <div className="absolute inset-0 bg-white/40 z-0" />
+          
           <FloralSideDecoration side="left" top="10%" assets={weddingData.assets} />
           <FloralSideDecoration side="right" top="60%" assets={weddingData.assets} />
+          
           <div className="relative z-10">
             <ScrollReveal>
               <div className="font-script text-4xl text-blue-900 mb-2 text-shadow-soft text-glow-white">Assalamu'alaikum Wr. Wb.</div>
@@ -240,6 +253,9 @@ const WeddingInvitation: React.FC = () => {
 
         {/* EVENTS SECTION */}
         <section className="py-20 px-4 relative bg-white/30 backdrop-blur-sm overflow-hidden" style={getSectionStyle(weddingData.assets.eventsBg)}>
+          {/* Samaran Background Events */}
+          <div className="absolute inset-0 bg-overlay-muted z-0" />
+          
           <FloralSideDecoration side="right" top="20%" assets={weddingData.assets} />
           <FloralSideDecoration side="left" top="70%" assets={weddingData.assets} />
           <div className="w-full relative z-10">
@@ -247,7 +263,7 @@ const WeddingInvitation: React.FC = () => {
             <div className="flex flex-col gap-8">
               {weddingData.events.map((event, idx) => (
                 <ScrollReveal key={idx} delay={idx * 200} direction="up">
-                  <div className="bg-white p-8 rounded-[2rem] shadow-xl border border-blue-50 text-center">
+                  <div className="bg-white/80 backdrop-blur-md p-8 rounded-[2rem] shadow-xl border border-blue-50 text-center">
                     <h3 className="font-serif text-2xl text-blue-900 mb-6 border-b-2 border-blue-50 pb-4 uppercase text-shadow-soft">{event.title}</h3>
                     <p className="text-slate-800 font-bold text-lg mb-2 text-shadow-soft">{formatEventDate(event.date)}</p>
                     <p className="text-blue-900 font-medium mb-6 text-sm text-shadow-soft">Pukul {event.time}</p>
@@ -265,14 +281,17 @@ const WeddingInvitation: React.FC = () => {
         </section>
 
         {/* GALLERY SECTION */}
-        <section className="py-20 px-4 relative" style={getSectionStyle(weddingData.assets.galleryBg)}>
+        <section className="py-20 px-4 relative overflow-hidden" style={getSectionStyle(weddingData.assets.galleryBg)}>
+          {/* Samaran Background Gallery */}
+          <div className="absolute inset-0 bg-white/40 z-0" />
+          
           <FloralSideDecoration side="left" top="5%" assets={weddingData.assets} />
           <div className="relative z-10 text-center">
             <ScrollReveal><h2 className="font-script text-5xl text-blue-900 mb-8 text-shadow-soft text-glow-white">Momen Bahagia</h2></ScrollReveal>
             <div className="grid grid-cols-2 gap-3 p-2">
               {weddingData.gallery.map((img, idx) => (
                 <ScrollReveal key={img.id} delay={idx * 100} direction={idx % 2 === 0 ? "left" : "right"}>
-                  <div className="overflow-hidden rounded-2xl shadow-lg relative aspect-square">
+                  <div className="overflow-hidden rounded-2xl shadow-lg relative aspect-square border-4 border-white/50">
                     <img src={getDriveMediaUrl(img.url)} className="w-full h-full object-cover" />
                   </div>
                 </ScrollReveal>
@@ -282,14 +301,17 @@ const WeddingInvitation: React.FC = () => {
         </section>
 
         {/* GIFT SECTION */}
-        <section ref={giftSectionRef} className="py-20 px-6 relative bg-blue-50/50" style={getSectionStyle(weddingData.assets.giftBg)}>
+        <section ref={giftSectionRef} className="py-20 px-6 relative bg-blue-50/50 overflow-hidden" style={getSectionStyle(weddingData.assets.giftBg)}>
+          {/* Samaran Background Gift */}
+          <div className="absolute inset-0 bg-white/30 z-0" />
+          
           <FloralSideDecoration side="right" top="15%" assets={weddingData.assets} />
           <div className="w-full relative z-10 max-w-sm mx-auto text-center">
             <ScrollReveal><h2 className="font-script text-5xl text-blue-900 mb-10 text-shadow-soft text-glow-white">Wedding Gift</h2></ScrollReveal>
             <div className="flex flex-col gap-10">
               {weddingData.bankAccounts.map((bank, idx) => (
                 <ScrollReveal key={idx} delay={idx * 150} direction="up">
-                  <div className="bg-indigo-900 p-6 rounded-[1.5rem] text-white shadow-2xl relative text-left overflow-hidden">
+                  <div className="bg-indigo-900/90 backdrop-blur-sm p-6 rounded-[1.5rem] text-white shadow-2xl relative text-left overflow-hidden">
                     <div className="font-bold mb-8 opacity-90 text-shadow-md">{bank.bankName}</div>
                     <div className="font-mono text-xl mb-6 tracking-widest text-shadow-md">{bank.accountNumber}</div>
                     <div className="text-[10px] uppercase opacity-60 text-shadow-soft">Atas Nama</div>
