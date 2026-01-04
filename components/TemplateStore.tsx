@@ -143,7 +143,7 @@ const TemplateStore: React.FC = () => {
         <div className="fixed inset-0 z-[200] bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4">
           <div className="bg-white w-full max-md rounded-[2.5rem] overflow-hidden shadow-2xl animate-fade-in-up">
             <div className="p-6 border-b flex items-center justify-between">
-              <h2 className="font-black text-slate-800 uppercase tracking-widest text-xs text-shadow-soft">
+              <h2 className="font-black text-slate-800 uppercase tracking-widest text-xs">
                 {paymentStep === 'success' ? 'Pembayaran Berhasil' : 'Checkout Pesanan'}
               </h2>
               {paymentStep !== 'processing' && (
@@ -159,24 +159,24 @@ const TemplateStore: React.FC = () => {
                   <div className="flex gap-4 items-center p-4 bg-slate-50 rounded-2xl">
                     <img src={checkoutItem.previewImageUrl} className="w-16 h-20 object-cover rounded-xl" />
                     <div>
-                      <h3 className="font-black text-slate-800 text-shadow-soft">{checkoutItem.name}</h3>
-                      <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest text-shadow-soft">{checkoutItem.category}</p>
-                      <p className="text-indigo-600 font-black mt-1 text-shadow-soft">{formatPrice(checkoutItem.price)}</p>
+                      <h3 className="font-black text-slate-800">{checkoutItem.name}</h3>
+                      <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{checkoutItem.category}</p>
+                      <p className="text-indigo-600 font-black mt-1">{formatPrice(checkoutItem.price)}</p>
                     </div>
                   </div>
                   <div className="space-y-3">
-                    <div className="flex justify-between text-xs font-bold text-slate-400 text-shadow-soft">
+                    <div className="flex justify-between text-xs font-bold text-slate-400">
                       <span>Harga Desain</span>
                       <span>{formatPrice(checkoutItem.price)}</span>
                     </div>
-                    <div className="flex justify-between text-xs font-bold text-slate-400 text-shadow-soft">
+                    <div className="flex justify-between text-xs font-bold text-slate-400">
                       <span>Biaya Layanan</span>
                       <span>{formatPrice(2500)}</span>
                     </div>
                     <div className="h-px bg-slate-100 my-2" />
                     <div className="flex justify-between items-center">
-                      <span className="font-black text-slate-800 text-shadow-soft">Total Bayar</span>
-                      <span className="text-xl font-black text-indigo-600 text-shadow-soft">{formatPrice(checkoutItem.price + 2500)}</span>
+                      <span className="font-black text-slate-800">Total Bayar</span>
+                      <span className="text-xl font-black text-indigo-600">{formatPrice(checkoutItem.price + 2500)}</span>
                     </div>
                   </div>
                   <button 
@@ -190,7 +190,7 @@ const TemplateStore: React.FC = () => {
 
               {paymentStep === 'method' && (
                 <div className="space-y-6">
-                  <h3 className="text-sm font-black text-slate-800 mb-2 text-shadow-soft">Pilih Metode Pembayaran</h3>
+                  <h3 className="text-sm font-black text-slate-800 mb-2">Pilih Metode Pembayaran</h3>
                   <div className="space-y-2">
                     {[
                       { id: 'qris', label: 'QRIS (Gopay, OVO, ShopeePay)', icon: QrCode },
@@ -208,7 +208,7 @@ const TemplateStore: React.FC = () => {
                           <div className={`p-2 rounded-lg ${selectedMethod === method.id ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-400'}`}>
                             <method.icon size={18} />
                           </div>
-                          <span className="text-xs font-bold text-slate-700 text-shadow-soft">{method.label}</span>
+                          <span className="text-xs font-bold text-slate-700">{method.label}</span>
                         </div>
                         <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${selectedMethod === method.id ? 'border-indigo-600' : 'border-slate-200'}`}>
                            {selectedMethod === method.id && <div className="w-2 h-2 bg-indigo-600 rounded-full" />}
@@ -222,15 +222,15 @@ const TemplateStore: React.FC = () => {
                   >
                     Bayar Sekarang
                   </button>
-                  <button onClick={() => setPaymentStep('summary')} className="w-full text-slate-400 font-bold text-[10px] uppercase tracking-widest text-shadow-soft">Kembali</button>
+                  <button onClick={() => setPaymentStep('summary')} className="w-full text-slate-400 font-bold text-[10px] uppercase tracking-widest">Kembali</button>
                 </div>
               )}
 
               {paymentStep === 'processing' && (
                 <div className="py-12 flex flex-col items-center justify-center text-center">
                   <Loader2 size={64} className="text-indigo-600 animate-spin mb-6" />
-                  <h3 className="text-xl font-black text-slate-800 mb-2 text-shadow-soft">Memproses Transaksi</h3>
-                  <p className="text-xs text-slate-400 font-medium leading-relaxed px-4 text-shadow-soft">
+                  <h3 className="text-xl font-black text-slate-800 mb-2">Memproses Transaksi</h3>
+                  <p className="text-xs text-slate-400 font-medium leading-relaxed px-4">
                     Mohon jangan tutup jendela ini. Kami sedang melakukan sinkronisasi dengan payment gateway aman kami.
                   </p>
                 </div>
@@ -241,12 +241,12 @@ const TemplateStore: React.FC = () => {
                   <div className="w-24 h-24 bg-green-50 rounded-full flex items-center justify-center mb-6">
                     <CheckCircle2 size={48} className="text-green-500" />
                   </div>
-                  <h3 className="text-2xl font-black text-slate-800 mb-2 text-shadow-soft">Transaksi Sukses!</h3>
+                  <h3 className="text-2xl font-black text-slate-800 mb-2">Transaksi Sukses!</h3>
                   <div className="bg-slate-50 p-4 rounded-2xl mb-8 w-full border border-slate-100">
-                    <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1 text-shadow-soft">ID Transaksi</p>
-                    <p className="font-mono text-sm font-bold text-slate-700 text-shadow-soft">VELL-{Math.random().toString(36).substr(2, 9).toUpperCase()}</p>
+                    <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">ID Transaksi</p>
+                    <p className="font-mono text-sm font-bold text-slate-700">VELL-{Math.random().toString(36).substr(2, 9).toUpperCase()}</p>
                   </div>
-                  <p className="text-xs text-slate-500 font-medium leading-relaxed mb-10 px-4 text-shadow-soft">
+                  <p className="text-xs text-slate-500 font-medium leading-relaxed mb-10 px-4">
                     Pesanan Anda telah dikonfirmasi. Dashboard pengelolaan undangan Anda sekarang telah **Aktif Otomatis**.
                   </p>
                   <a 
@@ -272,7 +272,7 @@ const TemplateStore: React.FC = () => {
           <div className="p-6 border-b flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Zap size={20} className="text-indigo-600 fill-current" />
-              <span className="font-black text-lg tracking-tight text-shadow-soft">Vell Menu</span>
+              <span className="font-black text-lg tracking-tight">Vell Menu</span>
             </div>
             <button onClick={toggleSidebar} className="p-2 hover:bg-slate-50 rounded-full transition-colors text-slate-400">
               <X size={20} />
@@ -280,17 +280,17 @@ const TemplateStore: React.FC = () => {
           </div>
           <div className="flex-1 overflow-y-auto py-6 px-4 space-y-8">
             <div className="space-y-1">
-              <h3 className="px-4 text-[10px] font-black uppercase text-slate-400 tracking-widest mb-3 text-shadow-soft">Navigasi Utama</h3>
-              <a href="/" className="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-50 rounded-2xl transition-colors font-bold text-sm text-shadow-soft">
+              <h3 className="px-4 text-[10px] font-black uppercase text-slate-400 tracking-widest mb-3">Navigasi Utama</h3>
+              <a href="/" className="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-50 rounded-2xl transition-colors font-bold text-sm">
                 <Home size={18} /> Beranda
               </a>
-              <a href="/undangan/admin" className="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-50 rounded-2xl transition-colors font-bold text-sm text-shadow-soft">
+              <a href="/undangan/admin" className="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-50 rounded-2xl transition-colors font-bold text-sm">
                 <Shield size={18} /> Area Admin
               </a>
             </div>
             
             <div className="space-y-1">
-              <h3 className="px-4 text-[10px] font-black uppercase text-slate-400 tracking-widest mb-3 text-shadow-soft">Tampilan</h3>
+              <h3 className="px-4 text-[10px] font-black uppercase text-slate-400 tracking-widest mb-3">Tampilan</h3>
               <div className="grid grid-cols-2 gap-2 px-4">
                   <button onClick={() => { setViewMode('grid'); toggleSidebar(); }} className={`flex items-center justify-center gap-2 py-3 rounded-2xl border transition-all font-bold text-xs ${viewMode === 'grid' ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-slate-50 text-slate-400 border-slate-100'}`}>
                       <LayoutGrid size={16} /> Grid
@@ -302,12 +302,12 @@ const TemplateStore: React.FC = () => {
             </div>
 
             <div className="space-y-1">
-              <h3 className="px-4 text-[10px] font-black uppercase text-slate-400 tracking-widest mb-3 text-shadow-soft">Kategori</h3>
+              <h3 className="px-4 text-[10px] font-black uppercase text-slate-400 tracking-widest mb-3">Kategori</h3>
               {categories.map((cat) => (
                 <button
                   key={cat}
                   onClick={() => { setSelectedCategory(cat); toggleSidebar(); }}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl transition-all font-bold text-sm text-shadow-soft ${
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl transition-all font-bold text-sm ${
                     selectedCategory === cat ? 'bg-indigo-600 text-white shadow-lg' : 'text-slate-600 hover:bg-slate-50'
                   }`}
                 >
@@ -332,8 +332,8 @@ const TemplateStore: React.FC = () => {
                 <Zap size={20} className="text-white fill-current md:w-6 md:h-6" />
               </div>
               <div className="flex flex-col">
-                <span className="font-black text-sm md:text-lg tracking-tight text-slate-800 leading-none text-shadow-soft">Vell Store</span>
-                <span className="text-[7px] md:text-[9px] font-black text-indigo-500 uppercase tracking-[0.2em] mt-0.5 text-shadow-soft">Premium Invitations</span>
+                <span className="font-black text-sm md:text-lg tracking-tight text-slate-800 leading-none">Vell Store</span>
+                <span className="text-[7px] md:text-[9px] font-black text-indigo-500 uppercase tracking-[0.2em] mt-0.5">Premium Invitations</span>
               </div>
             </a>
 
@@ -343,7 +343,7 @@ const TemplateStore: React.FC = () => {
                   <button
                     key={cat}
                     onClick={() => setSelectedCategory(cat)}
-                    className={`px-5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all text-shadow-soft ${
+                    className={`px-5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
                       selectedCategory === cat 
                       ? 'bg-white text-indigo-600 shadow-sm border border-slate-100' 
                       : 'text-slate-400 hover:text-slate-600'
@@ -374,7 +374,7 @@ const TemplateStore: React.FC = () => {
               <div className="relative">
                 <button 
                   onClick={() => setIsSortOpen(!isSortOpen)}
-                  className="flex items-center gap-2 px-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl text-[10px] font-black uppercase tracking-widest text-slate-600 hover:bg-slate-100 transition-all text-shadow-soft"
+                  className="flex items-center gap-2 px-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl text-[10px] font-black uppercase tracking-widest text-slate-600 hover:bg-slate-100 transition-all"
                 >
                   <ArrowUpDown size={14} className="text-indigo-600" />
                   <span>Urutkan: {sortBy === 'price-asc' ? 'Termurah' : sortBy === 'price-desc' ? 'Termahal' : 'Default'}</span>
@@ -391,7 +391,7 @@ const TemplateStore: React.FC = () => {
                         <button
                           key={opt.id}
                           onClick={() => { setSortBy(opt.id); setIsSortOpen(false); }}
-                          className={`w-full flex items-center gap-3 px-4 py-3 text-left text-[10px] font-bold uppercase tracking-widest transition-all text-shadow-soft ${
+                          className={`w-full flex items-center gap-3 px-4 py-3 text-left text-[10px] font-bold uppercase tracking-widest transition-all ${
                             sortBy === opt.id ? 'bg-indigo-50 text-indigo-600' : 'text-slate-500 hover:bg-slate-50'
                           }`}
                         >
@@ -407,7 +407,7 @@ const TemplateStore: React.FC = () => {
           </div>
           
           <div className="flex items-center gap-2 md:gap-4">
-            <a href="/undangan/admin" className="hidden sm:flex items-center gap-2 px-4 py-2 text-slate-400 hover:text-indigo-600 transition-colors text-xs font-bold uppercase tracking-widest text-shadow-soft">
+            <a href="/undangan/admin" className="hidden sm:flex items-center gap-2 px-4 py-2 text-slate-400 hover:text-indigo-600 transition-colors text-xs font-bold uppercase tracking-widest">
                 <Shield size={16} /> Admin
             </a>
             <a href="/" className="p-3 text-slate-400 hover:text-indigo-600 transition-colors rounded-full hover:bg-slate-50">
@@ -420,14 +420,14 @@ const TemplateStore: React.FC = () => {
       <main className="w-full max-w-[1600px] mx-auto pt-24 md:pt-32">
         <section className="pb-12 px-6 text-center lg:text-left lg:flex lg:items-end lg:justify-between lg:pb-16">
           <ScrollReveal className="lg:max-w-2xl">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-indigo-50 text-indigo-600 rounded-full text-[9px] font-black uppercase tracking-widest mb-4 border border-indigo-100/50 text-shadow-soft">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-indigo-50 text-indigo-600 rounded-full text-[9px] font-black uppercase tracking-widest mb-4 border border-indigo-100/50">
               Automated Payment Gateway Ready
             </div>
-            <h1 className="text-4xl md:text-6xl font-black text-slate-900 mb-6 leading-tight text-shadow-md">
+            <h1 className="text-4xl md:text-6xl font-black text-slate-900 mb-6 leading-tight">
               Desain Undangan <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-blue-500 italic text-shadow-soft">Bisa Langsung Aktif.</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-blue-500 italic">Bisa Langsung Aktif.</span>
             </h1>
-            <p className="text-slate-500 text-sm md:text-xl font-medium leading-relaxed text-shadow-soft">
+            <p className="text-slate-500 text-sm md:text-xl font-medium leading-relaxed">
               Pilih desain favorit Anda, bayar melalui sistem otomatis, dan mulai kustomisasi undangan Anda secara instan tanpa menunggu konfirmasi admin.
             </p>
           </ScrollReveal>
@@ -437,7 +437,7 @@ const TemplateStore: React.FC = () => {
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-32 text-slate-300">
               <Loader2 size={48} className="animate-spin mb-4 text-indigo-600" />
-              <p className="text-xs font-black uppercase tracking-[0.3em] text-shadow-soft">Syncing Catalog...</p>
+              <p className="text-xs font-black uppercase tracking-[0.3em]">Syncing Catalog...</p>
             </div>
           ) : viewMode === 'grid' ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-0 md:gap-8 lg:gap-10">
@@ -448,19 +448,19 @@ const TemplateStore: React.FC = () => {
                       <img src={template.previewImageUrl} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[3000ms] ease-out" />
                       <div className="absolute top-6 left-6 flex flex-col gap-2 pointer-events-none">
                         {template.isPopular && (
-                          <div className="bg-amber-400 text-white px-4 py-2 rounded-full text-[9px] font-black uppercase tracking-widest shadow-xl flex items-center gap-1.5 text-shadow-soft">
+                          <div className="bg-amber-400 text-white px-4 py-2 rounded-full text-[9px] font-black uppercase tracking-widest shadow-xl flex items-center gap-1.5">
                             <Star size={12} fill="currentColor" /> Terlaris
                           </div>
                         )}
-                        <div className="bg-white/95 backdrop-blur-md text-slate-800 px-4 py-2 rounded-full text-[9px] font-black uppercase tracking-widest shadow-lg text-shadow-soft">
+                        <div className="bg-white/95 backdrop-blur-md text-slate-800 px-4 py-2 rounded-full text-[9px] font-black uppercase tracking-widest shadow-lg">
                           {template.category}
                         </div>
                       </div>
                       <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-900/90 via-slate-900/40 to-transparent p-8 pt-24 text-white">
-                         <h3 className="text-2xl font-black mb-2 tracking-tight text-shadow-strong">{template.name}</h3>
+                         <h3 className="text-2xl font-black mb-2 tracking-tight">{template.name}</h3>
                          <div className="bg-white/10 backdrop-blur-xl px-4 py-1.5 rounded-xl inline-flex items-center gap-2 border border-white/10">
                            <Tag size={12} className="text-indigo-300" />
-                           <span className="font-black text-sm text-shadow-strong">{formatPrice(template.price)}</span>
+                           <span className="font-black text-sm">{formatPrice(template.price)}</span>
                          </div>
                       </div>
                     </div>
@@ -468,13 +468,13 @@ const TemplateStore: React.FC = () => {
                     <div className="p-6 md:p-8 bg-white flex flex-col gap-3">
                       <button 
                         onClick={() => window.open(template.demoUrl || template.previewImageUrl, '_blank')}
-                        className="w-full bg-white text-indigo-600 border border-indigo-100 py-4 rounded-[1.2rem] font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-indigo-50 transition-all shadow-sm text-shadow-soft"
+                        className="w-full bg-white text-indigo-600 border border-indigo-100 py-4 rounded-[1.2rem] font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-indigo-50 transition-all shadow-sm"
                       >
                         <Eye size={16} /> Lihat Contoh
                       </button>
                       <button 
                         onClick={() => handleStartCheckout(template)}
-                        className="w-full bg-slate-900 text-white py-4 rounded-[1.2rem] font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-indigo-600 transition-all shadow-xl shadow-slate-100 text-shadow-soft"
+                        className="w-full bg-slate-900 text-white py-4 rounded-[1.2rem] font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-indigo-600 transition-all shadow-xl shadow-slate-100"
                       >
                         <ShoppingBag size={16} /> Pilih Desain
                       </button>
@@ -499,36 +499,36 @@ const TemplateStore: React.FC = () => {
 
                     <div className="flex-1 space-y-2">
                         <div className="flex items-center gap-2">
-                            <span className="px-3 py-1 bg-slate-100 text-slate-500 rounded-full text-[8px] font-black uppercase tracking-widest text-shadow-soft">
+                            <span className="px-3 py-1 bg-slate-100 text-slate-500 rounded-full text-[8px] font-black uppercase tracking-widest">
                                 {template.category}
                             </span>
                             {template.isPopular && (
-                                <span className="text-[8px] font-black uppercase text-amber-500 tracking-widest text-shadow-soft">
+                                <span className="text-[8px] font-black uppercase text-amber-500 tracking-widest">
                                     Pilihan Terpopuler
                                 </span>
                             )}
                         </div>
-                        <h3 className="text-xl md:text-2xl font-black text-slate-800 text-shadow-soft">{template.name}</h3>
-                        <p className="text-slate-400 text-xs font-medium leading-relaxed max-w-lg text-shadow-soft">
+                        <h3 className="text-xl md:text-2xl font-black text-slate-800">{template.name}</h3>
+                        <p className="text-slate-400 text-xs font-medium leading-relaxed max-w-lg">
                             Desain eksklusif dengan fitur RSVP otomatis, galeri momen bahagia, dan navigasi peta interaktif untuk memudahkan tamu Anda.
                         </p>
                     </div>
 
                     <div className="md:w-64 space-y-3">
                         <div className="flex flex-col items-start md:items-end mb-4">
-                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-shadow-soft">Harga Desain</span>
-                            <span className="text-xl font-black text-indigo-600 text-shadow-soft">{formatPrice(template.price)}</span>
+                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Harga Desain</span>
+                            <span className="text-xl font-black text-indigo-600">{formatPrice(template.price)}</span>
                         </div>
                         <div className="grid grid-cols-2 md:grid-cols-1 gap-2">
                             <button 
                                 onClick={() => window.open(template.demoUrl || template.previewImageUrl, '_blank')}
-                                className="w-full bg-slate-50 text-slate-600 border border-slate-100 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-slate-100 transition-all text-shadow-soft"
+                                className="w-full bg-slate-50 text-slate-600 border border-slate-100 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-slate-100 transition-all"
                             >
                                 <Eye size={14} /> Lihat
                             </button>
                             <button 
                                 onClick={() => handleStartCheckout(template)}
-                                className="w-full bg-slate-900 text-white py-3 rounded-xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-indigo-600 transition-all shadow-lg text-shadow-soft"
+                                className="w-full bg-slate-900 text-white py-3 rounded-xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-indigo-600 transition-all shadow-lg"
                             >
                                 <ShoppingBag size={14} /> Pilih
                             </button>
@@ -555,8 +555,8 @@ const TemplateStore: React.FC = () => {
                     <benefit.icon size={28} />
                   </div>
                   <div>
-                    <h4 className="font-black text-sm uppercase text-slate-800 mb-2 text-shadow-soft">{benefit.title}</h4>
-                    <p className="text-slate-500 text-xs leading-relaxed text-shadow-soft">{benefit.desc}</p>
+                    <h4 className="font-black text-sm uppercase text-slate-800 mb-2">{benefit.title}</h4>
+                    <p className="text-slate-500 text-xs leading-relaxed">{benefit.desc}</p>
                   </div>
                 </div>
               </ScrollReveal>

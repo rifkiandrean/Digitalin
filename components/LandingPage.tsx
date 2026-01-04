@@ -115,13 +115,13 @@ const LandingPage: React.FC = () => {
             <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
               <Zap size={18} className="text-white fill-current" />
             </div>
-            <span className="font-bold text-xl tracking-tight text-slate-800 text-shadow-soft">Vell Digital</span>
+            <span className="font-bold text-xl tracking-tight text-slate-800">Vell Digital</span>
           </div>
           
           <div className="hidden md:flex items-center gap-8 text-sm font-bold uppercase tracking-widest text-slate-500">
-             <a href="#services" className="hover:text-indigo-600 transition-colors text-shadow-soft">Layanan</a>
-             <a href="/portfolio" className="hover:text-indigo-600 transition-colors text-shadow-soft">Portfolio</a>
-             <a href="https://wa.me/628123456789" className="text-indigo-600 text-shadow-soft">Kontak</a>
+             <a href="#services" className="hover:text-indigo-600 transition-colors">Layanan</a>
+             <a href="/portfolio" className="hover:text-indigo-600 transition-colors">Portfolio</a>
+             <a href="https://wa.me/628123456789" className="text-indigo-600">Kontak</a>
           </div>
 
           <a 
@@ -137,14 +137,14 @@ const LandingPage: React.FC = () => {
       <section className="pt-32 pb-20 px-6 overflow-hidden">
         <div className="max-w-6xl mx-auto text-center">
           <ScrollReveal>
-            <span className="inline-block px-4 py-1.5 bg-indigo-50 text-indigo-600 rounded-full text-xs font-bold uppercase tracking-widest mb-6 text-shadow-soft">
+            <span className="inline-block px-4 py-1.5 bg-indigo-50 text-indigo-600 rounded-full text-xs font-bold uppercase tracking-widest mb-6">
               Modern Digital Agency
             </span>
-            <h1 className="text-4xl md:text-6xl font-extrabold text-slate-900 mb-6 leading-tight text-shadow-md">
+            <h1 className="text-4xl md:text-6xl font-extrabold text-slate-900 mb-6 leading-tight">
               Wujudkan Ide Digital Anda <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-blue-500 text-shadow-soft">Menjadi Realita.</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-blue-500">Menjadi Realita.</span>
             </h1>
-            <p className="text-slate-500 text-lg max-w-2xl mx-auto mb-10 leading-relaxed text-shadow-soft">
+            <p className="text-slate-500 text-lg max-w-2xl mx-auto mb-10 leading-relaxed">
               Kami menyediakan berbagai solusi teknologi kustom untuk membantu bisnis, instansi, dan momen spesial Anda bersinar di dunia digital.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -164,9 +164,9 @@ const LandingPage: React.FC = () => {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <ScrollReveal>
-              <h2 className="text-3xl font-bold text-slate-900 mb-4 text-shadow-soft">Layanan Kami</h2>
+              <h2 className="text-3xl font-bold text-slate-900 mb-4">Layanan Kami</h2>
               <div className="w-20 h-1.5 bg-indigo-600 mx-auto rounded-full mb-6"></div>
-              <p className="text-slate-500 text-shadow-soft">Pilih solusi digital yang sesuai dengan kebutuhan Anda saat ini.</p>
+              <p className="text-slate-500">Pilih solusi digital yang sesuai dengan kebutuhan Anda saat ini.</p>
             </ScrollReveal>
           </div>
 
@@ -180,11 +180,11 @@ const LandingPage: React.FC = () => {
                   <div className={`w-14 h-14 ${service.color} rounded-2xl flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform shadow-lg`}>
                     <service.icon size={28} />
                   </div>
-                  <h3 className="text-xl font-bold text-slate-800 mb-3 text-shadow-soft">{service.title}</h3>
-                  <p className="text-slate-500 text-sm leading-relaxed mb-6 flex-1 text-shadow-soft">
+                  <h3 className="text-xl font-bold text-slate-800 mb-3">{service.title}</h3>
+                  <p className="text-slate-500 text-sm leading-relaxed mb-6 flex-1">
                     {service.desc}
                   </p>
-                  <div className="text-indigo-600 font-bold text-xs uppercase tracking-widest flex items-center gap-2 group/btn text-shadow-soft">
+                  <div className="text-indigo-600 font-bold text-xs uppercase tracking-widest flex items-center gap-2 group/btn">
                     Info Detail <ChevronRight size={14} className="group-hover/btn:translate-x-1 transition-transform" />
                   </div>
                 </a>
@@ -200,15 +200,15 @@ const LandingPage: React.FC = () => {
           <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
              <div className="text-left">
                 <ScrollReveal direction="left">
-                   <div className="flex items-center gap-2 text-indigo-600 mb-4 font-black uppercase tracking-widest text-xs text-shadow-soft">
+                   <div className="flex items-center gap-2 text-indigo-600 mb-4 font-black uppercase tracking-widest text-xs">
                       <Layers size={14} />
                       Showcase
                    </div>
-                   <h2 className="text-3xl sm:text-5xl font-black text-slate-900 leading-tight text-shadow-md">Proyek Unggulan <br />Terbaru Kami</h2>
+                   <h2 className="text-3xl sm:text-5xl font-black text-slate-900 leading-tight">Proyek Unggulan <br />Terbaru Kami</h2>
                 </ScrollReveal>
              </div>
              <ScrollReveal direction="right">
-                <a href="/portfolio" className="bg-slate-100 text-slate-800 px-8 py-4 rounded-2xl font-bold hover:bg-indigo-600 hover:text-white transition-all flex items-center gap-2 text-shadow-soft">
+                <a href="/portfolio" className="bg-slate-100 text-slate-800 px-8 py-4 rounded-2xl font-bold hover:bg-indigo-600 hover:text-white transition-all flex items-center gap-2">
                    Lihat Semua Karya <ChevronRight size={18} />
                 </a>
              </ScrollReveal>
@@ -222,8 +222,8 @@ const LandingPage: React.FC = () => {
                         <img src={p.image} alt={p.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                      </div>
                      <div className="p-8">
-                        <span className="text-[10px] font-black uppercase text-indigo-600 tracking-widest text-shadow-soft">{p.category}</span>
-                        <h3 className="text-xl font-bold text-slate-800 mt-2 text-shadow-soft">{p.title}</h3>
+                        <span className="text-[10px] font-black uppercase text-indigo-600 tracking-widest">{p.category}</span>
+                        <h3 className="text-xl font-bold text-slate-800 mt-2">{p.title}</h3>
                      </div>
                   </div>
                </ScrollReveal>
@@ -236,20 +236,20 @@ const LandingPage: React.FC = () => {
       <section className="py-20 px-6 bg-indigo-900 text-white overflow-hidden">
         <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
           <ScrollReveal>
-            <div className="text-4xl font-black mb-2 text-shadow-md">100+</div>
-            <div className="text-indigo-200 text-xs uppercase tracking-widest font-bold text-shadow-soft">Proyek Selesai</div>
+            <div className="text-4xl font-black mb-2">100+</div>
+            <div className="text-indigo-200 text-xs uppercase tracking-widest font-bold">Proyek Selesai</div>
           </ScrollReveal>
           <ScrollReveal delay={100}>
-            <div className="text-4xl font-black mb-2 text-shadow-md">50+</div>
-            <div className="text-indigo-200 text-xs uppercase tracking-widest font-bold text-shadow-soft">Klien Puas</div>
+            <div className="text-4xl font-black mb-2">50+</div>
+            <div className="text-indigo-200 text-xs uppercase tracking-widest font-bold">Klien Puas</div>
           </ScrollReveal>
           <ScrollReveal delay={200}>
-            <div className="text-4xl font-black mb-2 text-shadow-md">24/7</div>
-            <div className="text-indigo-200 text-xs uppercase tracking-widest font-bold text-shadow-soft">Support Ramah</div>
+            <div className="text-4xl font-black mb-2">24/7</div>
+            <div className="text-indigo-200 text-xs uppercase tracking-widest font-bold">Support Ramah</div>
           </ScrollReveal>
           <ScrollReveal delay={300}>
-            <div className="text-4xl font-black mb-2 text-shadow-md">5+</div>
-            <div className="text-indigo-200 text-xs uppercase tracking-widest font-bold text-shadow-soft">Tahun Pengalaman</div>
+            <div className="text-4xl font-black mb-2">5+</div>
+            <div className="text-indigo-200 text-xs uppercase tracking-widest font-bold">Tahun Pengalaman</div>
           </ScrollReveal>
         </div>
       </section>
@@ -259,15 +259,15 @@ const LandingPage: React.FC = () => {
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-16">
           <div className="flex-1">
             <ScrollReveal direction="left">
-              <h2 className="text-4xl font-bold text-slate-900 mb-8 leading-tight text-shadow-md">Mengapa Memilih <br />Vell Digital Service?</h2>
+              <h2 className="text-4xl font-bold text-slate-900 mb-8 leading-tight">Mengapa Memilih <br />Vell Digital Service?</h2>
               <div className="space-y-6">
                 <div className="flex gap-4">
                   <div className="mt-1 bg-green-100 text-green-600 p-1.5 rounded-full h-fit">
                     <ShieldCheck size={18} />
                   </div>
                   <div>
-                    <h4 className="font-bold text-slate-800 mb-1 text-shadow-soft">Kualitas Terjamin</h4>
-                    <p className="text-sm text-slate-500 leading-relaxed text-shadow-soft">Setiap baris kode kami tulis dengan teliti untuk memastikan performa maksimal dan keamanan data.</p>
+                    <h4 className="font-bold text-slate-800 mb-1">Kualitas Terjamin</h4>
+                    <p className="text-sm text-slate-500 leading-relaxed">Setiap baris kode kami tulis dengan teliti untuk memastikan performa maksimal dan keamanan data.</p>
                   </div>
                 </div>
                 <div className="flex gap-4">
@@ -275,8 +275,8 @@ const LandingPage: React.FC = () => {
                     <Smartphone size={18} />
                   </div>
                   <div>
-                    <h4 className="font-bold text-slate-800 mb-1 text-shadow-soft">Mobile Friendly</h4>
-                    <p className="text-sm text-slate-500 leading-relaxed text-shadow-soft">Semua produk kami dioptimalkan untuk tampilan di perangkat seluler agar mudah diakses siapa saja.</p>
+                    <h4 className="font-bold text-slate-800 mb-1">Mobile Friendly</h4>
+                    <p className="text-sm text-slate-500 leading-relaxed">Semua produk kami dioptimalkan untuk tampilan di perangkat seluler agar mudah diakses siapa saja.</p>
                   </div>
                 </div>
                 <div className="flex gap-4">
@@ -284,8 +284,8 @@ const LandingPage: React.FC = () => {
                     <Zap size={18} />
                   </div>
                   <div>
-                    <h4 className="font-bold text-slate-800 mb-1 text-shadow-soft">Pengerjaan Cepat</h4>
-                    <p className="text-sm text-slate-500 leading-relaxed text-shadow-soft">Kami menghargai waktu Anda. Proses pengembangan yang terstruktur menjamin ketepatan waktu.</p>
+                    <h4 className="font-bold text-slate-800 mb-1">Pengerjaan Cepat</h4>
+                    <p className="text-sm text-slate-500 leading-relaxed">Kami menghargai waktu Anda. Proses pengembangan yang terstruktur menjamin ketepatan waktu.</p>
                   </div>
                 </div>
               </div>
@@ -315,15 +315,15 @@ const LandingPage: React.FC = () => {
             <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
               <Zap size={18} className="text-white fill-current" />
             </div>
-            <span className="font-bold text-xl text-slate-800 text-shadow-soft">Vell Digital</span>
+            <span className="font-bold text-xl text-slate-800">Vell Digital</span>
           </div>
           <div className="flex gap-8 text-slate-500 text-sm font-medium">
-            <a href="/" className="hover:text-indigo-600 transition-colors text-shadow-soft">Layanan</a>
-            <a href="/portfolio" className="hover:text-indigo-600 transition-colors text-shadow-soft">Portfolio</a>
-            <a href="#" className="hover:text-indigo-600 transition-colors text-shadow-soft">Tentang</a>
-            <a href="https://wa.me/628123456789" className="hover:text-indigo-600 transition-colors text-shadow-soft">Kontak</a>
+            <a href="/" className="hover:text-indigo-600 transition-colors">Layanan</a>
+            <a href="/portfolio" className="hover:text-indigo-600 transition-colors">Portfolio</a>
+            <a href="#" className="hover:text-indigo-600 transition-colors">Tentang</a>
+            <a href="https://wa.me/628123456789" className="hover:text-indigo-600 transition-colors">Kontak</a>
           </div>
-          <p className="text-slate-400 text-xs font-bold uppercase tracking-widest text-shadow-soft">
+          <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">
             © 2026 Vell Digital Service. All rights reserved.
           </p>
         </div>
