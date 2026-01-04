@@ -24,8 +24,15 @@ export const DEFAULT_WEDDING_DATA: WeddingData = {
     floralCornerMid: "https://drive.google.com/file/d/1Lz0xYm8_floral_mid/view", 
     floralCornerBack: "https://drive.google.com/file/d/1Lz0xYm8_floral_back/view", 
     floralSide: "https://drive.google.com/file/d/1Lz0xYm8_floral_side/view", 
+    
+    // Aset Bunga Khusus Backdrop Hero
+    heroFloralTopLeft: "https://drive.google.com/file/d/1Lz0xYm8_floral_front/view",
+    heroFloralTopRight: "https://drive.google.com/file/d/1Lz0xYm8_floral_mid/view",
+    heroFloralBottomLeft: "https://drive.google.com/file/d/1Lz0xYm8_floral_side/view",
+    heroFloralBottomRight: "https://drive.google.com/file/d/1Lz0xYm8_floral_front/view",
+
     heroImage: "https://drive.google.com/file/d/1hGiGST6m5nf3ZtOpWQUKGZhTkv0ZTQP5/view",
-    heroBg: "", // Bisa diisi URL Google Drive untuk splash/kertas watercolor
+    heroBg: "", 
     bridePhoto: "https://images.unsplash.com/photo-1523438885200-e635ba2c371e?auto=format&fit=crop&q=80&w=500",
     groomPhoto: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=500",
     splashBg: "https://drive.google.com/file/d/1hGiGST6m5nf3ZtOpWQUKGZhTkv0ZTQP5/view",

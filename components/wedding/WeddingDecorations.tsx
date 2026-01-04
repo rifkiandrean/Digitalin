@@ -27,37 +27,38 @@ export const FloralSideDecoration = ({ side, top, assets }: { side: 'left' | 'ri
 };
 
 export const HeroFloralBackdrop = ({ assets }: { assets: any }) => {
-  const cornerImg = getDriveMediaUrl(assets.floralCorner);
-  const cornerMidImg = getDriveMediaUrl(assets.floralCornerMid || assets.floralCorner);
-  const sideImg = getDriveMediaUrl(assets.floralSide || assets.floralCorner);
+  const imgTopLeft = getDriveMediaUrl(assets.heroFloralTopLeft || assets.floralCorner);
+  const imgTopRight = getDriveMediaUrl(assets.heroFloralTopRight || assets.floralCornerMid || assets.floralCorner);
+  const imgBottomLeft = getDriveMediaUrl(assets.heroFloralBottomLeft || assets.floralSide || assets.floralCorner);
+  const imgBottomRight = getDriveMediaUrl(assets.heroFloralBottomRight || assets.floralCorner);
 
   return (
     <div className="absolute inset-0 z-0 pointer-events-none overflow-visible">
-      {/* Cluster Atas Kiri Frame - Rotasi diarahkan agar pucuk menghadap ke tengah */}
+      {/* Cluster Atas Kiri Frame */}
       <div className="absolute top-0 left-0 -translate-x-1/4 -translate-y-1/4 w-44 h-44 opacity-90">
         <img 
-          src={cornerImg} 
+          src={imgTopLeft} 
           className="w-full h-full object-contain rotate-[75deg] animate-floral-sway-gentle origin-base" 
         />
       </div>
-      {/* Cluster Atas Kanan Frame - Rotasi diarahkan agar pucuk menghadap ke tengah */}
+      {/* Cluster Atas Kanan Frame */}
       <div className="absolute top-0 right-0 translate-x-1/4 -translate-y-1/4 w-40 h-40 opacity-80">
         <img 
-          src={cornerMidImg} 
+          src={imgTopRight} 
           className="w-full h-full object-contain scale-x-[-1] rotate-[-75deg] origin-base" 
         />
       </div>
-      {/* Cluster Bawah Kiri Frame - Rotasi diarahkan agar pucuk menghadap ke atas/tengah */}
+      {/* Cluster Bawah Kiri Frame */}
       <div className="absolute bottom-8 -left-14 w-48 h-48 opacity-100">
         <img 
-          src={sideImg} 
+          src={imgBottomLeft} 
           className="w-full h-full object-contain rotate-[60deg] animate-floral-sway origin-base" 
         />
       </div>
-      {/* Cluster Bawah Kanan Frame - Rotasi diarahkan agar pucuk menghadap ke atas/tengah */}
+      {/* Cluster Bawah Kanan Frame */}
       <div className="absolute bottom-12 -right-14 w-52 h-52 opacity-100">
         <img 
-          src={cornerImg} 
+          src={imgBottomRight} 
           className="w-full h-full object-contain scale-x-[-1] scale-y-[-1] rotate-[65deg] animate-floral-sway-gentle origin-base" 
           style={{ animationDelay: '-2s' }}
         />

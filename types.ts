@@ -60,12 +60,20 @@ export interface WeddingData {
   weddingDate: string;
   turutMengundang: string[];
   assets: {
+    // Bunga Umum (Sudah ada)
     floralCorner: string; 
     floralCornerMid: string; 
     floralCornerBack: string; 
     floralSide: string; 
+    
+    // Bunga Khusus Backdrop Hero (Baru)
+    heroFloralTopLeft: string;
+    heroFloralTopRight: string;
+    heroFloralBottomLeft: string;
+    heroFloralBottomRight: string;
+
     heroImage: string;
-    heroBg: string; // Background utama hero
+    heroBg: string;
     bridePhoto: string;
     groomPhoto: string;
     splashBg: string;
