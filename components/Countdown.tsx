@@ -6,7 +6,6 @@ interface CountdownProps {
   targetDate: string;
 }
 
-// Fix: Use targetDate from props instead of non-existent WEDDING_DATE constant
 const Countdown: React.FC<CountdownProps> = ({ targetDate }) => {
   const [timeLeft, setTimeLeft] = useState<CountdownTime>({
     days: 0, hours: 0, minutes: 0, seconds: 0
@@ -36,14 +35,14 @@ const Countdown: React.FC<CountdownProps> = ({ targetDate }) => {
   }, [targetDate]);
 
   const Box = ({ value, label }: { value: number; label: string }) => (
-    <div className="flex flex-col items-center bg-blue-900 text-white rounded-xl p-3 w-20 shadow-md">
-      <span className="text-2xl font-bold">{value}</span>
-      <span className="text-xs uppercase tracking-widest">{label}</span>
+    <div className="flex flex-col items-center bg-blue-900 text-white rounded-[1.2rem] p-3 w-[72px] shadow-lg border border-blue-800/30">
+      <span className="text-xl font-bold">{value}</span>
+      <span className="text-[8px] font-black uppercase tracking-wider mt-0.5 opacity-80">{label}</span>
     </div>
   );
 
   return (
-    <div className="flex justify-center gap-2 md:gap-4 my-8">
+    <div className="flex justify-center gap-2 md:gap-3 my-4">
       <Box value={timeLeft.days} label="Hari" />
       <Box value={timeLeft.hours} label="Jam" />
       <Box value={timeLeft.minutes} label="Menit" />

@@ -8,7 +8,7 @@ import ScrollReveal from './ScrollReveal';
 import GuestBook from './GuestBook';
 import { fetchWeddingData, getDriveMediaUrl, DEFAULT_WEDDING_DATA } from '../constants';
 import { WeddingData } from '../types';
-import { FloralCorner, FloralSideDecoration } from './wedding/WeddingDecorations';
+import { FloralCorner, FloralSideDecoration, HeroFloralBackdrop } from './wedding/WeddingDecorations';
 
 const ADMIN_PIN = "hanipupud2026";
 
@@ -138,7 +138,7 @@ const WeddingInvitation: React.FC = () => {
         <FloralCorner position="top-left" assets={weddingData.assets} />
         <FloralCorner position="top-right" assets={weddingData.assets} />
         <div className="z-10 relative flex flex-col h-screen justify-end pb-16 px-8 animate-fade-in-up">
-          <p className="text-slate-600 font-serif font-bold text-sm mb-2">The Wedding of</p>
+          <p className="text-slate-600 font-serif font-bold text-sm mb-2 uppercase tracking-widest">The Wedding of</p>
           <h1 className="text-5xl font-serif text-blue-900 mb-8 leading-none">
             {weddingData.coupleShortName.split('&')[0]} <span className="font-script text-4xl">&</span> {weddingData.coupleShortName.split('&')[1]}
           </h1>
@@ -157,20 +157,48 @@ const WeddingInvitation: React.FC = () => {
       <div className="font-sans pb-24">
         <FloatingMusic audioUrl={weddingData.audioUrl} />
         
-        {/* HERO SECTION */}
-        <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-6 pt-12">
+        {/* HERO SECTION - REFINED TO MATCH REFERENCE IMAGE */}
+        <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-6 pt-12 overflow-visible">
+          {/* Background Decorations */}
           <FloralCorner position="top-left" assets={weddingData.assets} />
           <FloralCorner position="top-right" assets={weddingData.assets} />
-          <div className="animate-fade-in-up w-full">
-            <p className="text-blue-900 font-serif tracking-[0.4em] mb-8 text-xs uppercase font-bold">Save Our Date</p>
-            <div className="arched-image w-64 border-[6px] border-white shadow-xl mx-auto mb-10 overflow-hidden bg-white">
-              <img src={getDriveMediaUrl(weddingData.assets.heroImage)} className="w-full h-full object-cover" />
+          
+          <div className="animate-fade-in-up w-full relative z-10 flex flex-col items-center">
+            <p className="text-blue-900 font-serif tracking-[0.4em] mb-12 text-xs uppercase font-bold">The Wedding of</p>
+            
+            {/* Arched Image with Floral Backdrop Peeking Out */}
+            <div className="relative w-64 mb-10 group">
+               {/* Floral clusters peeking from behind */}
+               <HeroFloralBackdrop assets={weddingData.assets} />
+               
+               {/* Central Image Frame */}
+               <div className="arched-image relative z-10 w-full border-[8px] border-white shadow-[0_20px_60px_rgba(0,0,0,0.15)] mx-auto overflow-hidden bg-white ring-1 ring-slate-100/50">
+                 <img src={getDriveMediaUrl(weddingData.assets.heroImage)} className="w-full h-full object-cover" />
+               </div>
             </div>
-            <h2 className="font-script text-6xl text-blue-900 mb-6 leading-none">
-              {weddingData.brideName.split(' ')[0]} <span>&</span> {weddingData.groomName.split(' ')[0]}
+
+            <h2 className="font-script text-6xl text-blue-900 mb-6 leading-none drop-shadow-sm">
+              {weddingData.coupleShortName.split('&')[0]} <span className="font-script text-4xl">&</span> {weddingData.coupleShortName.split('&')[1]}
             </h2>
+            
+            <p className="text-slate-500 text-[11px] font-medium leading-relaxed px-10 mb-8">
+                Kami berharap Anda menjadi bagian dari hari istimewa kami!
+            </p>
+            
             <Countdown targetDate={weddingData.weddingDate} />
-            <p className="text-blue-900 font-serif tracking-[0.2em] mt-10 text-sm font-bold uppercase">{new Date(weddingData.weddingDate).toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+            
+            <p className="text-blue-900 font-serif tracking-[0.1em] mt-10 text-xs font-bold uppercase">
+                {new Date(weddingData.weddingDate).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+            </p>
+            
+            <div className="mt-10">
+                <button 
+                  onClick={() => giftSectionRef.current?.scrollIntoView({ behavior: 'smooth' })}
+                  className="bg-blue-900 text-white px-10 py-3 rounded-full font-bold text-xs shadow-xl active:scale-95 transition-all uppercase tracking-widest"
+                >
+                  Save The Date
+                </button>
+            </div>
           </div>
         </section>
 

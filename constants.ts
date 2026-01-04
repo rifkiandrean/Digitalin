@@ -1,84 +1,6 @@
 
 import { WeddingData, GuestMessage, InvitationTemplate } from './types';
 
-/**
- * GOOGLE APPS SCRIPT BACKEND V3.1 (Salin & Tempel di Google Apps Script)
- * -----------------------------------------------------------------------------
- * function doPost(e) {
- *   var data = JSON.parse(e.postData.contents);
- *   var ss = SpreadsheetApp.getActiveSpreadsheet();
- *   var action = data.action;
- *   
- *   // 1. GUESTBOOK: Simpan ucapan
- *   if (action === 'submit_message') {
- *     var sheet = ss.getSheetByName('guestbook') || ss.insertSheet('guestbook');
- *     if (sheet.getLastRow() === 0) {
- *       sheet.appendRow(['ID', 'Nama', 'Kehadiran', 'Pesan', 'Timestamp']);
- *     }
- *     sheet.appendRow([data.id, data.name, data.attendance, data.message, data.timestamp]);
- *     return ContentService.createTextOutput("Success").setMimeType(ContentService.MimeType.TEXT);
- *   }
- *   
- *   // 2. SETTINGS: Simpan konfigurasi Undangan (Hani & Pupud)
- *   if (action === 'update_settings') {
- *     var sheet = ss.getSheetByName('settings') || ss.insertSheet('settings');
- *     sheet.clear();
- *     sheet.appendRow(['PENGATURAN', 'NILAI / DATA']);
- *     for (var key in data) {
- *       if (key === 'action') continue;
- *       var val = data[key];
- *       if (typeof val === 'object') val = JSON.stringify(val);
- *       sheet.appendRow([key, val]);
- *     }
- *     return ContentService.createTextOutput("Success").setMimeType(ContentService.MimeType.TEXT);
- *   }
- *   
- *   // 3. CATALOG: Simpan katalog template (Database Utama Toko)
- *   if (action === 'update_catalog') {
- *     var sheet = ss.getSheetByName('catalog') || ss.insertSheet('catalog');
- *     sheet.clear();
- *     sheet.appendRow(['Catalog_ID', 'Data_JSON']);
- *     sheet.appendRow(['ALL_TEMPLATES', JSON.stringify(data.catalog)]);
- *     return ContentService.createTextOutput("Success").setMimeType(ContentService.MimeType.TEXT);
- *   }
- * }
- * 
- * function doGet(e) {
- *   var action = e.parameter.action;
- *   var ss = SpreadsheetApp.getActiveSpreadsheet();
- *   
- *   if (action === 'get_catalog') {
- *     var sheet = ss.getSheetByName('catalog');
- *     if (!sheet || sheet.getLastRow() < 2) return ContentService.createTextOutput("[]").setMimeType(ContentService.MimeType.JSON);
- *     var val = sheet.getRange(2, 2).getValue();
- *     return ContentService.createTextOutput(val).setMimeType(ContentService.MimeType.JSON);
- *   }
- *   
- *   if (action === 'get_messages') {
- *     var sheet = ss.getSheetByName('guestbook');
- *     if (!sheet) return ContentService.createTextOutput("[]").setMimeType(ContentService.MimeType.JSON);
- *     var rows = sheet.getDataRange().getValues();
- *     rows.shift();
- *     var messages = rows.map(function(row) {
- *       return { id: row[0], name: row[1], attendance: row[2], message: row[3], timestamp: row[4] };
- *     });
- *     return ContentService.createTextOutput(JSON.stringify(messages)).setMimeType(ContentService.MimeType.JSON);
- *   }
- *   
- *   var sheet = ss.getSheetByName('settings');
- *   if (!sheet || sheet.getLastRow() < 2) return ContentService.createTextOutput(JSON.stringify({})).setMimeType(ContentService.MimeType.JSON);
- *   var rows = sheet.getDataRange().getValues();
- *   rows.shift();
- *   var settings = {};
- *   rows.forEach(function(row) {
- *     var key = row[0];
- *     var val = row[1];
- *     try { settings[key] = JSON.parse(val); } catch(e) { settings[key] = val; }
- *   });
- *   return ContentService.createTextOutput(JSON.stringify(settings)).setMimeType(ContentService.MimeType.JSON);
- * }
- */
-
 const GOOGLE_SHEET_API_URL = "https://script.google.com/macros/s/AKfycbwry2veuiGew1xY_BCnBUnB6S9-PaRCEGOM0kFs5-ZlcbAvXm8QYhYEI4X8rx76lg6S/exec";
 
 const DEFAULT_MAPS_EMBED = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3952.936553835694!2d112.0116847!3d-7.8176885!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e785706598379c1%3A0xe5a3637e676100a7!2sMasjid%20Agung%20Kota%20Kediri!5e0!3m2!1sid!2sid!4v1710000000000!5m2!1sid!2sid";
@@ -90,22 +12,23 @@ export const DEFAULT_WEDDING_DATA: WeddingData = {
   brideParents: "Bapak & Ibu Keluarga Wanita",
   groomInstagram: "https://instagram.com/",
   brideInstagram: "https://instagram.com/",
-  coupleShortName: "Hani & Pupud",
-  weddingDate: "2026-05-16T09:00:00",
+  coupleShortName: "Hani & Habib",
+  weddingDate: "2025-08-31T09:00:00",
   turutMengundang: [
     "Keluarga Besar Bpk. Ahmad",
     "Keluarga Besar Bpk. Yusuf",
     "Segenap Kerabat & Sahabat"
   ],
   assets: {
-    floralCorner: "https://i.ibb.co/Lz0xYm8/floral-corner-refined.png",
-    floralCornerMid: "https://i.ibb.co/Lz0xYm8/floral-corner-refined.png", 
-    floralCornerBack: "https://i.ibb.co/Lz0xYm8/floral-corner-refined.png", 
-    floralSide: "https://i.ibb.co/Lz0xYm8/floral-corner-refined.png", 
-    heroImage: "https://drive.google.com/file/d/1hGiGST6m5nf3ZtOpWQUKGZhTkv0ZTQP5/view?usp=drive_link",
+    // Aset Bunga dengan URL Google Drive
+    floralCorner: "https://drive.google.com/file/d/1Lz0xYm8_floral_front/view",
+    floralCornerMid: "https://drive.google.com/file/d/1Lz0xYm8_floral_mid/view", 
+    floralCornerBack: "https://drive.google.com/file/d/1Lz0xYm8_floral_back/view", 
+    floralSide: "https://drive.google.com/file/d/1Lz0xYm8_floral_side/view", 
+    heroImage: "https://drive.google.com/file/d/1hGiGST6m5nf3ZtOpWQUKGZhTkv0ZTQP5/view",
     bridePhoto: "https://images.unsplash.com/photo-1523438885200-e635ba2c371e?auto=format&fit=crop&q=80&w=500",
     groomPhoto: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=500",
-    splashBg: "https://drive.google.com/file/d/1hGiGST6m5nf3ZtOpWQUKGZhTkv0ZTQP5/view?usp=drive_link",
+    splashBg: "https://drive.google.com/file/d/1hGiGST6m5nf3ZtOpWQUKGZhTkv0ZTQP5/view",
     coupleBg: "",
     eventsBg: "",
     galleryBg: "",
@@ -121,7 +44,7 @@ export const DEFAULT_WEDDING_DATA: WeddingData = {
   events: [
     {
       title: 'Akad Nikah',
-      date: '2026-05-16',
+      date: '2025-08-31',
       time: '08.00 - 10.00 WIB',
       location: 'Masjid Raya',
       address: 'Jl. Utama No. 123, Kota Bahagia',
@@ -130,7 +53,7 @@ export const DEFAULT_WEDDING_DATA: WeddingData = {
     },
     {
       title: 'Resepsi Pernikahan',
-      date: '2026-05-16',
+      date: '2025-08-31',
       time: '11.00 - 14.00 WIB',
       location: 'Aula Serbaguna',
       address: 'Jl. Pemuda No. 45, Kota Bahagia',
@@ -181,19 +104,15 @@ export const fetchTemplateCatalog = async (): Promise<InvitationTemplate[]> => {
 };
 
 export const saveTemplateCatalogToCloud = async (templates: InvitationTemplate[]) => {
-  // Selalu simpan ke local storage sebagai backup
   localStorage.setItem('vell_invitation_templates', JSON.stringify(templates));
-  
   if (!GOOGLE_SHEET_API_URL || GOOGLE_SHEET_API_URL.includes("XXXXXXXX")) return;
-
   try {
-    const response = await fetch(GOOGLE_SHEET_API_URL, {
+    await fetch(GOOGLE_SHEET_API_URL, {
       method: 'POST',
-      mode: 'no-cors', // Diperlukan agar tidak kena CORS error di GAS
+      mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ action: 'update_catalog', catalog: templates })
     });
-    // Karena no-cors, kita tidak bisa membaca respon, tapi fetch akan berhasil jika terkirim
     return true;
   } catch (error) { 
     console.error("Save catalog error:", error);
@@ -206,7 +125,6 @@ export const fetchWeddingData = async (): Promise<WeddingData> => {
     const saved = localStorage.getItem('wedding_invitation_data');
     return saved ? JSON.parse(saved) : DEFAULT_WEDDING_DATA;
   }
-
   try {
     const response = await fetch(GOOGLE_SHEET_API_URL);
     if (!response.ok) throw new Error('Network response was not ok');
@@ -221,7 +139,6 @@ export const fetchWeddingData = async (): Promise<WeddingData> => {
 export const saveWeddingDataToCloud = async (data: WeddingData) => {
   localStorage.setItem('wedding_invitation_data', JSON.stringify(data));
   if (!GOOGLE_SHEET_API_URL || GOOGLE_SHEET_API_URL.includes("XXXXXXXX")) return;
-
   try {
     await fetch(GOOGLE_SHEET_API_URL, {
       method: 'POST',
@@ -234,7 +151,6 @@ export const saveWeddingDataToCloud = async (data: WeddingData) => {
 
 export const fetchGuestMessages = async (): Promise<GuestMessage[]> => {
     if (!GOOGLE_SHEET_API_URL || GOOGLE_SHEET_API_URL.includes("XXXXXXXX")) return [];
-
     try {
         const response = await fetch(`${GOOGLE_SHEET_API_URL}?action=get_messages`);
         if (!response.ok) return [];
@@ -245,7 +161,6 @@ export const fetchGuestMessages = async (): Promise<GuestMessage[]> => {
 
 export const sendGuestMessageToCloud = async (message: GuestMessage) => {
     if (!GOOGLE_SHEET_API_URL || GOOGLE_SHEET_API_URL.includes("XXXXXXXX")) return;
-
     try {
         await fetch(GOOGLE_SHEET_API_URL, {
             method: 'POST',
