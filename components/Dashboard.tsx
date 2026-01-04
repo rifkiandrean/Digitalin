@@ -331,7 +331,12 @@ const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onClose }) => {
                     {(Object.entries(formData.assets) as [string, string][]).map(([key, value]) => (
                         <div key={key} className="space-y-1">
                         <label className="text-[10px] font-bold uppercase text-slate-500">{key.replace(/([A-Z])/g, ' $1')}</label>
-                        <input value={value} onChange={e => updateField(`assets.${key}`, e.target.value)} className="w-full p-3 border rounded-xl text-xs font-mono focus:ring-1 focus:ring-blue-900" />
+                        <input 
+                          value={value} 
+                          onChange={e => updateField(`assets.${key}`, e.target.value)} 
+                          placeholder="Masukkan link Google Drive atau URL..."
+                          className="w-full p-3 border rounded-xl text-xs font-mono focus:ring-1 focus:ring-blue-900" 
+                        />
                         {value && value.startsWith('http') && (
                             <div className="w-16 h-16 rounded-lg overflow-hidden border mt-1">
                                 <img src={getDriveMediaUrl(value)} alt="Preview" className="w-full h-full object-cover" />

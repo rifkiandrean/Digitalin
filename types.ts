@@ -65,6 +65,7 @@ export interface WeddingData {
     floralCornerBack: string; 
     floralSide: string; 
     heroImage: string;
+    heroBg: string; // Background utama hero
     bridePhoto: string;
     groomPhoto: string;
     splashBg: string;
@@ -86,7 +87,7 @@ export interface InvitationTemplate {
   name: string;
   price: number;
   previewImageUrl: string;
-  demoUrl?: string; // Menambahkan link demo live
+  demoUrl?: string; 
   category: 'Modern' | 'Floral' | 'Minimalist' | 'Elegant';
   isPopular?: boolean;
 }

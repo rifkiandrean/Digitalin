@@ -101,7 +101,12 @@ const WeddingInvitation: React.FC = () => {
 
   const getSectionStyle = (url?: string) => {
     if (!url) return {};
-    return { backgroundImage: `url('${getDriveMediaUrl(url)}')`, backgroundSize: 'cover', backgroundPosition: 'center' };
+    return { 
+      backgroundImage: `url('${getDriveMediaUrl(url)}')`, 
+      backgroundSize: 'cover', 
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat'
+    };
   };
 
   if (showPinPrompt) {
@@ -157,8 +162,11 @@ const WeddingInvitation: React.FC = () => {
       <div className="font-sans pb-24">
         <FloatingMusic audioUrl={weddingData.audioUrl} />
         
-        {/* HERO SECTION - REFINED TO MATCH REFERENCE IMAGE */}
-        <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-6 pt-12 overflow-visible">
+        {/* HERO SECTION - SUPPORTS DRIVE BACKGROUND */}
+        <section 
+          className="relative min-h-screen flex flex-col items-center justify-center text-center px-6 pt-12 overflow-visible"
+          style={getSectionStyle(weddingData.assets.heroBg)}
+        >
           {/* Background Decorations */}
           <FloralCorner position="top-left" assets={weddingData.assets} />
           <FloralCorner position="top-right" assets={weddingData.assets} />

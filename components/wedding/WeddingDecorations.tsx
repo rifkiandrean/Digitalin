@@ -33,32 +33,32 @@ export const HeroFloralBackdrop = ({ assets }: { assets: any }) => {
 
   return (
     <div className="absolute inset-0 z-0 pointer-events-none overflow-visible">
-      {/* Cluster Atas Kiri Frame */}
+      {/* Cluster Atas Kiri Frame - Rotasi disesuaikan ke kiri 90 derajat */}
       <div className="absolute top-0 left-0 -translate-x-1/3 -translate-y-1/4 w-40 h-40 opacity-90">
         <img 
           src={cornerImg} 
-          className="w-full h-full object-contain rotate-[-15deg] animate-floral-sway-gentle" 
+          className="w-full h-full object-contain rotate-[-105deg] animate-floral-sway-gentle" 
         />
       </div>
-      {/* Cluster Atas Kanan Frame */}
+      {/* Cluster Atas Kanan Frame - Rotasi disesuaikan ke kiri 90 derajat */}
       <div className="absolute top-0 right-0 translate-x-1/4 -translate-y-1/4 w-36 h-36 opacity-70">
         <img 
           src={cornerMidImg} 
-          className="w-full h-full object-contain scale-x-[-1] rotate-[10deg]" 
+          className="w-full h-full object-contain scale-x-[-1] rotate-[-80deg]" 
         />
       </div>
-      {/* Cluster Bawah Kiri Frame */}
+      {/* Cluster Bawah Kiri Frame - Rotasi disesuaikan ke kiri 90 derajat */}
       <div className="absolute bottom-4 -left-12 w-44 h-44 opacity-100">
         <img 
           src={sideImg} 
-          className="w-full h-full object-contain rotate-[-30deg] animate-floral-sway" 
+          className="w-full h-full object-contain rotate-[-120deg] animate-floral-sway" 
         />
       </div>
-      {/* Cluster Bawah Kanan Frame */}
+      {/* Cluster Bawah Kanan Frame - Rotasi disesuaikan ke kiri 90 derajat */}
       <div className="absolute bottom-10 -right-12 w-48 h-48 opacity-100">
         <img 
           src={cornerImg} 
-          className="w-full h-full object-contain scale-x-[-1] scale-y-[-1] rotate-[-15deg] animate-floral-sway-gentle" 
+          className="w-full h-full object-contain scale-x-[-1] scale-y-[-1] rotate-[-105deg] animate-floral-sway-gentle" 
           style={{ animationDelay: '-2s' }}
         />
       </div>
