@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { ArrowLeft, ExternalLink, Zap, Smartphone, Globe, Layers, Filter } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
 import { PortfolioItem } from '../types';
+import FloatingChat from './FloatingChat';
 
 const PORTFOLIO_DATA: PortfolioItem[] = [
   {
@@ -70,6 +71,7 @@ const Portfolio: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-900 pb-20">
+      <FloatingChat />
       {/* Navbar */}
       <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl border-b border-slate-100 h-16 sm:h-20 px-6">
         <div className="max-w-7xl mx-auto h-full flex items-center justify-between">

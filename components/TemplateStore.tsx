@@ -4,6 +4,7 @@ import { ShoppingBag, Star, ChevronRight, ArrowLeft, MessageSquare, Tag, Zap, Sp
 import ScrollReveal from './ScrollReveal';
 import { InvitationTemplate } from '../types';
 import { fetchTemplateCatalog } from '../constants';
+import FloatingChat from './FloatingChat';
 
 const WHATSAPP_NUMBER = "6282115123431";
 
@@ -138,6 +139,7 @@ const TemplateStore: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-white font-sans text-slate-900 pb-24 w-full overflow-x-hidden">
+      <FloatingChat />
       {/* Checkout Modal Overlay */}
       {checkoutItem && (
         <div className="fixed inset-0 z-[200] bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4">

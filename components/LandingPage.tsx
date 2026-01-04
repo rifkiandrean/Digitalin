@@ -17,6 +17,7 @@ import {
   Layers
 } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
+import FloatingChat from './FloatingChat';
 
 export const services = [
   {
@@ -106,6 +107,7 @@ const featuredProjects = [
 const LandingPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-white font-sans text-slate-900 w-full overflow-x-hidden">
+      <FloatingChat />
       {/* Navbar - Fixed centering for Desktop */}
       <nav className="fixed top-0 left-0 right-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-100">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">

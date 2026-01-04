@@ -3,6 +3,7 @@ import React from 'react';
 import { ArrowLeft, MessageSquare, CheckCircle2, Zap } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
 import { services } from './LandingPage';
+import FloatingChat from './FloatingChat';
 
 interface ServiceDetailProps {
   path: string;
@@ -22,6 +23,7 @@ const ServiceDetail: React.FC<ServiceDetailProps> = ({ path }) => {
 
   return (
     <div className="min-h-screen bg-white font-sans text-slate-900">
+      <FloatingChat />
       {/* Navbar Minimalis */}
       <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-100">
         <div className="max-w-4xl mx-auto px-6 h-16 flex items-center justify-between">
