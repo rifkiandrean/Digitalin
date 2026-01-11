@@ -75,7 +75,7 @@ const GuestGenerator: React.FC = () => {
           const defaultTpl: MessageTemplate = {
             id: '1',
             name: 'Formal',
-            content: `Assalamu’alaikum Warahmatullahi Wabarakatuh,\n\nTanpa mengurangi rasa hormat, izinkan kami mengundang Bapak/Ibu/Saudara/i [Nama Tamu] untuk hadir di acara pernikahan kami:\n\n*${mergedData.groomName} & ${mergedData.brideName}*\n\nWaktu: ${dateStr}\nPukul: ${firstEvent.time}\nTempat: ${firstEvent.location}\n\nLink Undangan Digital:\n[Link Undangan]\n\nTerima kasih atas perhatiannya.\n*${mergedData.coupleShortName}*`
+            content: `Assalamu’alaikum Warahmatullahi Wabarakatuh,\n\nTanpa mengurangi rasa hormat, izinkan kami mengundang Bapak/Ibu/Saudara/i [Nama Tamu] untuk hadir di acara pernikahan kami:\n\n*${mergedData.groomName} & ${mergedData.brideName}*\n\n📅 Waktu: ${dateStr}\n✨ Pukul: ${firstEvent.time}\n📍 Tempat: ${firstEvent.location}\n\nLink Undangan Digital:\n[Link Undangan]\n\nTerima kasih atas perhatiannya.\n*${mergedData.coupleShortName}*`
           };
           const informalTpl: MessageTemplate = {
             id: '2',

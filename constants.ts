@@ -6,13 +6,13 @@ const GOOGLE_SHEET_API_URL = "https://script.google.com/macros/s/AKfycbwry2veuiG
 const DEFAULT_MAPS_EMBED = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3952.936553835694!2d112.0116847!3d-7.8176885!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e785706598379c1%3A0xe5a3637e676100a7!2sMasjid%20Agung%20Kota%20Kediri!5e0!3m2!1sid!2sid!4v1710000000000!5m2!1sid!2sid";
 
 export const DEFAULT_WEDDING_DATA: WeddingData = {
-  groomName: "",
-  brideName: "",
-  groomParents: "",
-  brideParents: "",
+  groomName: "Pupud Saripudin",
+  brideName: "Hani Susilawati",
+  groomParents: "Bapak Ahman & Ibu Suwarsih",
+  brideParents: "Bapak Sarmin (Alm) & Ibu Rosmiati",
   groomInstagram: "",
   brideInstagram: "",
-  coupleShortName: "",
+  coupleShortName: "Hani & Pupud",
   weddingDate: "",
   turutMengundang: [
     "",
