@@ -64,7 +64,7 @@ export const DEFAULT_WEDDING_DATA: WeddingData = {
       time: '',
       location: '',
       address: '',
-      mapsUrl: ',
+      mapsUrl: '',
       mapsEmbedUrl: DEFAULT_MAPS_EMBED
     }
   ],

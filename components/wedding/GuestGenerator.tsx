@@ -109,29 +109,44 @@ const GuestGenerator: React.FC = () => {
 
   const handlePickContact = async () => {
     // Check if Contact Picker API is supported
-    const supportsContacts = 'contacts' in navigator && 'select' in (navigator as any).contacts;
+    const nav = navigator as any;
+    const supportsContacts = 'contacts' in nav && 'select' in nav.contacts;
     
     if (!supportsContacts) {
-      alert("Browser Anda belum mendukung fitur ambil kontak langsung. Silakan masukkan nomor secara manual.");
+      // Deteksi spesifik iOS untuk memberikan pesan yang lebih jelas
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      
+      if (isIOS) {
+        alert("Mohon maaf, fitur 'Ambil Kontak' dibatasi oleh sistem keamanan iOS (iPhone/iPad). Silakan ketik nama dan nomor secara manual.");
+      } else {
+        alert("Browser ini belum mendukung fitur ambil kontak otomatis. Fitur ini optimal digunakan pada Google Chrome (Android).");
+      }
       return;
     }
 
     try {
       const props = ['name', 'tel'];
       const opts = { multiple: false };
-      const contacts = await (navigator as any).contacts.select(props, opts);
+      const contacts = await nav.contacts.select(props, opts);
       
       if (contacts.length > 0) {
         const contact = contacts[0];
         if (contact.name && contact.name[0]) setGuestName(contact.name[0]);
         if (contact.tel && contact.tel[0]) {
           // Clean phone number
-          const cleanPhone = contact.tel[0].replace(/[^0-9]/g, '');
+          let cleanPhone = contact.tel[0].replace(/[^0-9]/g, '');
+          
+          // Auto convert 08xxx to 628xxx for consistency
+          if (cleanPhone.startsWith('0')) {
+             cleanPhone = '62' + cleanPhone.substring(1);
+          }
+          
           setPhoneNumber(cleanPhone);
         }
       }
     } catch (err) {
-      console.error("Contact picker error:", err);
+      // User cancelled or error
+      console.log("Contact picker cancelled or failed", err);
     }
   };
 
